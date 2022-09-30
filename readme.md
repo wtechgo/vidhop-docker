@@ -22,6 +22,12 @@ Alpine with bash and VidHop installed.
 `dlv https://www.youtube.com/watch?v=-DT7bX-B1Mg`
 
 
+## Documentation
+
+There is better documentation available in the [Vidhop Android](https://github.com/wtechgo/vidhop-android) 
+and the [VidHop Linux](https://github.com/wtechgo/vidhop-linux) repositories.
+
+
 ## Credits
 
 Special thanks to the incredibly awesome projects [YT-DLP](https://github.com/yt-dlp/yt-dlp),

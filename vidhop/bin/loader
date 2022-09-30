@@ -1,0 +1,93 @@
+#!/bin/bash
+
+vidhop_dir="/root/VidHop"
+vidhop_app_dir="/opt/vidhop"
+bin_dir="$vidhop_app_dir/bin"
+
+# overwrites $vidhop_dir, $vidhop_app_dir and $bin_dir with values from config.ini (if needed).
+[ -f "$vidhop_app_dir/config.ini" ] && . "$vidhop_app_dir/config.ini"
+
+. "$bin_dir/vars" # Will overwrite all vars from config.ini
+. "$bin_dir/config"
+. "$bin_dir/common"
+. "$bin_dir/logger"
+. "$bin_dir/history"
+. "$bin_dir/files"
+
+. "$bin_dir/dlv"
+. "$bin_dir/fvid"
+. "$bin_dir/batch"
+. "$bin_dir/sync" # from workstation to phone
+. "$bin_dir/debug"
+
+[ -f "$vidhop_app_dir/config.ini" ] && . "$vidhop_app_dir/config.ini" # overwrites sync vars with values from config.ini
+
+function updateytdlp() {
+  echo "> Updating YT-DLP via Python package manager..." && sleep 1
+  python -m pip install yt-dlp -U
+}
+
+function install_loader() {
+  echo "> Installing VidHop loader to /usr/bin/vidhop..." && sleep 1
+  cd "$HOME" # make sure we have write permissions
+  loader_bin="/usr/local/bin/vidhop"
+  loader_tmp="loader_tmp"
+  echo '#!/bin/bash' >"$loader_tmp"
+  echo >>"$loader_tmp"
+  echo ". $bin_dir/loader" >>"$loader_tmp"
+  sudo mv "$loader_tmp" "$loader_bin"
+  sudo chmod +x "$loader_bin"
+  . vidhop
+}
+
+function installloader() {  # alias for phone hand typing
+  install_loader
+}
+
+function fetch_github() {
+  echo "> Updating VidHop code at $vidhop_app_dir..."
+  echo "> Fetching from GitHub..." && sleep 1
+  git fetch --all
+  git reset --hard origin/master && sleep 1
+  . "$bin_dir/loader"
+}
+
+function updatevidhop() {
+  pwd=$(pwd) && cd "$vidhop_app_dir"
+  fetch_github
+  updateytdlp
+  install_loader
+  echo -e "\n${GREEN}VidHop updated ! ${NC}\n\nReload VidHop by choosing one of these two options:"
+  echo -e "  1. Close Termux and reopen Termux.\n  2. Execute '. vidhop'"
+  cd "$pwd"
+}
+
+function updatevidhopbin() {
+  pwd=$(pwd) && cd "$vidhop_app_dir"
+  fetch_github
+  updateytdlp
+  install_loader
+  echo -e "\n${GREEN}VidHop updated ! ${NC}\n\nReload VidHop by choosing one of these two options:"
+  echo -e "  1. Close Termux and reopen Termux.\n  2. Execute '. vidhop'"
+  cd "$pwd"
+}
+
+function uninstallvidhop() {
+  echo "This is the uninstallation program for VidHop."
+  echo "Uninstall removes all program files."
+  echo "It does not delete your downloads in the VidHop directory."
+  echo -n 'Are you sure you want to uninstall VidHop? y/N: ' && read -r answer
+  answer=$(echo "$answer" | tr '[:upper:]' '[:lower:]')
+  [ "$answer" = "n" ] || [ -z "$answer" ] && echo "aborted uninstall" && return
+  [ "$answer" = "y" ] &&
+    sudo rm "/usr/local/bin/vidhop" &&
+    rm -rf "/opt/vidhop"
+}
+
+function vidhophelp() {
+  dlv_help && echo
+  fvid_help && echo
+  files_help && echo
+  history_help && echo
+  sync_help && return
+}

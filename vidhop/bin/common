@@ -1,0 +1,225 @@
+#!/bin/bash
+
+function create_app_dirs() {
+  mkdir -p \
+    "$vids_dir" \
+    "$channels_dir" \
+    "$music_dir" \
+    "$podcasts_dir" \
+    "$vids_meta_dir" \
+    "$channels_meta_dir" \
+    "$music_meta_dir" \
+    "$podcasts_meta_dir" \
+    "$import_dir" \
+    "$export_dir" \
+    "$log_dir" \
+    "$downloaded_dir" \
+    2>/dev/null
+}
+create_app_dirs
+
+# Determine the video platform for a  given url e.g. https://youtube.com yields youtube.
+function extract_platform_name() {
+  [ -n "$1" ] && input="$1" || input="$url"
+  domain=$(echo "$input" | awk -F/ '{print $3}')
+  for name in "${platform_names[@]}"; do
+    if [[ "$domain" == *$name* ]]; then
+      echo "$name"
+      return
+    fi
+  done
+  echo could not determine platform for "$url"
+  return 1
+}
+
+# shellcheck disable=SC2120
+function sanitize_filename() { # echo '"*/<>?\|_: ..ok`' | sanitize_filename
+  [ -n "$1" ] && echo "$1" | sanitize_filename && return
+  tr '"' "'" |
+    tr -d '\*' |
+    tr -d '/' |
+    tr -d '<' |
+    tr -d '>' |
+    tr -d '\?' |
+    tr -d '\\' |
+    tr '\|' '-' |
+    tr '\`' "'" |
+    sed 's/:/ -/g' |
+    sed 's/\.\{2,\}/./g' |
+    xargs # xargs trims spaces string start & end
+  # sed 's/\.\{2,\}//g' removes 2 or more dots
+}
+
+function is_single_download() {
+  [[ "$function" == dlv* ]] || [[ "$function" == dla* ]] || [[ "$function" == dlpod* ]] &&
+    echo "true" || echo "false"
+}
+
+function is_media_download() {
+  [[ "$function" == dlv ]] || [[ "$function" == dlc ]] || [[ "$function" == dlt ]] ||
+    [[ "$function" == dla ]] || [[ "$function" == dlalbum ]] || [[ "$function" == dlpod ]] ||
+    [[ "$function" == dlvpl ]] || [[ "$function" == dlapl ]] &&
+    echo "true" || echo "false"
+}
+
+# shellcheck disable=SC2120
+function channel_url_from_obj() {
+  [ -n "$json" ] &&
+    jq 'if .channel_url != null then .channel_url
+      elif .webpage_url != null then .webpage_url
+      elif .entries[0] | has("uploader_url") then .entries[0].uploader_url
+      elif .entries[0] | has("channel_url") then .entries[0].channel_url
+      else empty end' <<<"$json" | tr -d '"'
+}
+
+# shellcheck disable=SC2120
+function channel_url_from_json_file() {
+  [ -n "$1" ] && json_file="$1"
+  [ ! -f "$json_file" ] || [[ "$json_file" != *.json ]] && return
+  jq 'if .channel_url != null then .channel_url
+      elif .webpage_url != null then .webpage_url
+      elif .entries[0] | has("uploader_url") then .entries[0].uploader_url
+      elif .entries[0] | has("channel_url") then .entries[0].channel_url
+      else empty end' "$json_file" | tr -d '"'
+}
+
+function channel_url() {
+  channel_url="$(channel_url_from_obj)"
+  [ -n "$channel_url" ] && [ "$channel_url" != "null" ] && echo "$channel_url" && return
+  channel_url="$(channel_url_from_json_file)"
+  [ -n "$channel_url" ] && [ "$channel_url" != "null" ] && echo "$channel_url"
+}
+
+function channel_name_from_obj() {
+  jq 'if .channel != null then .channel
+      elif .uploader != null then .uploader
+      elif .entries[0] | has("channel") then .entries[0].channel
+      elif .entries[0] | has("uploader") then .entries[0].uploader
+      else empty end' <<<"$json" | sanitize_filename
+}
+
+# shellcheck disable=SC2120
+function channel_name_from_json_file() {
+  [ -n "$1" ] && [ -f "$1" ] && local file="$1"
+  [ -z "$file" ] && [ -f "$json_file" ] && file="$json_file"
+  [ -z "$file" ] && [ -f "$meta_file" ] && file="$meta_file"
+  [ ! -f "$file" ] && return 1
+
+  jq 'if .channel != null then .channel
+      elif .uploader != null then .uploader
+      elif .entries[0] | has("channel") then .entries[0].channel
+      elif .entries[0] | has("uploader") then .entries[0].uploader
+      else empty end' "$file" | sanitize_filename
+}
+
+# shellcheck disable=SC2120
+function channel_name_from_filename() {
+  [ ! -f "$json_file" ] && [ -f "$meta_file" ] && json_file="$meta_file"
+  [ -n "$json_file" ] && basename "$json_file" ".json"
+}
+
+function channel_name() {
+  channel_name="$(channel_name_from_obj)"
+  [ -n "$channel_name" ] && [ "$channel_name" != "null" ] && echo "$channel_name" && return
+  channel_name="$(channel_name_from_json_file)"
+  [ -n "$channel_name" ] && [ "$channel_name" != "null" ] && echo "$channel_name" && return
+  # shellcheck disable=SC2119
+  channel_name="$(channel_name_from_filename)"
+  [ -n "$channel_name" ] && [ "$channel_name" != "null" ] && echo "$channel_name"
+}
+
+function save_channel_entries_to_archive() {
+  jq '[.entries[].id] | unique' <<<"$json" | jq --arg platform "$platform" '$platform + " " + .[]' | tr -d '"' >"$archive_file"
+}
+
+function is_url() {
+  [[ "$1" == *http* ]] && echo true || echo false
+}
+
+# Create name for downloaded archive file.
+function url_to_filename() {
+  echo "$1" |
+    tr '/' '-' |
+    tr '.' '_' |
+    tr '@' 'AT' |
+    tr ':' '_' |
+    tr -d '"' |
+    tr -d '\\' |
+    tr '?' '_' |
+    tr '&' '-'
+}
+
+function url_to_channel_name() {
+  url="$1"
+  [ "$(is_url "$url")" = "false" ] && return 1
+
+  echo "$url" | cut -d/ -f 4 |
+    tr -d '@' |
+    tr -d '?' |
+    tr -d '"' |
+    tr -d '\\' |
+    tr ':' '-' |
+    tr '/' '-' |
+    tr '.' '_'
+}
+
+function is_json() {
+  [ -f "$1" ] && echo false && return
+  first=$(cat <<<"$1" | head -n 1)
+  [ "$first" = "{" ] || [ "$first" = "[" ] && echo true
+  echo false
+}
+
+function get_extension() {
+  ext=$(echo -n "$1" | rev | cut -d '.' -f 1 | rev)
+  [ "$(echo -n "$ext" | wc --chars)" -gt 4 ] && echo "function get_extension failed: result larger than return 4 chars" && return 1
+  echo "$ext"
+}
+
+function strip_extension() {
+  file="$1"
+  ext=$(get_extension "$file")
+  echo "${file//.$ext/}" # remove the extension e.g. remove .json from abs path
+}
+
+function sort_upload_date_desc() {
+  [ -z "$json" ] && echo no json variable availble, abort sort && return 1
+  entries=$(jq ".entries | sort_by(.upload_date) | reverse" <<<"$json")
+  json=$(jq -s '.[0].entries = .[1] | .[0]' <<<"$json" <<<"$entries")
+}
+
+function first_channel_upload() {
+  [ -n "$json" ] && jq ".entries | sort_by(.upload_date) | .[0].upload_date" <<<"$json" | tr -d '"'
+}
+
+function sort_playlist_index_asc() {
+  [ -z "$json" ] && echo no json variable availble, abort sort && return 1
+  entries=$(jq ".entries | sort_by(.playlist_index) " <<<"$json")
+  json=$(jq -s '.[0].entries = .[1] | .[0]' <<<"$json" <<<"$entries")
+}
+
+function print_line_for_msg() {
+  [ -z "$1" ] && return
+  line=""
+  for ((i = 1; i < $(echo "$1" | wc --chars); i++)); do
+    line+="_"
+  done
+  echo -e "${line}\n"
+}
+
+function underline() {
+  echo -e "$1\n$(print_line_for_msg "$1")"
+}
+
+function repeat_char_full_screen() {
+  [ -n "$1" ] && char="$1" || char="_"
+  [ -n "$2" ] && count="$2" || count="$termux_screen_char_count"
+  for ((i = 0; i < $count; i++)); do
+    result+="$char"
+  done
+  echo $result
+}
+
+function full_screen_line() {
+  repeat_char_full_screen '_' "$workstation_screen_char_count"
+}

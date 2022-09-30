@@ -25,7 +25,7 @@ Alpine with bash and VidHop installed.
 ## Documentation
 
 There is better documentation available in the [Vidhop Android](https://github.com/wtechgo/vidhop-android) 
-and the [VidHop Linux](https://github.com/wtechgo/vidhop-linux) repositories.
+and [VidHop Linux](https://github.com/wtechgo/vidhop-linux) repositories.
 
 
 ## Credits

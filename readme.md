@@ -4,6 +4,9 @@ Alpine with bash and VidHop installed.
 
 ## Installation
 
+Prerequisite: You have Docker installed. If you haven't, 
+[download Docker](https://docs.docker.com/get-docker/) for your operating system and install it.
+
 1. Copy the project to your computer.  
    `git clone https://github.com/wtechgo/vidhop-docker.git && cd vidhop-docker` 
 2. Build the VidHop Docker image.  

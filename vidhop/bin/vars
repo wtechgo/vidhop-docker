@@ -1,6 +1,6 @@
 #!/bin/bash
 
-[ -z "$vidhop_dir" ] && vidhop_dir="$HOME/Videos/VidHop"
+[ -z "$vidhop_dir" ] && vidhop_dir="/VidHop"
 [ -z "$vidhop_app_dir" ] && vidhop_app_dir="/opt/bin/vidhop"
 [ -z "$bin_dir" ] && bin_dir="$vidhop_app_dir/bin" # Overwrites loader.bin_dir (though this value is identical to loader.bin_dir).
 config_ini="$vidhop_app_dir/config.ini"

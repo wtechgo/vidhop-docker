@@ -15,7 +15,7 @@ Alpine with bash and VidHop installed.
 `docker run --name vidhop-docker -it vidhop-docker /bin/bash`
 
 2. If that worked, expand the previous command with your VidHop media directory (where VidHop saves your downloads).  
-`docker run --name vidhop-docker -v "YOUR/PATH/TO/VIDHOP/MEDIA":/root/VidHop -it vidhop-docker /bin/bash`
+`docker run --name vidhop-docker -v "YOUR/PATH/TO/VIDHOP/MEDIA":/VidHop -it vidhop-docker /bin/bash`
 
 3. You are now in an Alpine Linux with VidHop pre-installed.  
    Try a VidHop command!  

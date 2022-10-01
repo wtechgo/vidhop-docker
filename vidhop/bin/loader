@@ -1,6 +1,6 @@
 #!/bin/bash
 
-vidhop_dir="/root/VidHop"
+vidhop_dir="/VidHop"
 vidhop_app_dir="/opt/vidhop"
 bin_dir="$vidhop_app_dir/bin"
 

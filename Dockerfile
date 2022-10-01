@@ -10,12 +10,13 @@ RUN pip install --no-cache-dir -U wheel yt-dlp requests selenium beautifulsoup4 
 RUN apk add --no-cache ffmpeg jq
 # RUN apk add moreutils && \
 
-#RUN git clone https://github.com/wtechgo/vidhop-linux.git /opt/vidhop
 
 RUN mkdir /VidHop  # media dir
 RUN mkdir /opt/vidhop   # app dir
-ADD vidhop /opt/vidhop
+
 COPY vidhop/.bashrc /root/.bashrc
+ADD vidhop /opt/vidhop
+#RUN git clone https://github.com/wtechgo/vidhop-linux.git /opt/vidhop
 
 # Install loader, enables `. vidhop`
 RUN touch /usr/local/bin/vidhop && \

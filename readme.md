@@ -156,8 +156,9 @@ To see some of these commands in action, watch [An Introduction to VidHop](https
 
 ## Other repositories
 
-There is better documentation available in the [Vidhop Android](https://github.com/wtechgo/vidhop-android) 
-and [VidHop Linux](https://github.com/wtechgo/vidhop-linux) repositories.
+The `readme.md` in the [Vidhop Android](https://github.com/wtechgo/vidhop-android) 
+and [VidHop Linux](https://github.com/wtechgo/vidhop-linux) repositories contains extra information 
+for configuring `Sync` and `SSH`.
 
 
 ## Credits

@@ -12,9 +12,21 @@ Prerequisite: You have Docker installed. If you haven't,
 2. Build the VidHop Docker image.  
    `docker build -t vidhop-docker .`
    
+Extra:
 
-3. Optional: a oneliner command in case you're rebuilding the Docker image a lot:  
-   `docker build -t vidhop-docker . ; docker stop $(docker ps -a -q); docker rm $(docker ps -a -q); docker run --name vidhop-docker -v $PWD/media:/VidHop -it vidhop-docker /bin/bash`
+- File permissions issue:
+   - Downloading with VidHop generates files in `$PWD/media` on the host computer (pwd is present working directory).
+   
+     Those files however, are created by user `root` inside the Docker container.
+   
+      Your user on host is not `root` in all likelihood, hence an error about permissions.  
+      For that scenario, 
+      run:  
+      `sudo chown -R $USER:$USER . && rm -rf media `
+
+
+- A oneliner command in case you're rebuilding the Docker image a lot:  
+  `docker build -t vidhop-docker . ; docker stop $(docker ps -a -q); docker rm $(docker ps -a -q); docker run --name vidhop-docker -v $PWD/media:/VidHop -it vidhop-docker /bin/bash`
 
 ## Usage
 

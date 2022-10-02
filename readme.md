@@ -1,6 +1,26 @@
 # VidHop Docker
 
+## Description
+
 Docker Alpine Linux with bash and VidHop installed.
+
+Download videos, channels, playlists, music and thumbnails from any video platform on Linux.
+
+VidHop stores metadata of the video files you process as JSON files on your device only. 
+Metadata through which you can easily search with `fvid <SEARCH_TERM>`.
+
+VidHop for Linux also exists. Sync functionality is built-in on both Linux and Android versions of VidHop though that 
+requires a working SSH connection between laptop and phone.
+
+VidHop is like a Swiss knife for anyone interested in saving audiovisual content from the internet.
+
+### Videos
+
+[An Introduction to VidHop](https://odysee.com/@WTechGo:e/Introduction-to-VidHop:0)
+
+[Installing VidHop form Scratch](https://odysee.com/@WTechGo:e/Install-VidHop-from-Scratch:c)
+
+[Sync VidHop between laptop and phone](https://odysee.com/@WTechGo:e/sync-vidhop-between-laptop-and-phone:1)
 
 ## Installation
 
@@ -47,7 +67,7 @@ Extra:
 
    `dlv https://www.youtube.com/watch?v=-DT7bX-B1Mg`
    
-
+A complete list of the commands is available in the commands section. 
 
 ## Functional Information
 

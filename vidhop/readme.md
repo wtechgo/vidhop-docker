@@ -4,14 +4,13 @@
 
 Download videos, channels, playlists, music and thumbnails from any video platform on Linux.
 
-VidHop stores metadata of the video files you process as JSON files, metadata through which you can easily search.
+VidHop stores metadata of the video files you process as JSON files on your device only. 
+Metadata through which you can easily search with `fvid <SEARCH_TERM>`.
 
 VidHop is like a Swiss knife for anyone interested in saving audiovisual content from the internet.
 
 VidHop for Linux also exists. Sync functionality is built-in on both Linux and Android versions of VidHop though that 
 requires a working SSH connection between laptop and phone.
-
-A port for Windows is another idea.
 
 ### Videos
 

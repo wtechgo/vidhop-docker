@@ -1,7 +1,6 @@
 . /opt/vidhop/bin/loader    # Load VidHop.
 
-PS1='\w $ '
-#PS1='\u:\w $ '
+PS1='vidhop@:\w 8> '
 
 alias ll='ls -lrth --color=auto'
 alias la='ls -lrthA --color=auto'

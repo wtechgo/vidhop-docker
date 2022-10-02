@@ -15,11 +15,23 @@ Prerequisite: You have Docker installed. If you haven't,
 ## Usage
 
 1. Run the Docker container that we have just built.  
-`docker run --name vidhop-docker -v $PWD/media:/VidHop -it vidhop-docker /bin/bash`
 
+   ```
+   docker run --name vidhop-docker -v $PWD/media:/VidHop -it vidhop-docker /bin/bash
+   ```
+   
+   When you run into this Docker error:  
+   `docker: Error response from daemon: Conflict. The container name "/vidhop-docker" is already in use` 
+   
+   You can stop and remove all Docker containers with this command:  
+   `docker stop $(docker ps -a -q); docker rm $(docker ps -a -q)`
+   
 2. You are now in an Alpine Linux with VidHop pre-installed.  
    Try a VidHop command!  
-`dlv https://www.youtube.com/watch?v=-DT7bX-B1Mg`
+
+   `dlv https://www.youtube.com/watch?v=-DT7bX-B1Mg`
+3. Optional: in case you're rebuilding the Docker image a lot:  
+   `docker build -t vidhop-docker . ; docker stop $(docker ps -a -q); docker rm $(docker ps -a -q); docker run --name vidhop-docker -v $PWD/media:/VidHop -it vidhop-docker /bin/bash`
 
 
 ## Documentation

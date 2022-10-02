@@ -67,7 +67,7 @@ Extra:
 
    `dlv https://www.youtube.com/watch?v=-DT7bX-B1Mg`
    
-A complete list of the commands is available in the commands section. 
+A complete list of the commands is available in the [commands section](https://github.com/wtechgo/vidhop-docker#commands). 
 
 ## Functional Information
 

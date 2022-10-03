@@ -11,7 +11,6 @@ RUN apk add --no-cache ffmpeg jq
 # RUN apk add moreutils && \
 
 # Force docker build to recopy.
-RUN rm -rf /VidHop
 RUN rm -rf /vidhop
 RUN rm -rf /opt/vidhop
 

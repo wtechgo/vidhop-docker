@@ -1,6 +1,6 @@
 #!/bin/bash
 
-vidhop_dir="/VidHop"
+vidhop_dir="/vidhop"
 vidhop_app_dir="/opt/vidhop"
 bin_dir="$vidhop_app_dir/bin"
 
@@ -58,7 +58,7 @@ function updatevidhop() {
   fetch_github
   updateytdlp
   install_loader
-  echo -e "\n${GREEN}VidHop updated ! ${NC}\n\nReload VidHop by choosing one of these two options:"
+  echo -e "\n${BOLD}${GREEN}VidHop updated ! ${NORMAL}${NC}\n\nReload VidHop by choosing one of these two options:"
   echo -e "  1. Close Termux and reopen Termux.\n  2. Execute '. vidhop'"
   cd "$pwd"
 }
@@ -68,7 +68,7 @@ function updatevidhopbin() {
   fetch_github
   updateytdlp
   install_loader
-  echo -e "\n${GREEN}VidHop updated ! ${NC}\n\nReload VidHop by choosing one of these two options:"
+  echo -e "\n${BOLD}${GREEN}VidHop updated ! ${NORMAL}${NC}\n\nReload VidHop by choosing one of these two options:"
   echo -e "  1. Close Termux and reopen Termux.\n  2. Execute '. vidhop'"
   cd "$pwd"
 }

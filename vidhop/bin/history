@@ -223,9 +223,9 @@ JSON
 function format_oneliner_history() {
   mode="$1" file="$2"
   if [ "$mode" = -c ]; then
-    echo -e "${GREEN}$(jq 'unique_by(.url) | sort_by(.upload_date) | .[] | "> " + .channel_name + " | " + .url' "$file" | tr -d '"')"
+    echo -e "${BOLD}${GREEN}$(jq 'unique_by(.url) | sort_by(.upload_date) | .[] | "> " + .channel_name + " | " + .url' "$file" | tr -d '"')"
   else
-    echo -e "${GREEN}$(
+    echo -e "${BOLD}${GREEN}$(
       jq 'unique_by(.url) | sort_by(.upload_date) | .[] | ""
      + "> " + .channel_name + ": "
      + .title + " | "
@@ -269,28 +269,28 @@ function lasttitle() {
 function print_files() {
   [ -z "$title" ] && [ -n "$name" ] && title="$name"
   [ -n "$title" ] && echo -e "Files:"
-  [ -n "$channel_dir" ] && echo -e "----channel_dir: ${GREEN}$channel_dir${NC}"
-  [ -n "$media_file" ] && echo -e "-----media_file: ${GREEN}$media_file${NC}"
-  [ -n "$meta_file" ] && echo -e "------meta_file: ${GREEN}$meta_file${NC}"
-  [ -n "$thumb_file" ] && echo -e "-----thumb_file: ${GREEN}$thumb_file${NC}"
-  [ -n "$podcast_dir" ] && echo -e "----podcast_dir: ${GREEN}$podcast_dir${NC}"
-  [ -n "$avatar_file" ] && echo -e "----avatar_file: ${GREEN}$avatar_file${NC}"
+  [ -n "$channel_dir" ] && echo -e "----channel_dir: ${BOLD}${GREEN}$channel_dir${NORMAL}${NC}"
+  [ -n "$media_file" ] && echo -e "-----media_file: ${BOLD}${GREEN}$media_file${NORMAL}${NC}"
+  [ -n "$meta_file" ] && echo -e "------meta_file: ${BOLD}${GREEN}$meta_file${NORMAL}${NC}"
+  [ -n "$thumb_file" ] && echo -e "-----thumb_file: ${BOLD}${GREEN}$thumb_file${NORMAL}${NC}"
+  [ -n "$podcast_dir" ] && echo -e "----podcast_dir: ${BOLD}${GREEN}$podcast_dir${NORMAL}${NC}"
+  [ -n "$avatar_file" ] && echo -e "----avatar_file: ${BOLD}${GREEN}$avatar_file${NORMAL}${NC}"
 }
 
 function print_summary() {
   [ -n "$title" ] || [ -n "$channel_name" ] && echo -e "\nSummary:"
   if [[ "$function" == dlc* ]] || [[ "$function" == dlvpl* ]] || [[ "$function" == dlapl* ]]; then
-    [ -n "$channel_name" ] && echo -e "---channel_name: ${GREEN}$channel_name${NC}"
-    [ -n "$channel_url" ] && echo -e "----channel_url: ${GREEN}$channel_url${NC}"
+    [ -n "$channel_name" ] && echo -e "---channel_name: ${BOLD}${GREEN}$channel_name${NORMAL}${NC}"
+    [ -n "$channel_url" ] && echo -e "----channel_url: ${BOLD}${GREEN}$channel_url${NORMAL}${NC}"
     first_upload="$(first_channel_upload)"
     count_videos="$(jq '.entries | length' <<<"$json")"
-    [ -n "$first_upload" ] && echo -e "---first_upload: ${GREEN}$first_upload${NC}"
-    [ -n "$count_videos" ] && echo -e "---count_videos: ${GREEN}$count_videos${NC}"
+    [ -n "$first_upload" ] && echo -e "---first_upload: ${BOLD}${GREEN}$first_upload${NORMAL}${NC}"
+    [ -n "$count_videos" ] && echo -e "---count_videos: ${BOLD}${GREEN}$count_videos${NORMAL}${NC}"
   else
-    [ -n "$title" ] && echo -e "----------title: ${GREEN}$title${NC}"
-    [ -n "$url" ] && echo -e "------------url: ${GREEN}$url${NC}"
-    [ -n "$channel_name" ] && echo -e "---channel_name: ${GREEN}$channel_name${NC}"
-    [ -n "$channel_url" ] && echo -e "----channel_url: ${GREEN}$channel_url${NC}"
+    [ -n "$title" ] && echo -e "----------title: ${BOLD}${GREEN}$title${NORMAL}${NC}"
+    [ -n "$url" ] && echo -e "------------url: ${BOLD}${GREEN}$url${NORMAL}${NC}"
+    [ -n "$channel_name" ] && echo -e "---channel_name: ${BOLD}${GREEN}$channel_name${NORMAL}${NC}"
+    [ -n "$channel_url" ] && echo -e "----channel_url: ${BOLD}${GREEN}$channel_url${NORMAL}${NC}"
   fi
 }
 

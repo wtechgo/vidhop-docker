@@ -27,7 +27,7 @@ VidHop is like a Swiss knife for anyone interested in saving audiovisual content
 1. Run the Docker container that we have just built.  
 
    ```
-   docker run --name vidhop-docker -v $PWD/media:/VidHop -it vidhop-docker /bin/bash
+   docker run --name vidhop-docker -v $PWD/media:/vidhop -it vidhop-docker /bin/bash
    ```
    
    When you run into this Docker error:  
@@ -67,7 +67,14 @@ Extra:
 
 
 - A oneliner command in case you're rebuilding the Docker image a lot:  
-  `docker stop $(docker ps -a -q); docker rm $(docker ps -a -q); docker build --no-cache -t vidhop-docker . ; docker run --name vidhop-docker -v $PWD/media:/VidHop -it vidhop-docker /bin/bash`
+  
+```
+# Build with cache.
+docker stop $(docker ps -a -q); docker rm $(docker ps -a -q); docker build -t vidhop-docker . ; docker run --name vidhop-docker -v $PWD/media:/vidhop -it vidhop-docker /bin/bash
+
+# Build without cache.
+docker stop $(docker ps -a -q); docker rm $(docker ps -a -q); docker build --no-cache -t vidhop-docker . ; docker run --name vidhop-docker -v $PWD/media:/vidhop -it vidhop-docker /bin/bash
+```
 
 # Getting started with vidhop-docker on Windows
 
@@ -79,7 +86,7 @@ These steps are what I tried on Windows and worked.
 	  `docker stop $(docker ps -a -q); docker rm $(docker ps -a -q);`
 - Inside the Alpine session:
     - docker build --no-cache -t vidhop-docker .
-    - docker run --name vidhop-docker -v $PWD/media:/VidHop -it vidhop-docker /bin/bash
+    - docker run --name vidhop-docker -v $PWD/media:/vidhop -it vidhop-docker /bin/bash
 
 ## Functional Information
 

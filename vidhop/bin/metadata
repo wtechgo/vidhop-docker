@@ -39,7 +39,7 @@ function set_metadata_field() {
   [ -z "$metadata" ] && echo "no metadata to work with" && return
   json=$(jq --arg 'value' "$value" '."'"$key"'" = $value' <<<"$metadata")
 
-  [ -f "$meta_file" ] && jq . <<<"$json" >"$meta_file" && return
+  [ -f "$meta_file" ] && jq -M . <<<"$json" >"$meta_file" && return
   echo "no metadata file to write to"
 }
 

@@ -12,9 +12,10 @@ RUN apk add --no-cache ffmpeg jq
 
 # Force docker build to recopy.
 RUN rm -rf /VidHop
+RUN rm -rf /vidhop
 RUN rm -rf /opt/vidhop
 
-RUN mkdir /VidHop  # media dir
+RUN mkdir /vidhop  # media dir
 RUN mkdir /opt/vidhop   # app dir
 
 COPY vidhop/.bashrc /root/.bashrc
@@ -27,4 +28,4 @@ RUN touch /usr/local/bin/vidhop && \
   echo ". /opt/vidhop/bin/loader" >>/usr/local/bin/vidhop && \
   chmod +x /usr/local/bin/vidhop
 
-WORKDIR /VidHop
+WORKDIR /vidhop

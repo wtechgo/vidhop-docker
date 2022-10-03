@@ -170,7 +170,7 @@ function fetch_video_thumbnail() {
 
 function print_metadata() {
   echo -e "Metadata JSON:"
-  jq <<<"$json"
+  jq -M <<<"$json"
   print_summary
 }
 

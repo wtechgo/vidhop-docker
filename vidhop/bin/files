@@ -272,12 +272,13 @@ function mediafile() {
 
 function metadata() {
   if [ -n "$1" ]; then
-    [ -f "$1" ] && jq . "$1" && return
+    [ -f "$1" ] && jq -M . "$1" && return
     found_meta_file="$(find_one_meta "$1")"
-    [ -f "$found_meta_file" ] && jq . "$found_meta_file" && return
+    [ -f "$found_meta_file" ] && jq -M . "$found_meta_file" && return
   else
-    [ -f "$meta_file" ] && jq . "$meta_file" && return
-    [ -f "$json_file" ] && jq . "$meta_file" && return
+    [ -f "$meta_file" ] && jq -M . "$meta_file" && return
+    [ -f "$json_file" ] && jq -M . "$meta_file" && return
+    [ -n "$json" ] && jq -M <<<"$json" && return
   fi
   echo "no metadata to show"
 }

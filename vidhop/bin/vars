@@ -1,6 +1,6 @@
 #!/bin/bash
 
-[ -z "$vidhop_dir" ] && vidhop_dir="/VidHop"
+[ -z "$vidhop_dir" ] && vidhop_dir="/vidhop"
 [ -z "$vidhop_app_dir" ] && vidhop_app_dir="/opt/bin/vidhop"
 [ -z "$bin_dir" ] && bin_dir="$vidhop_app_dir/bin" # Overwrites loader.bin_dir (though this value is identical to loader.bin_dir).
 config_ini="$vidhop_app_dir/config.ini"
@@ -97,12 +97,12 @@ ORANGE='\e[33m'
 PURPLE='\e[35m'
 RED='\e[31m'
 YELLOW='\e[33m'
-LIGHT_GRAY='\e[37m'
 LIGHT_RED='\e[91m'
 LIGHT_GREEN='\e[92m'
 LIGHT_YELLOW='\e[93m'
 LIGHT_BLUE='\e[94m'
 LIGHT_MAGENTA='\e[95m'
+LIGHT_GRAY='\e[37m'
 LIGHT_CYAN='\e[96m'
 DARKGRAY='\e[30m'
 NC='\033[0m' # No Color
@@ -110,44 +110,44 @@ BOLD=$(tput bold)
 NORMAL=$(tput sgr0)
 
 function test_colors() {
-  echo -e "${BLACK}VidHop is Awesome !${NC}"
-  echo -e "${BOLD}${BLACK}Bold VidHop is Awesome !${NC}${NORMAL}"
-  echo -e "${GRAY}VidHop is Awesome !${NC}"
-  echo -e "${BOLD}${GRAY}Bold VidHop is Awesome !${NC}${NORMAL}"
-  echo -e "${WHITE}VidHop is Awesome !${NC}"
-  echo -e "${BOLD}${WHITE}Bold VidHop is Awesome !${NC}${NORMAL}"
-  echo -e "${BLUE}VidHop is Awesome !${NC}"
-  echo -e "${BOLD}${BLUE}Bold VidHop is Awesome !${NC}${NORMAL}"
-  echo -e "${CYAN}VidHop is Awesome !${NC}"
-  echo -e "${BOLD}${CYAN}Bold VidHop is Awesome !${NC}${NORMAL}"
-  echo -e "${GREEN}VidHop is Awesome !${NC}"
-  echo -e "${BOLD}${GREEN}Bold VidHop is Awesome !${NC}${NORMAL}"
-  echo -e "${MAGENTA}VidHop is Awesome !${NC}"
-  echo -e "${BOLD}${MAGENTA}Bold VidHop is Awesome !${NC}${NORMAL}"
-  echo -e "${ORANGE}VidHop is Awesome !${NC}"
-  echo -e "${BOLD}${ORANGE}Bold VidHop is Awesome !${NC}${NORMAL}"
-  echo -e "${PURPLE}VidHop is Awesome !${NC}"
-  echo -e "${BOLD}${PURPLE}Bold VidHop is Awesome !${NC}${NORMAL}"
-  echo -e "${RED}VidHop is Awesome !${NC}"
-  echo -e "${BOLD}${RED}Bold VidHop is Awesome !${NC}${NORMAL}"
-  echo -e "${YELLOW}VidHop is Awesome !${NC}"
-  echo -e "${BOLD}${YELLOW}Bold VidHop is Awesome !${NC}${NORMAL}"
-  echo -e "${LIGHT_GRAY}VidHop is Awesome !${NC}"
-  echo -e "${BOLD}${LIGHT_GRAY}Bold VidHop is Awesome !${NC}${NORMAL}"
-  echo -e "${LIGHT_RED}VidHop is Awesome !${NC}"
-  echo -e "${BOLD}${LIGHT_RED}Bold VidHop is Awesome !${NC}${NORMAL}"
-  echo -e "${LIGHT_GREEN}VidHop is Awesome !${NC}"
-  echo -e "${BOLD}${LIGHT_GREEN}Bold VidHop is Awesome !${NC}${NORMAL}"
-  echo -e "${LIGHT_YELLOW}VidHop is Awesome !${NC}"
-  echo -e "${BOLD}${LIGHT_YELLOW}Bold VidHop is Awesome !${NC}${NORMAL}"
-  echo -e "${LIGHT_BLUE}VidHop is Awesome !${NC}"
-  echo -e "${BOLD}${LIGHT_BLUE}Bold VidHop is Awesome !${NC}${NORMAL}"
-  echo -e "${LIGHT_MAGENTA}VidHop is Awesome !${NC}"
-  echo -e "${BOLD}${LIGHT_MAGENTA}Bold VidHop is Awesome !${NC}${NORMAL}"
-  echo -e "${LIGHT_CYAN}VidHop is Awesome !${NC}"
-  echo -e "${BOLD}${LIGHT_CYAN}Bold VidHop is Awesome !${NC}${NORMAL}"
-  echo -e "${DARKGRAY}VidHop is Awesome !${NC}"
-  echo -e "${BOLD}${DARKGRAY}Bold VidHop is Awesome !${NC}${NORMAL}"
+  echo -e "BLACK: ${BLACK}VidHop is Awesome !${NC}"
+  echo -e "BLACK BOLD${BOLD}${BLACK}Bold VidHop is Awesome !${NC}${NORMAL}"
+  echo -e "GRAY: ${GRAY}VidHop is Awesome !${NC}"
+  echo -e "GRAY BOLD${BOLD}${GRAY}Bold VidHop is Awesome !${NC}${NORMAL}"
+  echo -e "WHITE: ${WHITE}VidHop is Awesome !${NC}"
+  echo -e "WHITE BOLD${BOLD}${WHITE}Bold VidHop is Awesome !${NC}${NORMAL}"
+  echo -e "BLUE: ${BLUE}VidHop is Awesome !${NC}"
+  echo -e "BLUE BOLD${BOLD}${BLUE}Bold VidHop is Awesome !${NC}${NORMAL}"
+  echo -e "CYAN: ${CYAN}VidHop is Awesome !${NC}"
+  echo -e "CYAN BOLD${BOLD}${CYAN}Bold VidHop is Awesome !${NC}${NORMAL}"
+  echo -e "GREEN: ${GREEN}VidHop is Awesome !${NC}"
+  echo -e "GREEN BOLD${BOLD}${GREEN}Bold VidHop is Awesome !${NC}${NORMAL}"
+  echo -e "MAGENTA: ${MAGENTA}VidHop is Awesome !${NC}"
+  echo -e "MAGENTA BOLD${BOLD}${MAGENTA}Bold VidHop is Awesome !${NC}${NORMAL}"
+  echo -e "ORANGE: ${ORANGE}VidHop is Awesome !${NC}"
+  echo -e "ORANGE BOLD${BOLD}${ORANGE}Bold VidHop is Awesome !${NC}${NORMAL}"
+  echo -e "PURPLE: ${PURPLE}VidHop is Awesome !${NC}"
+  echo -e "PURPLE BOLD${BOLD}${PURPLE}Bold VidHop is Awesome !${NC}${NORMAL}"
+  echo -e "RED: ${RED}VidHop is Awesome !${NC}"
+  echo -e "RED BOLD${BOLD}${RED}Bold VidHop is Awesome !${NC}${NORMAL}"
+  echo -e "YELLOW: ${YELLOW}VidHop is Awesome !${NC}"
+  echo -e "YELLOW BOLD${BOLD}${YELLOW}Bold VidHop is Awesome !${NC}${NORMAL}"
+  echo -e "LIGHT_GRAY: ${LIGHT_GRAY}VidHop is Awesome !${NC}"
+  echo -e "LIGHT_GRAY BOLD${BOLD}${LIGHT_GRAY}Bold VidHop is Awesome !${NC}${NORMAL}"
+  echo -e "LIGHT_RED: ${LIGHT_RED}VidHop is Awesome !${NC}"
+  echo -e "LIGHT_RED BOLD${BOLD}${LIGHT_RED}Bold VidHop is Awesome !${NC}${NORMAL}"
+  echo -e "LIGHT_GREEN: ${LIGHT_GREEN}VidHop is Awesome !${NC}"
+  echo -e "LIGHT_GREEN BOLD${BOLD}${LIGHT_GREEN}Bold VidHop is Awesome !${NC}${NORMAL}"
+  echo -e "LIGHT_YELLOW: ${LIGHT_YELLOW}VidHop is Awesome !${NC}"
+  echo -e "LIGHT_YELLOW BOLD${BOLD}${LIGHT_YELLOW}Bold VidHop is Awesome !${NC}${NORMAL}"
+  echo -e "LIGHT_BLUE: ${LIGHT_BLUE}VidHop is Awesome !${NC}"
+  echo -e "LIGHT_BLUE BOLD${BOLD}${LIGHT_BLUE}Bold VidHop is Awesome !${NC}${NORMAL}"
+  echo -e "LIGHT_MAGENTA: ${LIGHT_MAGENTA}VidHop is Awesome !${NC}"
+  echo -e "LIGHT_MAGENTA BOLD${BOLD}${LIGHT_MAGENTA}Bold VidHop is Awesome !${NC}${NORMAL}"
+  echo -e "LIGHT_CYAN: ${LIGHT_CYAN}VidHop is Awesome !${NC}"
+  echo -e "LIGHT_CYAN BOLD${BOLD}${LIGHT_CYAN}Bold VidHop is Awesome !${NC}${NORMAL}"
+  echo -e "DARKGRAY: ${DARKGRAY}VidHop is Awesome !${NC}"
+  echo -e "DARKGRAY BOLD${BOLD}${DARKGRAY}Bold VidHop is Awesome !${NC}${NORMAL}"
 }
 
 platform_names=(

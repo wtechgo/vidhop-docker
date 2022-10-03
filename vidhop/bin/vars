@@ -109,6 +109,47 @@ NC='\033[0m' # No Color
 BOLD=$(tput bold)
 NORMAL=$(tput sgr0)
 
+function test_colors() {
+  echo -e "${BLACK}VidHop is Awesome !${NC}"
+  echo -e "${BOLD}${BLACK}Bold VidHop is Awesome !${NC}${NORMAL}"
+  echo -e "${GRAY}VidHop is Awesome !${NC}"
+  echo -e "${BOLD}${GRAY}Bold VidHop is Awesome !${NC}${NORMAL}"
+  echo -e "${WHITE}VidHop is Awesome !${NC}"
+  echo -e "${BOLD}${WHITE}Bold VidHop is Awesome !${NC}${NORMAL}"
+  echo -e "${BLUE}VidHop is Awesome !${NC}"
+  echo -e "${BOLD}${BLUE}Bold VidHop is Awesome !${NC}${NORMAL}"
+  echo -e "${CYAN}VidHop is Awesome !${NC}"
+  echo -e "${BOLD}${CYAN}Bold VidHop is Awesome !${NC}${NORMAL}"
+  echo -e "${GREEN}VidHop is Awesome !${NC}"
+  echo -e "${BOLD}${GREEN}Bold VidHop is Awesome !${NC}${NORMAL}"
+  echo -e "${MAGENTA}VidHop is Awesome !${NC}"
+  echo -e "${BOLD}${MAGENTA}Bold VidHop is Awesome !${NC}${NORMAL}"
+  echo -e "${ORANGE}VidHop is Awesome !${NC}"
+  echo -e "${BOLD}${ORANGE}Bold VidHop is Awesome !${NC}${NORMAL}"
+  echo -e "${PURPLE}VidHop is Awesome !${NC}"
+  echo -e "${BOLD}${PURPLE}Bold VidHop is Awesome !${NC}${NORMAL}"
+  echo -e "${RED}VidHop is Awesome !${NC}"
+  echo -e "${BOLD}${RED}Bold VidHop is Awesome !${NC}${NORMAL}"
+  echo -e "${YELLOW}VidHop is Awesome !${NC}"
+  echo -e "${BOLD}${YELLOW}Bold VidHop is Awesome !${NC}${NORMAL}"
+  echo -e "${LIGHT_GRAY}VidHop is Awesome !${NC}"
+  echo -e "${BOLD}${LIGHT_GRAY}Bold VidHop is Awesome !${NC}${NORMAL}"
+  echo -e "${LIGHT_RED}VidHop is Awesome !${NC}"
+  echo -e "${BOLD}${LIGHT_RED}Bold VidHop is Awesome !${NC}${NORMAL}"
+  echo -e "${LIGHT_GREEN}VidHop is Awesome !${NC}"
+  echo -e "${BOLD}${LIGHT_GREEN}Bold VidHop is Awesome !${NC}${NORMAL}"
+  echo -e "${LIGHT_YELLOW}VidHop is Awesome !${NC}"
+  echo -e "${BOLD}${LIGHT_YELLOW}Bold VidHop is Awesome !${NC}${NORMAL}"
+  echo -e "${LIGHT_BLUE}VidHop is Awesome !${NC}"
+  echo -e "${BOLD}${LIGHT_BLUE}Bold VidHop is Awesome !${NC}${NORMAL}"
+  echo -e "${LIGHT_MAGENTA}VidHop is Awesome !${NC}"
+  echo -e "${BOLD}${LIGHT_MAGENTA}Bold VidHop is Awesome !${NC}${NORMAL}"
+  echo -e "${LIGHT_CYAN}VidHop is Awesome !${NC}"
+  echo -e "${BOLD}${LIGHT_CYAN}Bold VidHop is Awesome !${NC}${NORMAL}"
+  echo -e "${DARKGRAY}VidHop is Awesome !${NC}"
+  echo -e "${BOLD}${DARKGRAY}Bold VidHop is Awesome !${NC}${NORMAL}"
+}
+
 platform_names=(
   archive
   bitchute

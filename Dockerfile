@@ -10,6 +10,9 @@ RUN pip install --no-cache-dir -U wheel yt-dlp requests selenium beautifulsoup4 
 RUN apk add --no-cache ffmpeg jq
 # RUN apk add moreutils && \
 
+# Force docker build to recopy.
+RUN rm -rf /VidHop
+RUN rm -rf /opt/vidhop
 
 RUN mkdir /VidHop  # media dir
 RUN mkdir /opt/vidhop   # app dir

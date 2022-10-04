@@ -20,7 +20,6 @@ RUN mkdir /opt/vidhop   # app dir
 
 COPY vidhop/.bashrc /root/.bashrc
 ADD vidhop /opt/vidhop
-ADD vidhop/.bash_history /root/.bash_history
 #RUN git clone https://github.com/wtechgo/vidhop-linux.git /opt/vidhop
 
 # Install loader, enables `. vidhop`
@@ -34,7 +33,7 @@ SHELL ["/bin/bash", "-ec"]
 RUN sed -i -e "s/bin\/ash/bin\/bash/" /etc/passwd
 ENV HISTSIZE=500
 ENV HISTFILESIZE=500
-ENV HISTFILE=$HOME/.bash_history
-RUN set -o history
+ENV HISTFILE=/root/.bash_history
+RUN touch /root/.bash_history && set -o history
 
 WORKDIR /vidhop

@@ -27,7 +27,7 @@ VidHop is like a Swiss knife for anyone interested in saving audiovisual content
 1. Run the Docker container that we have just built.  
 
    ```
-   docker run --name vidhop-docker -v $PWD/media:/vidhop -it vidhop-docker /bin/bash
+   docker run --name vidhop-docker -v $PWD/media:/vidhop -v $PWD/vidhop/.bash_history:/root/.bash_history -it vidhop-docker /bin/bash
    ```
    
    When you run into this Docker error:  
@@ -51,7 +51,7 @@ Prerequisite: You have Docker installed. If you haven't,
 1. Copy the project to your computer.  
    `git clone https://github.com/wtechgo/vidhop-docker.git && cd vidhop-docker` 
 2. Build the VidHop Docker image.  
-   `docker build --no-cache -t vidhop-docker .`
+   `docker build -t vidhop-docker .`
    
 Extra:
 
@@ -70,10 +70,10 @@ Extra:
   
 ```
 # Build with cache.
-docker stop $(docker ps -a -q); docker rm $(docker ps -a -q); docker build -t vidhop-docker . ; docker run --name vidhop-docker -v $PWD/media:/vidhop -it vidhop-docker /bin/bash
+docker stop $(docker ps -a -q); docker rm $(docker ps -a -q); docker build -t vidhop-docker . ; docker run --name vidhop-docker -v $PWD/media:/vidhop -v $PWD/vidhop/.bash_history:/root/.bash_history -it vidhop-docker /bin/bash
 
 # Build without cache.
-docker stop $(docker ps -a -q); docker rm $(docker ps -a -q); docker build --no-cache -t vidhop-docker . ; docker run --name vidhop-docker -v $PWD/media:/vidhop -it vidhop-docker /bin/bash
+docker stop $(docker ps -a -q); docker rm $(docker ps -a -q); docker build --no-cache -t vidhop-docker . ; docker run --name vidhop-docker -v $PWD/media:/vidhop -v $PWD/vidhop/.bash_history:/root/.bash_history -it vidhop-docker /bin/bash
 ```
 
 # Getting started with vidhop-docker on Windows
@@ -85,8 +85,8 @@ These steps are what I tried on Windows and worked.
 	- In Powershell because e.g. this command did not work in command prompt:  
 	  `docker stop $(docker ps -a -q); docker rm $(docker ps -a -q);`
 - Inside the Alpine session:
-    - docker build --no-cache -t vidhop-docker .
-    - docker run --name vidhop-docker -v $PWD/media:/vidhop -it vidhop-docker /bin/bash
+    - docker build -t vidhop-docker .
+    - docker run --name vidhop-docker -v $PWD/media:/vidhop -v $PWD/vidhop/.bash_history:/root/.bash_history -it vidhop-docker /bin/bash
 
 ## Functional Information
 

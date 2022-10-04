@@ -1,3 +1,0 @@
-rsync
-mediainfo
-tor

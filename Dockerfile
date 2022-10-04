@@ -1,7 +1,7 @@
 FROM python:alpine
 
 RUN apk update && apk upgrade   # update system
-RUN apk add --no-cache  coreutils util-linux binutils findutils grep iproute2   # replace BusyBox symlinks
+RUN apk add --no-cache coreutils util-linux binutils findutils grep iproute2   # replace BusyBox symlinks
 RUN apk add --no-cache bash bash-doc bash-completion gawk sed grep bc    # install bash
 RUN apk add --no-cache mediainfo nano openssh rsync git ncurses tor proxychains-ng # install tools   # install vidhop requirements
 # install Python packages

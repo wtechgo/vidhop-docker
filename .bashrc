@@ -5,7 +5,6 @@ vidhop_stop() {
 
 vidhop_start() {
   vidhop_stop 1>/dev/null
-  [ ! -f Dockerfile ] && echo "this directory doesn't contain a Dockerfile" && return
   docker run --name vidhop-docker \
     -v "$PWD/media:/vidhop" \
     -v "$PWD/vidhop/.bash_history":"/root/.bash_history" \
@@ -13,6 +12,7 @@ vidhop_start() {
 }
 
 vidhop_build() {
+  [ ! -f Dockerfile ] && echo "this directory doesn't contain a Dockerfile" && return
   docker build -t vidhop-docker .
 }
 

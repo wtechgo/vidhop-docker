@@ -1,18 +1,23 @@
 # VidHop Docker
 
-## Description
+*An Alpine Linux Docker image with VidHop installed for Windows and other.*
 
-Docker Alpine Linux with bash and VidHop installed.
+## Functional Information
 
-Download videos, channels, playlists, music and thumbnails from any video platform on Linux.
+VidHop enables Linux users to download videos, songs, thumbnails, complete channels and playlists from popular video
+platforms to their workstation.
 
-VidHop stores metadata of the video files you process as JSON files on your device only. 
-Metadata through which you can easily search with `fvid <SEARCH_TERM>`.
+Each download also saves the video **metadata** and its thumbnail (video banner image). When users download a channel or
+playlist, the same happens for each video while also saving channel metadata. It's also possible to fetch **only** the
+metadata of a video, channel or playlist.
 
-VidHop for Linux also exists. Sync functionality is built-in on both Linux and Android versions of VidHop though that 
-requires a working SSH connection between laptop and phone.
+**The metadata is what makes application powerful** as VidHop provides functions for users to query their collected metadata
+using search words or sentences. Effectively, VidHop will look for the search word in video titles and descriptions
+though the metadata contains other useful data like video, channel and thumbnail URLs. File extensions include mp4 (
+video), json (metadata) and jpg (thumbnails).
 
-VidHop is like a Swiss knife for anyone interested in saving audiovisual content from the internet.
+Finally, VidHop provides many utilities for day-to-day use such as keeping a history, renaming of downloaded files,
+inspect video specs of files and URLs, remove the last download or play it...
 
 ### Videos
 
@@ -162,23 +167,6 @@ Install `Windows Terminal` from the `Microsoft Store` and tune the appearance to
 [Windows Terminal themes](https://windowsterminalthemes.dev/).
 
 The color scheme I used in the Docker video is `Dark Pastel` from [windowsterminalthemes.dev](https://windowsterminalthemes.dev).
-
-## Functional Information
-
-VidHop enables Linux users to download videos, songs, thumbnails, complete channels and playlists from popular video
-platforms to their workstation.
-
-Each download also saves the video **metadata** and its thumbnail (video banner image). When users download a channel or
-playlist, the same happens for each video while also saving channel metadata. It's also possible to fetch **only** the
-metadata of a video, channel or playlist.
-
-**The metadata is what makes application powerful** as VidHop provides functions for users to query their collected metadata
-using search words or sentences. Effectively, VidHop will look for the search word in video titles and descriptions
-though the metadata contains other useful data like video, channel and thumbnail URLs. File extensions include mp4 (
-video), json (metadata) and jpg (thumbnails).
-
-Finally, VidHop provides many utilities for day-to-day use such as keeping a history, renaming of downloaded files,
-inspect video specs of files and URLs, remove the last download or play it...
 
 ## Commands
 

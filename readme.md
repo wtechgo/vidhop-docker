@@ -16,11 +16,10 @@ VidHop is like a Swiss knife for anyone interested in saving audiovisual content
 
 ### Videos
 
-[An Introduction to VidHop](https://odysee.com/@WTechGo:e/Introduction-to-VidHop:0)
-
-[Installing VidHop form Scratch](https://odysee.com/@WTechGo:e/Install-VidHop-from-Scratch:c)
-
-[Sync VidHop between laptop and phone](https://odysee.com/@WTechGo:e/sync-vidhop-between-laptop-and-phone:1)
+- [VidHop Docker on Windows](https://odysee.com/@WTechGo:e/VidHop-for-Docker-Install-demo-extra-information:a)
+- [An Introduction to VidHop](https://odysee.com/@WTechGo:e/Introduction-to-VidHop:0)
+- [Installing VidHop from Scratch](https://odysee.com/@WTechGo:e/Install-VidHop-from-Scratch:c)
+- [Sync VidHop between laptop and phone](https://odysee.com/@WTechGo:e/sync-vidhop-between-laptop-and-phone:1)
 
 ## Usage
 
@@ -45,29 +44,16 @@ A complete list of the commands is available in the [commands section](https://g
 
 ## Installation
 
-Prerequisite: You have Docker installed. If you haven't, 
+Prerequisites: You have Docker installed. If you haven't, 
 [download Docker](https://docs.docker.com/get-docker/) for your operating system and install it.
 
 1. Copy the project to your computer.  
-   `git clone https://github.com/wtechgo/vidhop-docker.git && cd vidhop-docker` 
-2. Build the VidHop Docker image.  
+   `git clone https://github.com/wtechgo/vidhop-docker.git && cd vidhop-docker`  
+   If you don't have `Git` installed, you can simply download the [zip file from GitHub](https://github.com/wtechgo/vidhop-docker/archive/refs/heads/master.zip).
+2. Navigate into the project with your terminal.
+3. Build the VidHop Docker image.  
    `docker build -t vidhop-docker .`
-   
-Extra:
-
-- File permissions issue:
-   - Downloading with VidHop generates files in `$PWD/media` on the host computer (pwd is present working directory).
-   
-     Those files however, are created by user `root` inside the Docker container.
-   
-      Your user on host is not `root` in all likelihood, hence an error about permissions.  
-      For that scenario, 
-      run:  
-      `sudo chown -R $USER:$USER . && rm -rf media `
-
-
-- A oneliner command in case you're rebuilding the Docker image a lot:  
-  
+4. Extra: A oneliner command in case you're rebuilding the Docker image a lot.  
 ```
 # Build with cache.
 docker stop $(docker ps -a -q); docker rm $(docker ps -a -q); docker build -t vidhop-docker . ; docker run --name vidhop-docker -v $PWD/media:/vidhop -v $PWD/vidhop/.bash_history:/root/.bash_history -it vidhop-docker /bin/bash
@@ -76,17 +62,106 @@ docker stop $(docker ps -a -q); docker rm $(docker ps -a -q); docker build -t vi
 docker stop $(docker ps -a -q); docker rm $(docker ps -a -q); docker build --no-cache -t vidhop-docker . ; docker run --name vidhop-docker -v $PWD/media:/vidhop -v $PWD/vidhop/.bash_history:/root/.bash_history -it vidhop-docker /bin/bash
 ```
 
-# Getting started with vidhop-docker on Windows
+### Media directory file permissions in Linux
 
-These steps are what I tried on Windows and worked.
+Downloading with VidHop generates files in `$PWD/media` on the host computer (pwd is present working directory).
 
-- Installed Alpine WSL from Microsoft Store.
-- Start Alpine WSL session with `alpine` in Powershell.
-	- In Powershell because e.g. this command did not work in command prompt:  
-	  `docker stop $(docker ps -a -q); docker rm $(docker ps -a -q);`
-- Inside the Alpine session:
-    - docker build -t vidhop-docker .
-    - docker run --name vidhop-docker -v $PWD/media:/vidhop -v $PWD/vidhop/.bash_history:/root/.bash_history -it vidhop-docker /bin/bash
+Those files however, are created by user `root` inside the Docker container.
+
+Your user on host is not `root` in all likelihood, hence an error about permissions.  
+For that scenario, run:    
+`sudo chown -R $USER:$USER .`  
+And if you want to delete VidHop data:  
+`rm -rf media`
+
+## Configure Powershell
+
+### Install VidHop scripts into Powershell
+
+The file `Microsoft.PowerShell_profile.ps1` in this project, needs to be in one of these two locations.
+
+```
+C:\Users\<username>\Documents\PowerShell\Microsoft.PowerShell_profile.ps1
+C:\Users\<username>\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1  # PS versions < 5
+```
+
+A `Microsoft.PowerShell_profile.ps1` file will be created in one of the above locations with command.  
+``New-item –type file –force $profile``
+
+`Microsoft.PowerShell_profile.ps1` is very similar to the `.bashrc` concept in Linux. It is a profile for all terminal 
+sessions thereafter and ideal for declaring persistent custom variables and functions.
+
+    ~/.bashrc <===> `%userprofile%\Documents\PowerShell\Microsoft.PowerShell_profile.ps1
+
+*Source: [https://superuser.com/a/1009553/633101](https://superuser.com/a/1009553/633101).*
+
+### Startup scripts inside `Microsoft.PowerShell_profile.ps1`
+
+```
+Function Prompt {"$(Get-Location) $ "}
+
+Function Remove-Directory([string]$path) {
+     if ($path -eq ""){
+          Write-Output "usage:`n  Remove-Directory <PATH>"
+          return
+     }
+     Remove-Item $path -Force  -Recurse -ErrorAction SilentlyContinue
+}
+
+Function Start-Vidhop() {
+     if (-Not (Test-Path $PWD/media) -And -Not (Test-Path $PWD/vidhop/.bash_history)) {
+          Write-Output "could not find /media and vidhop/.bash_history"
+          Write-Output "you are not inside the vidhop-docker directory"
+          Write-Output "navigate to the vidhop-docker directory and try again"
+          return
+     }
+     echo "clearing running instances of vidhop-docker..."
+     docker stop "$(docker ps -a -q)"
+     docker rm "$(docker ps -a -q)"
+     clear
+     docker run --name vidhop-docker -v $PWD/media:/vidhop -v $PWD/vidhop/.bash_history:/root/.bash_history -it vidhop-docker /bin/bash
+}
+
+Function Stop-Vidhop() {
+     docker stop "$(docker ps -a -q)"
+     docker rm "$(docker ps -a -q)"
+}
+
+Function Build-Vidhop() {
+     if ( -Not (Test-Path Dockerfile)){
+          Write-Output "no Dockerfile in this directory, abort"
+          return
+     }
+     docker build -t vidhop-docker .
+}
+
+Function BuildNoCache-Vidhop() {
+     if ( -Not (Test-Path Dockerfile)){
+          Write-Output "no Dockerfile in this directory, abort"
+          return
+     }
+     docker build --no-cache -t vidhop-docker .
+}
+
+Function Clear-DockerContainers {
+     docker stop $(docker ps -a -q)
+     docker rm $(docker ps -a -q)
+}
+```
+
+### Result
+
+After you open a new Powershell terminal, you should be able to call `Vidhop-Start`, `Vidhop-Stop` etc.
+
+### A suggestion for a better Powershell experience
+
+Install `Windows Terminal` from the `Microsoft Store` and tune the appearance to your liking.
+
+[Tutorial Free Code Camp: How to customize Windows Terminal appearance](https://www.freecodecamp.org/news/windows-terminal-themes-color-schemes-powershell-customize/).
+
+[Windows Terminal themes](https://windowsterminalthemes.dev/).
+
+The color scheme I used in the Docker video is `Dark Pastel` from [windowsterminalthemes.dev](https://windowsterminalthemes.dev).
 
 ## Functional Information
 
@@ -104,20 +179,6 @@ video), json (metadata) and jpg (thumbnails).
 
 Finally, VidHop provides many utilities for day-to-day use such as keeping a history, renaming of downloaded files,
 inspect video specs of files and URLs, remove the last download or play it...
-
-## Technical Information
-
-VidHop is in essence a collection of bash scripts users load in terminal via `.bashrc` or by calling the loader
-`. vidhop` or `source vidhop` or another shell (also tested on zsh).
-
-VidHop uses [YT-DLP](https://github.com/yt-dlp/yt-dlp) (written in Python) for downloading videos and metadata.
-`install.sh` also installs FFmpeg for converting YT-DLP downloads when necessary.
-
-Handling metadata JSON files happens with [JQ](https://github.com/stedolan/jq).
-
-Finally, VidHop (`install.sh`) installs a bunch of useful packages
-like `openssh, rsync, mediainfo, selenium and beautifulsoup4 (for scraping channel avatar images) and tor, proxychains-ng (for dealing with censored videos)`
-.
 
 ## Commands
 
@@ -204,6 +265,20 @@ To see some of these commands in action, watch [An Introduction to VidHop](https
     sendvidhop  => send files from workstation to phone
     fetchvidhop => fetch VidHop files from phone to workstation
 ```
+
+## Technical Information
+
+VidHop is in essence a collection of bash scripts users load in terminal via `.bashrc` or by calling the loader
+`. vidhop` or `source vidhop` or another shell (also tested on zsh).
+
+VidHop uses [YT-DLP](https://github.com/yt-dlp/yt-dlp) (written in Python) for downloading videos and metadata.
+`install.sh` also installs FFmpeg for converting YT-DLP downloads when necessary.
+
+Handling metadata JSON files happens with [JQ](https://github.com/stedolan/jq).
+
+Finally, VidHop (`install.sh`) installs a bunch of useful packages
+like `openssh, rsync, mediainfo, selenium and beautifulsoup4 (for scraping channel avatar images) and tor, proxychains-ng (for dealing with censored videos)`
+.
 
 ## Other repositories
 

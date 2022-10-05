@@ -67,6 +67,46 @@ JSON
   echo "$title" >>"$titles_file"
 }
 
+function add_to_vhistory() {
+  clear_history_vars
+  create_if_not_exists "$vhistory_file"
+
+  title="$name"
+  channel_name="$(channel_name_from_obj)"
+  channel_url="$(channel_url)"
+  media_file="$vids_dir/$platform/$name.mp4"
+  meta_file="$vids_meta_dir/$platform/$name.json"
+  vh_downloaded="$(is_media_download)"
+  vh_downloaded_date="$(date +'%d-%m-%Y_%H:%M:%S')"
+  upload_date="$(jq '.upload_date' <<<"$json" | tr -d '"')"
+  # Set thumb file.
+  [ -f "$vids_meta_dir/$platform/$name.jpg" ] && thumb_file="$vids_meta_dir/$platform/$name.jpg"
+  [ -f "$vids_meta_dir/$platform/$name.jpeg" ] && thumb_file="$vids_meta_dir/$platform/$name.jpeg"
+  [ -f "$vids_meta_dir/$platform/$name.png" ] && thumb_file="$vids_meta_dir/$platform/$name.png"
+  [ -f "$vids_meta_dir/$platform/$name.webp" ] && thumb_file="$vids_meta_dir/$platform/$name.webp"
+
+  history_entry=$(
+    cat <<JSON
+{
+    "title": "$title",
+    "url": "$url",
+    "channel_name": "$channel_name",
+    "channel_url": "$channel_url",
+    "media_file": "$media_file",
+    "meta_file": "$meta_file",
+    "thumb_file": "$thumb_file",
+    "vh_downloaded": "$vh_downloaded",
+    "vh_downloaded_date": "$vh_downloaded_date",
+    "upload_date": "$upload_date"
+}
+JSON
+  ) # $upload_date has no quotes
+
+  new_history=$(jq --argjson history_entry "$history_entry" '. + [$history_entry]' "$vhistory_file")
+  jq <<<"$new_history" >"$vhistory_file"
+  echo "$title" >>"$titles_file"
+}
+
 function add_to_chistory() {
   clear_history_vars
   create_if_not_exists "$chistory_file"
@@ -158,10 +198,10 @@ function add_to_thistory() {
   vh_downloaded="$([ "$function" = "dla" ] && echo true || echo false)"
   vh_downloaded_date="$(date +'%d-%m-%Y_%H:%M:%S')"
   upload_date="$(jq '.upload_date' <<<"$json" | tr -d '"')"
-  [ -f "$thumbnails_dir/$platform/$name.jpg" ] && thumb_file="$thumbnails_dir/$platform/$name.jpg"
-  [ -f "$thumbnails_dir/$platform/$name.jpeg" ] && thumb_file="$thumbnails_dir/$platform/$name.jpeg"
-  [ -f "$thumbnails_dir/$platform/$name.png" ] && thumb_file="$thumbnails_dir/$platform/$name.png"
-  [ -f "$thumbnails_dir/$platform/$name.webp" ] && thumb_file="$thumbnails_dir/$platform/$name.webp"
+  [ -f "$thumbnails_dir/$platform/$name.jpg" ] && thumb_file="$thumbnails_dir/$platform/$name.jpg" && media_file="$thumb_file"
+  [ -f "$thumbnails_dir/$platform/$name.jpeg" ] && thumb_file="$thumbnails_dir/$platform/$name.jpeg" && media_file="$thumb_file"
+  [ -f "$thumbnails_dir/$platform/$name.png" ] && thumb_file="$thumbnails_dir/$platform/$name.png" && media_file="$thumb_file"
+  [ -f "$thumbnails_dir/$platform/$name.webp" ] && thumb_file="$thumbnails_dir/$platform/$name.webp" && media_file="$thumb_file"
 
   history_entry=$(
     cat <<JSON

@@ -189,7 +189,9 @@ function sort_upload_date_desc() {
 }
 
 function first_channel_upload() {
-  [ -n "$json" ] && jq ".entries | sort_by(.upload_date) | .[0].upload_date" <<<"$json" | tr -d '"'
+  [ -z "$json" ] && return 0
+  [ "$(jq 'has("entries")' <<<"$json")" = false ] && return 0
+  jq ".entries | sort_by(.upload_date) | .[0].upload_date" <<<"$json" | tr -d '"'
 }
 
 function sort_playlist_index_asc() {

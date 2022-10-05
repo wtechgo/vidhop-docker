@@ -27,7 +27,7 @@ function set_metadata_field_json_obj() {
 # Usage: command "key" "value" ---------------------> uses "$json"
 #        command "key" "value" "partial_filename" --> seeks metadata file, stores path, in $metadata and loads it "$json"
 function set_metadata_field() {
-  [ "$#" = 0 ] || [ "$#" = 1 ] && echo "no metadata field given to remove" && return
+  [ "$#" = 0 ] || [ "$#" = 1 ] && echo "no metadata field given to set" && return
   [ "$#" = 2 ] && key="$1" && value="$2" && metadata="$json" # meta_file should be set if $json is set
   [ "$#" = 3 ] && key="$1" && value="$2" && partial_filename="$3" &&
     meta_file="$(find_one_meta "$partial_filename")" &&

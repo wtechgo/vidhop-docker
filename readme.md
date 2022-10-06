@@ -26,36 +26,28 @@ inspect video specs of files and URLs, remove the last download or play it...
 - [Installing VidHop from Scratch](https://odysee.com/@WTechGo:e/Install-VidHop-from-Scratch:c)
 - [Sync VidHop between laptop and phone](https://odysee.com/@WTechGo:e/sync-vidhop-between-laptop-and-phone:1)
 
-## Usage
-
-1. Run the Docker container that we have just built.  
-
-   ```
-   docker run --name vidhop-docker -v $PWD/media:/vidhop -v $PWD/vidhop/.bash_history:/root/.bash_history -it vidhop-docker /bin/bash
-   ```
-   
-   When you run into this Docker error:  
-   `docker: Error response from daemon: Conflict. The container name "/vidhop-docker" is already in use` 
-   
-   You can stop and remove all Docker containers with this command:  
-   `docker stop $(docker ps -a -q); docker rm $(docker ps -a -q)`
-   
-2. You are now in an Alpine Linux with VidHop pre-installed.  
-   Try a VidHop command!  
-
-   `dlv https://www.youtube.com/watch?v=-DT7bX-B1Mg`
-   
-A complete list of the commands is available in the [commands section](https://github.com/wtechgo/vidhop-docker#commands). 
-
 ## Installation
 
-Prerequisites: You have Docker installed. If you haven't, 
-[download Docker](https://docs.docker.com/get-docker/) for your operating system and install it.
+### Prerequisites
+
+You have `Docker` installed. If you haven't, [download Docker](https://docs.docker.com/get-docker/) 
+for your operating system and install it.
+
+Having [Git](https://git-scm.com/downloads) installed is 
+recommended to download (`git clone`) now and to pull in updates (`git pull`) later on.
+
+---
 
 1. Copy the project to your computer.  
-   `git clone https://github.com/wtechgo/vidhop-docker.git && cd vidhop-docker`  
+   ```
+   # HTTPS
+   git clone https://github.com/wtechgo/vidhop-docker.git && cd vidhop-docker
+   
+   # SSH
+   git clone git@github.com:wtechgo/vidhop-docker.git && cd vidhop-docker
+   ```  
    If you don't have `Git` installed, you can simply download the [zip file from GitHub](https://github.com/wtechgo/vidhop-docker/archive/refs/heads/master.zip).
-2. Navigate into the project with your terminal.
+2. Navigate into the project with your terminal. `Dockerfile` should be in your present working directory.
 3. Build the VidHop Docker image.  
    `docker build -t vidhop-docker .`
 4. Extra: A oneliner command in case you're rebuilding the Docker image a lot.  
@@ -66,6 +58,29 @@ docker stop $(docker ps -a -q); docker rm $(docker ps -a -q); docker build -t vi
 # Build without cache.
 docker stop $(docker ps -a -q); docker rm $(docker ps -a -q); docker build --no-cache -t vidhop-docker . ; docker run --name vidhop-docker -v $PWD/media:/vidhop -v $PWD/vidhop/.bash_history:/root/.bash_history -it vidhop-docker /bin/bash
 ```
+
+## Usage
+
+1. Run the Docker container that we have just built.
+   ```
+   docker run --name vidhop-docker -v $PWD/media:/vidhop -v $PWD/vidhop/.bash_history:/root/.bash_history -it vidhop-docker /bin/bash
+   ```
+2. You are now in an Alpine Linux with VidHop pre-installed.  
+   **Try a VidHop command !**  
+
+   `dlv https://www.youtube.com/watch?v=-DT7bX-B1Mg`
+   
+
+3. Extra.
+   - When you run into this Docker error:  
+   `docker: Error response from daemon: Conflict. The container name "/vidhop-docker" is already in use`
+   - You can stop and remove all Docker containers with this command:  
+   `docker stop $(docker ps -a -q); docker rm $(docker ps -a -q)`
+   - To alleviate this workflow check sections 
+     [Configure Powershell Windows](#configure-powershell-windows) and 
+     [Configure .bashrc Linux](#configure-bashrc-linux). 
+   
+A complete list of the commands is available in the [commands section](https://github.com/wtechgo/vidhop-docker#commands). 
 
 ### Media directory file permissions in Linux
 
@@ -79,7 +94,7 @@ For that scenario, run:
 And if you want to delete VidHop data:  
 `rm -rf media`
 
-## Configure Powershell
+## Configure Powershell Windows
 
 ### Install VidHop scripts into Powershell
 
@@ -167,6 +182,11 @@ Install `Windows Terminal` from the `Microsoft Store` and tune the appearance to
 [Windows Terminal themes](https://windowsterminalthemes.dev/).
 
 The color scheme I used in the Docker video is `Dark Pastel` from [windowsterminalthemes.dev](https://windowsterminalthemes.dev).
+
+## Configure .bashrc Linux
+
+VidHop functions for a better terminal experience are in project file `.bashrc`. You can copy the content intro `~/.bashrc` 
+or copy the file over `~/.bashrc`.
 
 ## Commands
 

@@ -1,11 +1,13 @@
 #!/bin/bash
 
-[ -z "$vidhop_dir" ] && vidhop_dir="/vidhop"
+[ -z "$vidhop_dir" ] && vidhop_dir="$HOME/Videos/VidHop"
 [ -z "$vidhop_app_dir" ] && vidhop_app_dir="/opt/bin/vidhop"
 [ -z "$bin_dir" ] && bin_dir="$vidhop_app_dir/bin" # Overwrites loader.bin_dir (though this value is identical to loader.bin_dir).
 config_ini="$vidhop_app_dir/config.ini"
 config_ini_template="$vidhop_app_dir/config.ini.template"
 scrape_channel_avatar_img_py="$bin_dir/scrape_channel_avatar_img.py"
+facebook_scraper="$bin_dir/facebook-scraper.py"
+twitter_scraper="$bin_dir/twitter-scraper.py"
 
 # media
 vids_dir="$vidhop_dir/videos"
@@ -20,6 +22,9 @@ channels_meta_dir="$meta_dir/channels"
 music_meta_dir="$meta_dir/music"
 podcasts_meta_dir="$meta_dir/podcasts"
 thumbnails_meta_dir="$meta_dir/thumbnails"
+# social media
+social_media_dir="$vidhop_dir/social_media"
+
 # log
 log_dir="$vidhop_dir/log"
 log_file="$log_dir/vidhop.log"
@@ -97,6 +102,7 @@ ORANGE='\e[33m'
 PURPLE='\e[35m'
 RED='\e[31m'
 YELLOW='\e[33m'
+LIGHT_GRAY='\e[37m'
 LIGHT_RED='\e[91m'
 LIGHT_GREEN='\e[92m'
 LIGHT_YELLOW='\e[93m'

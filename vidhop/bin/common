@@ -14,6 +14,7 @@ function create_app_dirs() {
     "$export_dir" \
     "$log_dir" \
     "$downloaded_dir" \
+    "$social_media_dir" \
     2>/dev/null
 }
 create_app_dirs
@@ -189,9 +190,7 @@ function sort_upload_date_desc() {
 }
 
 function first_channel_upload() {
-  [ -z "$json" ] && return 0
-  [ "$(jq 'has("entries")' <<<"$json")" = false ] && return 0
-  jq ".entries | sort_by(.upload_date) | .[0].upload_date" <<<"$json" | tr -d '"'
+  [ -n "$json" ] && jq ".entries | sort_by(.upload_date) | .[0].upload_date" <<<"$json" | tr -d '"'
 }
 
 function sort_playlist_index_asc() {
@@ -206,6 +205,7 @@ function print_line_for_msg() {
   for ((i = 1; i < $(echo "$1" | wc --chars); i++)); do
     line+="_"
   done
+  echo -e "${line}\n"
   echo -e "${line}\n"
 }
 
@@ -223,5 +223,5 @@ function repeat_char_full_screen() {
 }
 
 function full_screen_line() {
-  repeat_char_full_screen '_' "$termux_screen_char_count"
+  repeat_char_full_screen '_' "$workstation_screen_char_count"
 }

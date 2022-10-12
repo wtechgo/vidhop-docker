@@ -7,6 +7,7 @@ RUN apk add --no-cache mediainfo nano openssh rsync git ncurses tor proxychains-
 # install Python packages
 RUN apk add --no-cache python3 py3-pip gcc musl-dev python3-dev libffi-dev openssl-dev cargo
 RUN pip install --no-cache-dir -U wheel yt-dlp requests selenium beautifulsoup4 image pillow
+RUN pip install --no-cache-dir -U facebook-scraper snscrape
 # Install YT-DLP & VidHop dependencies
 RUN apk add --no-cache ffmpeg jq
 # RUN apk add moreutils && \

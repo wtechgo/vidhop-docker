@@ -206,7 +206,6 @@ function print_line_for_msg() {
     line+="_"
   done
   echo -e "${line}\n"
-  echo -e "${line}\n"
 }
 
 function underline() {

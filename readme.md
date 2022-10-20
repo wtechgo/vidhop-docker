@@ -111,7 +111,7 @@ A `Microsoft.PowerShell_profile.ps1` file will be created in one of the above lo
 `Microsoft.PowerShell_profile.ps1` is very similar to the `.bashrc` concept in Linux. It is a profile for all terminal 
 sessions thereafter and ideal for declaring persistent custom variables and functions.
 
-    ~/.bashrc <===> `%userprofile%\Documents\PowerShell\Microsoft.PowerShell_profile.ps1
+    ~/.bashrc <=> `%userprofile%\Documents\PowerShell\Microsoft.PowerShell_profile.ps1
 
 *Source: [https://superuser.com/a/1009553/633101](https://superuser.com/a/1009553/633101).*
 
@@ -171,7 +171,7 @@ Function Clear-DockerContainers {
 
 ### Result
 
-After you open a new Powershell terminal, you should be able to call `Vidhop-Start`, `Vidhop-Stop` etc.
+After you open a new Powershell terminal, you should be able to call `Start-Vidhop`, `Stop-Vidhop` etc.
 
 ### A suggestion for a better Powershell experience
 
@@ -185,7 +185,7 @@ The color scheme I used in the Docker video is `Dark Pastel` from [windowstermin
 
 ## Configure .bashrc Linux
 
-VidHop functions for a better terminal experience are in project file `.bashrc`. You can copy the content intro `~/.bashrc` 
+VidHop functions for a better terminal experience are in project file `.bashrc`. You can copy the content into `~/.bashrc` 
 or copy the file over `~/.bashrc`.
 
 ## Commands
@@ -277,7 +277,7 @@ To see some of these commands in action, watch [An Introduction to VidHop](https
 ## Technical Information
 
 VidHop is in essence a collection of bash scripts users load in terminal via `.bashrc` or by calling the loader
-`. vidhop` or `source vidhop` or another shell (also tested on zsh).
+`. vidhop` or `source vidhop`.
 
 VidHop uses [YT-DLP](https://github.com/yt-dlp/yt-dlp) (written in Python) for downloading videos and metadata.
 `install.sh` also installs FFmpeg for converting YT-DLP downloads when necessary.
@@ -291,9 +291,8 @@ like `openssh, rsync, mediainfo, selenium and beautifulsoup4 (for scraping chann
 ## Other repositories
 
 The `readme.md` in the [Vidhop Android](https://github.com/wtechgo/vidhop-android) 
-and [VidHop Linux](https://github.com/wtechgo/vidhop-linux) repositories contains extra information 
-for configuring `Sync` and `SSH`.
-
+and [VidHop Linux](https://github.com/wtechgo/vidhop-linux) repositories contain extra information 
+for configuring `vidhopsync` and `SSH`.
 
 ## Credits
 
@@ -316,4 +315,3 @@ Special thanks to the incredibly awesome projects [YT-DLP](https://github.com/yt
 <img src="https://github.com/wtechgo/vidhop-android/blob/master/img/qr_monero_wtechgo.png?raw=true" alt="Monero" width="100" />
 </a>
 <pre>8BNDojnvwYkacFwztY3XsjefCr28zTDraTgzdFLH8JiL5W4eMjTuHCu57LkCy9UHKHZfGzWDo6ErDYDP4jBK814aG2T8z8c</pre>
-   

@@ -51,7 +51,7 @@ function oneliner_channel_entries() {
     jq --arg 'channel_name_fallback' "$channel_name_fallback" '.entries | unique_by(.webpage_url) | sort_by(.upload_date) | .[]
           | "> " + .title + " | " + .webpage_url + " | " + .upload_date' <<<"$json" | tr -d '"'
   )
-  echo -e "${BOLD}${GREEN}$chani_entries${NORMAL}${NC}"
+  echo -e "${GREEN}$chani_entries"
 }
 
 function format_oneliner() {
@@ -99,8 +99,8 @@ function oneliner_export_reverse() {
 
 function opinionated_print() {
   [ "$more" = "true" ] && format_more && return
-  [ "$reverse" = "true" ] && echo -e "${BOLD}${GREEN}$(format_oneliner_reverse)${NORMAL}${NC}" && return
-  echo -e "${BOLD}${GREEN}$(format_oneliner)${NORMAL}${NC}"
+  [ "$reverse" = "true" ] && echo -e "${GREEN}$(format_oneliner_reverse)" && return
+  echo -e "${GREEN}$(format_oneliner)"
 }
 
 function save_fvid() {
@@ -269,7 +269,7 @@ function format_usermeta() {
 }
 
 function print_usermeta() {
-  echo -e "${BOLD}${GREEN}$(format_usermeta)"
+  echo -e "${GREEN}$(format_usermeta)"
 }
 
 function fvidusermeta() {
@@ -366,16 +366,16 @@ function json_files_for_channel_name() {
 function print_channel_label() {
   url="$(channel_url_from_json_file "$json_file")"
   channel_name="$(basename "$json_file" ".json")"
-  channel_label="  $channel_name | $url"
-  echo -e "\n${BOLD}${GREEN}$(underline "$channel_label")${NORMAL}${NC}" && echo
+  label="  $channel_name | $url"
+  echo -e "\n${GREEN}$(underline "$label")${NC}" && echo
 }
 
 function print_channel_data() {
-  channel_url="$(channel_url_from_json_file "$json_file")"
-  channel_label="  $channel_name | $url"
-  echo -e "${BOLD}${GREEN}$(print_line_for_msg "$channel_label")${NORMAL}${NC}" && echo
+  url="$(channel_url_from_json_file "$json_file")"
+  url_msg=" channel_url : $url"
+  print_line_for_msg "$url_msg"
   echo " channel_name: $(channel_name)"
-  echo " channel_url : $channel_url"
+  echo " channel_url : $url"
   echo " first_upload: $(first_channel_upload)"
   echo " count_videos: $(jq '.entries | length' <<<"$json")"
   echo

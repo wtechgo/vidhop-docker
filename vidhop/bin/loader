@@ -25,14 +25,15 @@ bin_dir="$vidhop_app_dir/bin"
 
 function updateytdlp() {
   echo "> Updating YT-DLP via Python package manager..." && sleep 1
+  pip install -U pip
   python -m pip install yt-dlp -U
 }
 
 function install_loader() {
-  echo "> Installing VidHop loader to /usr/bin/vidhop..." && sleep 1
-  cd "$HOME" # make sure we have write permissions
   loader_bin="/usr/local/bin/vidhop"
   loader_tmp="loader_tmp"
+  echo "> Installing VidHop loader to $loader_bin..." && sleep 1
+  cd "$HOME" # make sure we have write permissions
   echo '#!/bin/bash' >"$loader_tmp"
   echo >>"$loader_tmp"
   echo ". $bin_dir/loader" >>"$loader_tmp"
@@ -58,7 +59,7 @@ function updatevidhop() {
   fetch_github
   updateytdlp
   install_loader
-  echo -e "\n${BOLD}${GREEN}VidHop updated ! ${NORMAL}${NC}\n\nReload VidHop by choosing one of these two options:"
+  echo -e "\n${GREEN}VidHop updated ! ${NC}\n\nReload VidHop by choosing one of these two options:"
   echo -e "  1. Close Termux and reopen Termux.\n  2. Execute '. vidhop'"
   cd "$pwd"
 }
@@ -68,7 +69,7 @@ function updatevidhopbin() {
   fetch_github
   updateytdlp
   install_loader
-  echo -e "\n${BOLD}${GREEN}VidHop updated ! ${NORMAL}${NC}\n\nReload VidHop by choosing one of these two options:"
+  echo -e "\n${GREEN}VidHop updated ! ${NC}\n\nReload VidHop by choosing one of these two options:"
   echo -e "  1. Close Termux and reopen Termux.\n  2. Execute '. vidhop'"
   cd "$pwd"
 }

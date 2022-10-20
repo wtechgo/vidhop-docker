@@ -1,6 +1,6 @@
 vidhop_stop() {
-  docker stop "$(docker ps -a -q)"
-  docker rm "$(docker ps -a -q)"
+  docker stop $(docker ps -a -q) 2>/dev/null
+  docker rm $(docker ps -a -q) 2>/dev/null
 }
 
 vidhop_start() {

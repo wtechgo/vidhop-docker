@@ -4,7 +4,7 @@
 
 ## Functional Information
 
-VidHop enables Linux users to download videos, songs, thumbnails, complete channels and playlists from popular video
+VidHop enables users to download videos, songs, thumbnails, complete channels and playlists from popular video
 platforms to their workstation.
 
 Each download also saves the video **metadata** and its thumbnail (video banner image). When users download a channel or

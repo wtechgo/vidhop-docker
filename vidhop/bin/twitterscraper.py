@@ -5,9 +5,6 @@ from snscrape.base import ScraperException
 
 
 class TwitterScraper:
-    def __init__(self):
-        pass
-
     def extract_id_from_url(self, url: str) -> str:
         if url.find("twitter.com") == -1:
             raise ValueError("not a twitter url")

@@ -13,7 +13,6 @@ function fvid_help() {
   echo "    fvidusermeta <SEARCH_TEXT>  => find videos where user added metadata contains <SEARCH_TEXT>, execute 'metadata_help' for more information."
   echo "    chani <CHANNEL_NAME> => channel information, lists all videos of a channel with name matching <CHANNEL_NAME>"
   echo "    chani <CHANNEL_NAME> <PLATFORM> => channel information, lists all videos of a channel with name matching <CHANNEL_NAME> with platform matching <PLATFORM>"
-  return 0
 }
 
 function clear_vars_fvid() {
@@ -246,7 +245,7 @@ function fvidf() { # find video files (on disk)
     echo -e "> Channel downloads in VidHop directory search result:" && echo -e "$result" &&
     unset result && found_something="true"
 
-  result=$(find "$HOME/Videos" -type f -not -path "$vidhop_dir" -iname "*$text*.mp4" | sed "s/^/'/;s/$/'/" | sort)
+  result=$(find -L "$HOME/Videos" -type f -not -path "$vidhop_dir" -iname "*$text*.mp4" | sed "s/^/'/;s/$/'/" | sort)
   [ "$(wc --words <<<"$result")" -gt 0 ] &&
     echo -e "> Videos in user home directory result:" && echo -e "$result" &&
     unset result && found_something="true"

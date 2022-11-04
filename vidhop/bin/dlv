@@ -5,23 +5,29 @@ function dlv_help() {
   echo " Title: dlv"
   echo " Description: Download video(s) and channels."
   echo " Commands:"
-  echo "    dlv <URL>     => download video at <URL> plus information (metadata, thumbnail)"
-  echo "    dlvi <URL>    => download video information only at <URL>, no mp4 download"
-  echo "    dlvpl <URL>   => download video playlist"
-  echo "    dlvpli <URL>  => download video playlist information"
-  echo "    dlc <URL>     => download channel, all videos, metadata and thumbnails"
-  echo "    dlci <URL>    => download channel information, same as dlc but no video downloads"
-  echo "    dla <URL>     => download audio, as mp3 from music videos"
-  echo "    dlalbum <URL> => download a music album as mp3"
-  echo "    dlapl <URL>   => download audio playlist"
-  echo "    dlapli <URL>  => download audio playlist information"
-  echo "    dlpod <URL>   => download podcast, technically also audio but we differentiate podcasts from music"
-  echo "    dlt <URL>     => download thumbnail, as jpg"
-  return 0
+  echo "    dlv <URL>     => download video at <URL> plus information (metadata, thumbnail) into /VidHop/videos"
+  echo "    dlv -c <URL>  => download comments while doing dlv, appended to metadata.json into /VidHop/videos"
+  echo "    dlvi <URL>    => download video information only at <URL>, no mp4 download into /VidHop/metadata/videos"
+  echo "    dlvi -c <URL> => download comments while doing dlvi, appended to metadata.json into /VidHop/metadata/videos"
+  echo "    dlvpl <URL>   => download video playlist into /VidHop/channels/<CHANNEL_NAME>/<PLAYLIST_NAME>"
+  echo "    dlvpli <URL>  => download video playlist information into /VidHop/metadata/channels/<CHANNEL_NAME>/<PLAYLIST_NAME>"
+  echo "    dlc <URL>     => download channel, all videos, metadata and thumbnails into /VidHop/channels"
+  echo "    dlci <URL>    => download channel information, same as dlc but no video downloads into /VidHop/metadata/channels"
+  echo "    dla <URL>     => download audio, as mp3 from music videos into /VidHop/music"
+  echo "    dlalbum <URL> => download a music album as mp3 into /VidHop/music/<ALBUM_NAME>"
+  echo "    dlapl <URL>   => download audio playlist into /VidHop/music/<CHANNEL_NAME>/<PLAYLIST_NAME>"
+  echo "    dlapli <URL>  => download audio playlist information into /VidHop/metadata/music/<CHANNEL_NAME>/<PLAYLIST_NAME>"
+  echo "    dlpod <URL>   => download podcast or audio tape into /VidHop/podcasts"
+  echo "    dlt <URL>     => download thumbnail and metadata as jpg into /VidHop/thumbnails"
+  echo "    dlfbpost <URL>  => download facebook post metadata, no images into /VidHop/social_media"
+  echo "    dltweet <URL>   => download twitter tweet metadata, no images into /VidHop/social_media"
+  echo "    dlwebsite <URL> => download page or complete website with images into /VidHop/website"
+  echo "    dlw <URL>       => alias for dlwebsite"
 }
 
 function clear_vars_dlv() {
-  unset url standalone platform name json json_file meta_file archive_file has_archive archive_content avatar_json \
+  [ "$(is_media_download)" = true ] && unset url standalone platform name
+  unset json json_file meta_file archive_file has_archive archive_content avatar_json \
     avatar_json_file valid album artist pl_name pl_dir media_file thumb_file channel_dir
   rm "$log_json_file" 2>/dev/null
   return 0
@@ -45,27 +51,30 @@ check_valid_platform() {
 function fetch_video_metadata() {
   url="$1"
   json=$(
-    yt-dlp --dump-single-json --verbose "$url" |
+    yt-dlp $([ "$dl_comments" = true ] && echo -n --write-comments) \
+      --dump-single-json --verbose "$url" |
       jq '{
                   id: .id,
                   title: .title,
-                  thumbnail: .thumbnail,
+                  webpage_url: .webpage_url,
+                  original_url: .original_url,
                   description: .description,
-                  upload_date: .upload_date,
                   uploader: .uploader,
                   uploader_id: .uploader_id,
                   uploader_url: .uploader_url,
+                  upload_date: .upload_date,
                   channel: .channel,
                   channel_follower_count: .channel_follower_count,
                   channel_id: .channel_id,
                   channel_url: .channel_url,
+                  categories: .categories,
+                  tags: .tags,
                   duration: .duration,
+                  thumbnail: .thumbnail,
+                  comments: .comments,
                   view_count: .view_count,
                   average_rating: .average_rating,
                   age_limit: .age_limit,
-                  webpage_url: .webpage_url,
-                  categories: .categories,
-                  tags: .tags,
                   playable_in_embed: .playable_in_embed,
                   is_live: .is_live,
                   was_live: .was_live,
@@ -73,7 +82,6 @@ function fetch_video_metadata() {
                   release_timestamp: .release_timestamp,
                   like_count: .like_count,
                   availability: .availability,
-                  original_url: .original_url,
                   webpage_url_basename: .webpage_url_basename,
                   webpage_url_domain: .webpage_url_domain,
                   fulltitle: .fulltitle,
@@ -110,7 +118,7 @@ function fetch_video_metadata() {
 
 # Download video information of one video: metadata and video thumbnail..
 function fetch_sanitized_title() {
-  yt-dlp --print "%(title)s" \
+  yt-dlp --print "%(title).${filename_char_count}s" \
     --replace-in-metadata "title" '"' "'" \
     --replace-in-metadata "title" '\*' '' \
     --replace-in-metadata "title" '/' '' \
@@ -125,7 +133,7 @@ function fetch_sanitized_title() {
 }
 
 function fetch_song_filename() {
-  yt-dlp --print "%(artist)s - %(title)s" \
+  yt-dlp --print "%(artist)s - %(title).${filename_char_count}s" \
     --replace-in-metadata "artist,title" '"' "'" \
     --replace-in-metadata "artist,title" '\*' '' \
     --replace-in-metadata "artist,title" '/' '' \
@@ -156,10 +164,12 @@ function fetch_video_subs() {
   # The mechanism that forces VLC player to pick the best English subtitles available by default.
   # Extra info: Media Players prioritize a subs file that is next to a media file,
   # even if there is a subs directory too.
-  english="$subs_dir/${name}.en.srt"
-  english_auto="$auto_subs_dir/${name}.en.srt"
-  [ -f "$english" ] && /bin/cp "$english" "$vids_dir/$platform/$name.en.srt"
-  ! [ -f "$english" ] && [ -f "$english_auto" ] && /bin/cp "$english_auto" "$vids_dir/$platform/$name.en.srt"
+  if [ "$(is_media_download)" = true ]; then
+    english="$subs_dir/${name}.en.srt"
+    english_auto="$auto_subs_dir/${name}.en.srt"
+    [ -f "$english" ] && /bin/cp "$english" "$vids_dir/$platform/$name.en.srt"
+    ! [ -f "$english" ] && [ -f "$english_auto" ] && /bin/cp "$english_auto" "$vids_dir/$platform/$name.en.srt"
+  fi
 
   [ "$(is_dir_empty "$auto_subs_dir")" = true ] && rm -rf "$auto_subs_dir"
   [ "$(is_dir_empty "$subs_dir")" = true ] && rm -rf "$subs_dir"
@@ -173,7 +183,7 @@ function fetch_video_thumbnail() {
 
 function print_metadata() {
   echo -e "Metadata JSON:"
-  jq <<<"$json"
+  jq 'del(.comments)' <<<"$json"
   print_summary
 }
 
@@ -190,10 +200,10 @@ function augment_json() {
 
 # Download video information. Video metadata and thumbnail.
 function dlvi() {
-  standalone="$2"
-  [ -z "$standalone" ] && clear_vars_dlv && standalone=true
-  url="$1" && [ -n "$3" ] && debug="$3"
-  function=$([ "$standalone" = "true" ] && echo dlvi || echo dlv)
+  [ -z "$function" ] && function=dlvi && standalone=true
+  clear_vars_dlv
+  [ $# = 1 ] && url="$1"
+  [ $# = 2 ] && dl_comments=true && url="$2"
   check_valid_platform "$url" || return 1
   platform=$(extract_platform_name "$url")
 
@@ -210,17 +220,19 @@ function dlvi() {
   augment_json
   jq <<<"$json" >"$json_file"
 
-  if [ "$standalone" = "true" ]; then
+  if [ "$(is_media_download)" = false ]; then
     print_metadata
     cd "$vids_meta_dir/$platform/$name" || return
+    unset dl_comments function
   fi
 }
 
 # Download video. Plus thumbnail and metadata.
 function dlv() {
-  [ "$1" = "--help" ] || [ "$1" = "-h" ] && dlv_help && return 0
   clear_vars_dlv
-  url="$1"
+  [ "$1" = "--help" ] || [ "$1" = "-h" ] && dlv_help && return 0
+  [ "$1" = "--comments" ] || [ "$1" = "-c" ] && dl_comments=true && url="$2"
+  [ "$#" = 1 ] && url="$1"
   standalone=false
   function=dlv
   check_valid_platform "$url" || return 1
@@ -228,11 +240,12 @@ function dlv() {
   platform=$(extract_platform_name "$url") || return 1
   mkdir "$vids_dir/$platform" 2>/dev/null
 
-  dlvi "$url" "$standalone"
+  dlvi "$url"
   yt-dlp -S ext:mp4:m4a --recode mp4 --no-mtime -P "$vids_dir/$platform" -o "$name.%(ext)s" --verbose "$url"
 
   print_metadata
   cd "$vids_dir/$platform" || return
+  unset dl_comments function
 }
 
 # CHANNELS
@@ -616,9 +629,10 @@ function dlvpl() {
 
 # Download audio. Save only the mp3 audio of a video plus metadata and thumbnail.
 function dla() {
-  clear_vars_dlv
-  url="$1"
   function=dla
+  clear_vars_dlv
+  [ $# = 1 ] && url="$1"
+  [ $# = 2 ] && dl_comments=true && url="$2"
   check_valid_platform "$url" || return 1
   mkdir -p "$music_meta_dir" 2>/dev/null
 
@@ -663,8 +677,8 @@ function dlaci() {
   [ "$has_archive" ] && reset_archive_file
 
   # Save metadata to the channel directory. Each channel in its own directory.
-  name=$(channel_name_from_obj | tr -d "'")            # if all downloaded before, no entries, no uploader, channelname = null
-  platform=$(extract_platform_name "$url") # yields youtube or bitchute etc.  - entries[0].artist
+  name=$(channel_name_from_obj | tr -d "'") # if all downloaded before, no entries, no uploader, channelname = null
+  platform=$(extract_platform_name "$url")  # yields youtube or bitchute etc.  - entries[0].artist
   channel_dir="$music_dir/$name"
   channel_meta_dir="$music_meta_dir/$name"
   json_file="$channel_meta_dir/metadata.json"
@@ -889,9 +903,10 @@ function dlalbum() {
 
 # Download podcast. We differentiate podcasts from music.
 function dlpod() {
-  clear_vars_dlv
-  url="$1"
   function=dlpod
+  clear_vars_dlv
+  [ $# = 1 ] && url="$1"
+  [ $# = 2 ] && dl_comments=true && url="$2"
   check_valid_platform "$url" || return 1
   platform=$(extract_platform_name "$url")
   mkdir -p "$podcasts_meta_dir/$platform" 2>/dev/null
@@ -917,11 +932,13 @@ function dlpod() {
 
 # Download thumbnail. Store the thumbnail of a single video plus its metadata.
 function dlt() {
+  function=dlt
   clear_vars_dlv
-  url="$1"
+  [ $# = 1 ] && url="$1"
+  [ $# = 2 ] && dl_comments=true && url="$2"
+
   check_valid_platform "$url" || return 1
   platform=$(extract_platform_name "$url")
-  function=dlt
   mkdir -p "$thumbnails_dir/$platform" "$thumbnails_meta_dir/$platform" 2>/dev/null
 
   name="$(fetch_sanitized_title)"
@@ -943,7 +960,7 @@ function dlfbpost() {
   url="$1" && [ -z "$url" ] && echo "usage: dlfbpost <URL>" && return
   json="$(python "$facebook_scraper" --url "$url")"
   text="$(jq '.text' <<<"$json")"
-  shortened_text="$(echo "$text" | tr -dc '[:alnum:] ' | tr '[:upper:]' '[:lower:]' | cut -c -80)"
+  shortened_text="$(echo "$text" | tr -dc '[:alnum:] ' | tr '[:upper:]' '[:lower:]' | cut -c -"$filename_char_count")"
   username=$(jq .username <<<"$json" | tr -d '"')
   timestamp=$(date +'%d-%m-%Y_%Hh%Mm%Ss')
   json_file="${social_media_dir}/facebook/${username}/${shortened_text}_${timestamp}.json"
@@ -958,7 +975,7 @@ function dltweet() {
   url="$1" && [ -z "$url" ] && echo "usage: dltweet <URL>" && return
   json=$(python "$twitter_scraper" --url "$url")
   text="$(jq '.content' <<<"$json")"
-  shortened_text="$(echo "$text" | tr -dc '[:alnum:] ' | tr '[:upper:]' '[:lower:]' | cut -c -80)"
+  shortened_text="$(echo "$text" | tr -dc '[:alnum:] ' | tr '[:upper:]' '[:lower:]' | cut -c -"$filename_char_count")"
   username=$(jq .username <<<"$json" | tr -d '"')
   timestamp=$(date +'%d-%m-%Y_%Hh%Mm%Ss')
   json_file="${social_media_dir}/twitter/${username}/${shortened_text}_${timestamp}.json"
@@ -967,4 +984,14 @@ function dltweet() {
   jq . <<<"$json" >"$json_file"
   cd "${social_media_dir}/twitter/${username}"
   jq . <<<"$json"
+}
+
+function dlwebsite() {
+  [ -z "$1" ] || [ "$(is_url "$1")" = false ] && echo "not a valid url" && return
+  url="$1"
+  python "$website_scraper" "$url" "$websites_dir"
+}
+
+function dlw() {
+  dlwebsite "$1"
 }

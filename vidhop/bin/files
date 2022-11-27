@@ -21,7 +21,7 @@ function play() {
   [ -f "$1" ] && media_file="$1" || search_text="$1"
 
   if [ -n "$search_text" ]; then
-    files=$(find "$vidhop_dir" -iname "*$1*mp4")
+    files=$(find "$vidhop_dir" -iname "*$1*mp4" -o -iname "*$1*webm")
     echo "$files"
     count=$(wc -l <<<"$files")
     [ "$files" = "" ] && count=0
@@ -34,10 +34,12 @@ function play() {
   fi
   ! [ -f "$media_file" ] && echo "cannot play file '$media_file'" && return
 
-  [[ "$media_file" == *.mp4 ]] && "$video_app" "$media_file" && return
-  [[ "$media_file" == *.mp3 ]] && "$audio_app" "$media_file" && return
-  [[ "$media_file" == *.webp ]] && "$picture_app_alt" "$media_file" && return
-  [[ "$media_file" == *.jpg ]] || [[ "$media_file" == *.jpg ]] && "$picture_app" "$media_file" && return
+  [[ "$media_file" == *.mp4 ]] && ("$video_app" "$media_file" 2>/dev/null &) && return
+  [[ "$media_file" == *.webm ]] && ("$video_app" "$media_file" 2>/dev/null &) && return
+  [[ "$media_file" == *.mp3 ]] && ("$audio_app" "$media_file" 2>/dev/null &) && return
+  [[ "$media_file" == *.m4a ]] && ("$audio_app" "$media_file" 2>/dev/null &) && return
+  [[ "$media_file" == *.webp ]] && ("$picture_app_alt" "$media_file" 2>/dev/null &) && return
+  [[ "$media_file" == *.jpg ]] || [[ "$media_file" == *.jpg ]] && ("$picture_app" "$media_file" 2>/dev/null &) && return
 }
 
 function path_newfile() {
@@ -71,11 +73,13 @@ function renvid() {
   old_name=$(basename "$old_meta_dir" .json)
   old_vid_dir="$(dirname "$(dirname "$old_meta_file" | sed 's;/VidHop/metadata/videos/;/VidHop/videos/;;')")"
   old_media_file="$old_vid_dir/$old_name.mp4"
+  old_media_file_webm="$old_vid_dir/$old_name.webn"
   old_media_file_sub="$old_vid_dir/$old_name.en.srt"
 
   # show file found
   [ -d "$old_meta_dir" ] && echo "found '$old_meta_dir' (metadata directory)"
   [ -f "$old_media_file" ] && echo "found '$old_media_file'"
+  [ -f "$old_media_file_webm" ] && echo "found '$old_media_file'"
   [ -f "$old_media_file_sub" ] && echo "found '$old_media_file_sub'"
   # ask confirmation to rename
   echo -n "rename these files? Y/n: " && read -r answer
@@ -100,10 +104,14 @@ function renvid() {
     media_file="$old_vid_dir/$new_name.mp4" &&
     mv "$old_media_file" "$media_file" &&
     echo -e "renamed: '$old_media_file'\n     to: '$media_file'"
+  [ -f "$old_media_file_webm" ] &&
+    media_file="$old_vid_dir/$new_name.webm" &&
+    mv "$old_media_file_webm" "$media_file" &&
+    echo -e "renamed: '$old_media_file_webm'\n     to: '$media_file'"
   [ -d "$old_meta_dir" ] &&
     meta_dir="$(dirname "$old_meta_dir")/$new_name" &&
     mv "$old_meta_dir" "$meta_dir" &&
-    echo -e "renamed: '$old_meta_dir'\n     to: '$old_meta_dir' (metadata directory)"
+    echo -e "renamed: '$old_meta_dir'\n     to: '$meta_dir' (metadata directory)"
   # set vars for metadata command & rerun of renvid
   name="$new_name"
   meta_file="$meta_dir/metadata.json"
@@ -297,6 +305,36 @@ function specs() {
 
 function mediafile() {
   echo "$media_file"
+}
+
+function 264encode() {
+  [ -z "$1" ] &&
+    echo "usage: convert264 <SRC_FILE.EXT> [<DEST_FILE.EXT>]" &&
+    echo " info: converts the source file to x264 in the same location and appends '_264' if the destination filename was identical" && return
+
+  src="$(realpath "$1")"
+  [ ! -f "$src" ] && echo "file not found '$src', abort" && return
+  dest="$(strip_extension "$src").mp4"                               # converts into the same location
+  [ -f "$dest" ] && dest="$(strip_extension "$dest")_x264.mp4" # append _264 if the destination is also mp4
+
+  ffmpeg -i "$src" -c:v libx264 -profile:v high -preset slow -f mp4 -tune film -crf 18 "$dest"
+  echo "file conversion to x264 completed"
+  ## instructions from https://lbry.com/faq/video-publishing-guide
+  #ffmpeg -i input.avi -c:v libx264 -crf 21 -preset faster -pix_fmt yuv420p -maxrate 5000K -bufsize 5000K -vf 'scale=if(gte(iw\,ih)\,min(1920\,iw)\,-2):if(lt(iw\,ih)\,min(1920\,ih)\,-2)' -movflags +faststart -c:a aac -b:a 160k output.mp4
+}
+
+function 265encode() {
+  [ -z "$1" ] &&
+    echo "usage: convert264 <SRC_FILE.EXT> [<DEST_FILE.EXT>]" &&
+    echo " info: converts the source file to x265 in the same location and appends '_265' if the destination filename was identical" && return
+
+  src="$(realpath "$1")"
+  [ ! -f "$src" ] && echo "file not found '$src', abort" && return
+  dest="$(strip_extension "$src").mp4"                               # converts into the same location
+  [ -f "$dest" ] && dest="$(strip_extension "$dest")_x265.mp4" # append _265 if the destination is also mp4
+
+  ffmpeg -i "$src" -c:v libx265 -preset ultrafast -crf 23 -vtag hvc1 "$dest"
+  echo "file conversion to x265 completed"
 }
 
 function treevidhopbefore() {

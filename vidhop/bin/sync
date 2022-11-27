@@ -64,7 +64,6 @@ function real_sendvidhop() {
     --exclude="export/" \
     --include="*/" \
     --include="*.json" \
-    --include="music/*.mp3" \
     --exclude="*" \
     "$VIDHOP_DIR_WS/" "$USER_PHONE@$IP_PHONE:$VIDHOP_DIR_PHONE"
 }
@@ -81,7 +80,6 @@ function dry_sendvidhop() {
     --exclude="export/" \
     --include="*/" \
     --include="*.json" \
-    --include="music/*.mp3" \
     --exclude="*" \
     "$VIDHOP_DIR_WS/" "$USER_PHONE@$IP_PHONE:$VIDHOP_DIR_PHONE"
 }
@@ -113,6 +111,7 @@ function real_fetchvidhop() {
     --include="*/" \
     --include="*.json" \
     --include="*.mp3" \
+    --include="*.m4a" \
     --exclude="*" \
     "$USER_PHONE@$IP_PHONE:$VIDHOP_DIR_PHONE/metadata/" "$VIDHOP_DIR_WS/metadata"
 
@@ -127,6 +126,7 @@ function real_fetchvidhop() {
     --exclude="export/" \
     --include="*/" \
     --include="*.mp4" \
+    --include="*.webm" \
     --include="*.jpg" \
     --include="*.jpeg" \
     --include="*.png" \
@@ -141,6 +141,7 @@ function dry_fetchvidhop() {
     --include="*/" \
     --include="*.json" \
     --include="*.mp3" \
+    --include="*.m4a" \
     --exclude="*" \
     "$USER_PHONE@$IP_PHONE:$VIDHOP_DIR_PHONE/metadata/" "$VIDHOP_DIR_WS/metadata"
 
@@ -155,6 +156,7 @@ function dry_fetchvidhop() {
     --exclude="export/" \
     --include="*/" \
     --include="*.mp4" \
+    --include="*.webm" \
     --include="*.jpg" \
     --include="*.jpeg" \
     --include="*.png" \
@@ -202,6 +204,7 @@ function sendvidhopbin() {
     --exclude=".git/" \
     --exclude=".gitignore" \
     --exclude=".idea/" \
+    --exclude="bash.bashrc" \
     "$VIDHOP_DEV_DIR_WS/"* "$USER_PHONE@$IP_PHONE:$VIDHOP_APP_DIR_PHONE"
 }
 
@@ -296,7 +299,7 @@ screen_rec="$shared/Movies/Screen Recorder"
 doc_exts=(doc docx xls xlsx pdf txt md)
 img_exts=(jpg png webp jpeg)
 audio_exts=(mp3 m4a wav flacc aac)
-mov_exts=(mp4 mkv mov avi)
+mov_exts=(mp4 webm mkv mov avi)
 
 function real_fetchdownloads() {
   for ext in "${audio_exts[@]}"; do
@@ -425,7 +428,7 @@ function sendmusictophone() {
 function mvmedia() {
   img=(jpg png webp jpeg psd)
   vid=(mp4 mkv mov avi webm)
-  audio=(mp3 wav flacc aac m4a)
+  audio=(mp3 m4a wav flacc aac m4a)
   doc=(doc docx xls lsx pdf txt md epub)
   keepdoc=(notes law finance offgrid videos)
 

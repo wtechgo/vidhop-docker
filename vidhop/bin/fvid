@@ -67,7 +67,7 @@ function format_oneliner() {
             .title + " | " +
             .webpage_url + " | " +
             .upload_date' <<<"$json" | tr -d '"'
-  [ -n "$2" ] && [ "$2" = "videos" ] && echo -e "${NC}Still searching through channels...${GREEN}"
+  [ -n "$2" ] && [ "$2" = "videos" ] && [ "$function" = fvid ] && echo -e "${NC}Still searching through channels...${GREEN}"
 }
 
 function format_oneliner_reverse() { # reverse means ascending which suits 'newest first' in the console
@@ -168,6 +168,10 @@ function fvidv() {
 
   say "searching in videos metadata at $vids_meta_dir..."
   while read -r vidjson; do
+    # match the filename to the search text with spaces replaced by *
+    [[ "$(echo "$vidjson" | tr '[:upper:]' '[:lower:]' | tr ' ' '-')" == *"$(echo "$text" | tr ' ' '-')"* ]] &&
+      videos+=$(jq . "$vidjson") && continue
+    # search after matches inside the json file
     videos+=$(
       jq --arg text "$text" '
             select(
@@ -206,16 +210,18 @@ function fvidc() {
 }
 
 function fvid() {
+  function=fvid
   set +m
   fvidv "$1" &
   fvidc "$1" &
   wait
   set -m
+  unset function
 }
 
 function fvidcv() {
-  if [ -n "$1" ]; then name="$1"; else echo "usage: fvidcv <CHANNEL_NAME> <SEARCH_TEXT>" && return 0; fi
-  if [ -n "$2" ]; then text=$(echo "$2" | tr '[:upper:]' '[:lower:]'); else echo "usage: fvidcv <CHANNEL_NAME> <SEARCH_TEXT>" && return 0; fi
+  if [ -n "$1" ]; then name="$1"; else echo "usage: fvidcv <CHANNEL_NAME> <SEARCH_TEXT> [<PLATFORM>]" && return 0; fi
+  if [ -n "$2" ]; then text=$(echo "$2" | tr '[:upper:]' '[:lower:]'); else echo "usage: fvidcv <CHANNEL_NAME> <SEARCH_TEXT> [<PLATFORM>]" && return 0; fi
   platform="$3"
 
   json_files=$(json_files_for_channel_name "$name" "$platform")
@@ -243,17 +249,18 @@ function fvidf() { # find video files (on disk)
   unset result
   found_something="false"
 
-  result=$(find "$vids_dir" -type f -iname "*$text*.mp4" | sed "s/^/'/;s/$/'/" | sort) # sed adds quotes for filenames with spaces
+  result=$(find "$vids_dir" -not -path "*.srt" -type f -iname "*$text*" | sed "s/^/'/;s/$/'/" | sort) # sed adds quotes for filenames with spaces
   [ "$(wc --words <<<"$result")" -gt 0 ] &&
     echo -e "> Single video downloads in VidHop directory search result:" && echo -e "$result" &&
     unset result && found_something="true"
 
-  result=$(find "$channels_dir" -type f -iname "*$text*.mp4" | sed "s/^/'/;s/$/'/" | sort)
+  result=$(find "$channels_dir" -not -path "*.srt" -type f -iname "*$text*" | sed "s/^/'/;s/$/'/" | sort)
   [ "$(wc --words <<<"$result")" -gt 0 ] &&
     echo -e "> Channel downloads in VidHop directory search result:" && echo -e "$result" &&
     unset result && found_something="true"
 
-  result=$(find -L "$HOME/Videos" -type f -not -path "$vidhop_dir" -iname "*$text*.mp4" | sed "s/^/'/;s/$/'/" | sort)
+  result=$(find -L "$HOME/Videos" -not \( -path "$HOME/Videos/VidHop" -prune \) -not -path "*.srt" \
+    -type f -iname "*$text*" | sed "s/^/'/;s/$/'/" | sort)
   [ "$(wc --words <<<"$result")" -gt 0 ] &&
     echo -e "> Videos in user home directory result:" && echo -e "$result" &&
     unset result && found_something="true"
@@ -317,6 +324,7 @@ function vidi() { # video info
   [ -z "$text" ] && echo navigated to videos metadata directory so you can tab autocomplete && return 0
 
   name=$(basename "$text" ".mp4")
+  name=$(basename "$name" ".webm")
   json=$(find "$vids_meta_dir" -iname "*$name*.json" | head -n 1)
   [ -z "$json" ] && echo no match found && return 0
 
@@ -544,4 +552,23 @@ function clear_wp() {
 
 function ls_wp() {
   ll -l "$wp_export_dir/merge"
+}
+
+# Find audio file.
+function faudf() {
+  text="$1"
+  unset result
+  found_something="false"
+
+  result=$(find "$music_dir" -type f -iname "*$text*" | sed "s/^/'/;s/$/'/" | sort) # sed adds quotes for filenames with spaces
+  [ "$(wc --words <<<"$result")" -gt 0 ] &&
+    echo -e "> VidHop music directory search result:" && echo -e "$result" &&
+    unset result && found_something="true"
+
+  result=$(find "$music_dir_ws" -type f -iname "*$text*" | sed "s/^/'/;s/$/'/" | sort) # sed adds quotes for filenames with spaces
+  [ "$(wc --words <<<"$result")" -gt 0 ] &&
+    echo -e "> User music directory search result:" && echo -e "$result" &&
+    unset result && found_something="true"
+
+  [ "$found_something" = "false" ] && echo "found nothing"
 }

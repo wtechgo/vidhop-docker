@@ -96,8 +96,8 @@ To see some of these commands in action, watch [An Introduction to VidHop](https
     dlvpli <URL>  => download video playlist information into /VidHop/metadata/channels/<CHANNEL_NAME>/<PLAYLIST_NAME>
     dlc <URL>     => download channel, all videos, metadata and thumbnails into /VidHop/channels
     dlci <URL>    => download channel information, same as dlc but no video downloads into /VidHop/metadata/channels
-    dla <URL>     => download audio, as mp3 from music videos into /VidHop/music
-    dlalbum <URL> => download a music album as mp3 into /VidHop/music/<ALBUM_NAME>
+    dla <URL>     => download audio, as m4a from music videos into /VidHop/music
+    dlalbum <URL> => download a music album as m4a into /VidHop/music/<ALBUM_NAME>
     dlapl <URL>   => download audio playlist into /VidHop/music/<CHANNEL_NAME>/<PLAYLIST_NAME>
     dlapli <URL>  => download audio playlist information into /VidHop/metadata/music/<CHANNEL_NAME>/<PLAYLIST_NAME>
     dlpod <URL>   => download podcast or audio tape into /VidHop/podcasts
@@ -191,7 +191,7 @@ To see some of these commands in action, watch [An Introduction to VidHop](https
     updatevidhop    => default update
     uninstallvidhop => remove all VidHop executables, downloaded data in the VidHop directory will NOT be deleted
     installloader   => alias for install_loader
-    install_loader  => enables users to reload with '. vidhop
+    install_loader  => enables users to reload with '. vidhop'
     fetch_github    => download the newest VidHop code from GitHub
     update_python_packages => updates Python packages with pip (package manager)
 ```

@@ -13,8 +13,8 @@ function dlv_help() {
   echo "    dlvpli <URL>  => download video playlist information into /VidHop/metadata/channels/<CHANNEL_NAME>/<PLAYLIST_NAME>"
   echo "    dlc <URL>     => download channel, all videos, metadata and thumbnails into /VidHop/channels"
   echo "    dlci <URL>    => download channel information, same as dlc but no video downloads into /VidHop/metadata/channels"
-  echo "    dla <URL>     => download audio, as mp3 from music videos into /VidHop/music"
-  echo "    dlalbum <URL> => download a music album as mp3 into /VidHop/music/<ALBUM_NAME>"
+  echo "    dla <URL>     => download audio, as m4a from music videos into /VidHop/music"
+  echo "    dlalbum <URL> => download a music album as m4a into /VidHop/music/<ALBUM_NAME>"
   echo "    dlapl <URL>   => download audio playlist into /VidHop/music/<CHANNEL_NAME>/<PLAYLIST_NAME>"
   echo "    dlapli <URL>  => download audio playlist information into /VidHop/metadata/music/<CHANNEL_NAME>/<PLAYLIST_NAME>"
   echo "    dlpod <URL>   => download podcast or audio tape into /VidHop/podcasts"
@@ -111,6 +111,7 @@ function fetch_video_metadata() {
                   asr: .asr
             }'
   )
+  ext=$(yt-dlp --print ext "$url")
 }
 
 # SINGLE VIDEO
@@ -241,7 +242,7 @@ function dlv() {
   mkdir "$vids_dir/$platform" 2>/dev/null
 
   dlvi "$url"
-  yt-dlp -S ext:mp4:m4a --recode mp4 --no-mtime -P "$vids_dir/$platform" -o "$name.%(ext)s" --verbose "$url"
+  yt-dlp --no-mtime -P "$vids_dir/$platform" -o "$name.%(ext)s" --verbose "$url"
 
   print_metadata
   cd "$vids_dir/$platform" || return
@@ -435,7 +436,7 @@ function dlc() {
   set_channel_dir "$channel_dir" # augments $json
 
   # Download all videos from channel.
-  yt-dlp -S ext:mp4:m4a --recode mp4 -P "$channel_dir" -o "%(title)s.%(ext)s" \
+  yt-dlp -P "$channel_dir" -o "%(title)s.%(ext)s" \
     $([ "$has_archive" = true ] && echo "--download-archive $archive_file") \
     --replace-in-metadata "title" '"' "'" \
     --replace-in-metadata "title" '\*' '' \
@@ -605,8 +606,7 @@ function dlvpl() {
   [ ! $? ] && echo "download channel info failed (function: dlvpli)" && return
 
   # Download all videos from channel.
-  yt-dlp -S ext:mp4:m4a --recode mp4 \
-    -P "$channels_dir/$name/$platform/$pl_name" -o "%(track_number)s. %(title)s.%(ext)s" \
+  yt-dlp -P "$channels_dir/$name/$platform/$pl_name" -o "%(track_number)s. %(title)s.%(ext)s" \
     $([ "$has_archive" = true ] && echo "--download-archive $archive_file") \
     --replace-in-metadata "title" '"' "'" \
     --replace-in-metadata "title" '\*' '' \
@@ -627,7 +627,7 @@ function dlvpl() {
   cd "$channels_dir/$name/$platform" || return
 }
 
-# Download audio. Save only the mp3 audio of a video plus metadata and thumbnail.
+# Download audio. Save only the m4a audio of a video plus metadata and thumbnail.
 function dla() {
   function=dla
   clear_vars_dlv
@@ -638,8 +638,9 @@ function dla() {
 
   name="$(fetch_song_filename | sed 's/NA - //')"
   fetch_video_metadata "$url" # populates json
-  # download mp3
-  yt-dlp -S ext:mp3:m4a --recode mp3 -x --audio-format mp3 --embed-thumbnail --no-mtime \
+  ext=m4a
+  # download m4a
+  yt-dlp -f ba --recode m4a --embed-thumbnail --no-mtime \
     -P "$music_dir" -o "$name.%(ext)s" --verbose "$url"
   # download thumbnail
   yt-dlp --write-thumbnail --convert-thumbnails jpg --no-download \
@@ -751,7 +752,7 @@ function dlac() {
   [ ! $? ] && echo "download channel info failed (function: dlaci)" && return
 
   # Download all videos from channel.
-  yt-dlp -S ext:mp3:m4a --recode mp3 -x --audio-format mp3 --embed-thumbnail --no-mtime \
+  yt-dlp -f ba --recode m4a --embed-thumbnail --no-mtime \
     -P "$channel_dir" -o "%(album)s/%(track_number|)s%(track_number&. |)s%(title)s.%(ext)s" \
     $([ "$has_archive" = true ] && echo "--download-archive $archive_file") \
     --replace-in-metadata "title" '"' "'" \
@@ -877,7 +878,7 @@ function dlapl() {
   [ ! $? ] && echo "download channel info failed (function: dlapli)" && return
 
   # Download all videos from channel.
-  yt-dlp -S ext:mp3:m4a --recode mp3 -x --audio-format mp3 --embed-thumbnail --no-mtime \
+  yt-dlp -f ba --recode m4a --embed-thumbnail --no-mtime \
     -P "$music_dir/$pl_dir" -o "%(playlist_index)s. %(title)s.%(ext)s" \
     $([ "$has_archive" = true ] && echo "--download-archive $archive_file") \
     --replace-in-metadata "title" '"' "'" \
@@ -922,7 +923,7 @@ function dlpod() {
     -P "$podcasts_meta_dir/$platform" -o "$name.%(ext)s" --verbose "$url"
   echo thumbnail download completed
 
-  yt-dlp -S ext:mp3:m4a --recode mp3 -x --audio-format mp3 --no-mtime \
+  yt-dlp -f ba --recode m4a --no-mtime \
     -P "$podcasts_dir/$platform" -o "$name.%(ext)s" --verbose "$url"
   echo audio download completed
 
@@ -990,8 +991,49 @@ function dlwebsite() {
   [ -z "$1" ] || [ "$(is_url "$1")" = false ] && echo "not a valid url" && return
   url="$1"
   python "$website_scraper" "$url" "$websites_dir"
+  cd "$websites_dir"
 }
 
 function dlw() {
   dlwebsite "$1"
+}
+
+function dlcensored() {
+  # TODO: Adapt code to Alpine Linux.
+  echo "not implemented" && return
+
+  [ ! "$(command -v tor)" ] && echo tor not installed, abort && return
+  [ ! "$(command -v torsocks)" ] && echo torsocks not installed, abort && return
+  [ -z "$1" ] && echo "usage: dlcensored <URL>" && return || url="$1"
+  echo "fetching public IP address via https://api.ipify.org..."
+  echo "your IP-address is $(myip)" && sleep 2
+
+  if [ "$(command -v systemctl)" ]; then
+    echo "starting Tor..." && sleep 3
+    systemctl start tor
+
+    echo "fetching anonymous IP address via https://api.ipify.org..."
+    ip_tor="$(torsocks bash -c "curl 'https://api.ipify.org?format=text'")"
+    echo "your anonymous IP-address is $ip_tor (inside the Tor network)" && sleep 1
+
+    echo "starting video download..."
+    torsocks bash -c ". vidhop; dlv $url"
+
+    echo "stopping Tor..." && sleep 2
+    systemctl stop tor
+  else
+    echo "starting Tor..." && sleep 3
+    service tor start
+
+    echo "fetching anonymous IP address via https://api.ipify.org..."
+    ip_tor="$(torsocks bash -c "curl 'https://api.ipify.org?format=text'")"
+    echo "your anonymous IP-address is $ip_tor (inside the Tor network)" && sleep 3
+
+    echo "starting video download..."
+    torsocks bash -c ". vidhop; dlv $url"
+
+    echo "stopping Tor..." && sleep 2
+    service tor stop
+  fi
+  echo download finished
 }

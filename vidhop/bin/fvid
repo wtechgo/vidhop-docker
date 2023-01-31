@@ -142,7 +142,21 @@ function say() {
   echo -e "${NC}$1"
 }
 
-function find_one_meta() {
+function find_one_file() {
+  [ -z "$1" ] || [ -z "$2" ] && echo "usage: find_one <TYPE_FILE_OR_DIR> <PARTIAL_NAME> [<DIRECTORY>]" && return
+  if [ -n "$3" ];then search_dir="$3"; else search_dir="$wt_projects_dir"; fi
+  search_text="$2"
+  type="$1"
+
+  result=$(find "$search_dir" -type "$type" -iwholename "*$search_text*")
+  unset search_text
+
+  [ "$(wc -w <<<"$result")" -eq 0 ] && echo -e "found no match for '$search_text', abort" && return 1
+  [ "$(wc -l <<<"$result")" -gt 1 ] && echo -e "found multiple possibilities for '$search_text', abort\n$result" && return 2
+  [ "$(wc -l <<<"$result")" -eq 1 ] && echo -e "$result"
+}
+
+function find_one_vmeta() {
   search_text="$1"
   platform="$2"
 
@@ -151,7 +165,7 @@ function find_one_meta() {
     meta_file="$search_text"
   else
     # $meta_file search.
-    results=$(find "$meta_dir" -type f -iwholename "*$platform*$search_text*metadata.json")
+    results=$(find "$vids_meta_dir" -type f -iwholename "*$platform*$search_text*metadata.json")
     [ -z "$results" ] && return 1
     count="$(wc -l <<<"$results")"
     [ "$count" -eq 1 ] && meta_file="$results" || return 2
@@ -159,6 +173,15 @@ function find_one_meta() {
 
   [ -f "$meta_file" ] && title=$(basename "$meta_file" .json)
   [ -n "$meta_file" ] && echo "$meta_file"
+}
+
+function find-one-cmeta() {
+  [ -z "$1" ] && echo "usage: find_one_cmeta <CHANNEL_SEARCH_TEXT> [<PLATFORM>]" && return
+  channel_search_text="$1"
+  platform="$2"
+  result=$(find_one_file f "$channel_search_text**$platform*metadata.json" "$channels_meta_dir")
+  [ ! $? = 0 ] && return
+  echo "$result"
 }
 
 function fvidv() {
@@ -223,8 +246,8 @@ function fvid() {
 
 function fvidcv() {
   usage="usage: fvidcv <CHANNEL_SEARCH_TEXT> <SEARCH_TEXT> [<PLATFORM>]\n       fvidcv <CHANNEL_JSON_ABS_PATH> <SEARCH_TEXT>"
-  if [ -n "$1" ]; then channel_search_name="$1"; else echo "$usage"&& return 0; fi
-  if [ -n "$2" ]; then text=$(echo "$2" | tr '[:upper:]' '[:lower:]'); else echo "$usage"&& return 0; fi
+  if [ -n "$1" ]; then channel_search_name="$1"; else echo "$usage" && return 0; fi
+  if [ -n "$2" ]; then text=$(echo "$2" | tr '[:upper:]' '[:lower:]'); else echo "$usage" && return 0; fi
   platform="$3"
 
   if [ -f "$channel_search_name" ]; then

@@ -25,66 +25,98 @@ inspect video specs of files and URLs, remove the last download or play it...
 - [An Introduction to VidHop](https://odysee.com/@WTechGo:e/Introduction-to-VidHop:0)
 - [Installing VidHop from Scratch](https://odysee.com/@WTechGo:e/Install-VidHop-from-Scratch:c)
 - [Sync VidHop between laptop and phone](https://odysee.com/@WTechGo:e/sync-vidhop-between-laptop-and-phone:1)
+- [Explanation project module, config.ini, batch download and switch environment](https://odysee.com/@WTechGo:e/VidHop---Project-module,-config.ini,-batch-import,-switch-env:a)
 
-## Installation
+## Prerequisites
 
-### Prerequisites
+### Docker
 
 You have `Docker` installed. If you haven't, [download Docker](https://docs.docker.com/get-docker/) 
 for your operating system and install it.
 
-Having [Git](https://git-scm.com/downloads) installed is 
-recommended to download (`git clone`) now and to pull in updates (`git pull`) later on.
+### Git
 
----
+It's highly recommended you install [Git](https://git-scm.com/downloads).  
+With Git, you can do the initial VidHop software download and more important, easily download updates in the future.
 
-1. Copy the project to your computer.  
-   ```
-   # HTTPS
-   git clone https://github.com/wtechgo/vidhop-docker.git && cd vidhop-docker
+### No fear of the terminal prompt aka command prompt
+
+The terminal or command prompt is a program, most of the time a black screen, where you type in commands, like the 
+hackers on TV :)
+
+On Windows, hit Windows key, type "powershell" and hit enter.  
+
+On MAC, I'm not sure, but it's called Terminal there.  
+On Linux, I assume you know.
+
+## Installation
+
+1. Copy the VidHop software to your computer.  
+   <br>
+   Copy these files into the location (directory) where you want VidHop to live.   
+   I choose the Videos directory of my user as location.  
+   Applies for option 1 & 2.  
+   <br>
+   **Option 1**: **Copy files with Git** with the command prompt.  
+   Copy the command, paste it in command prompt (with right-mouse-click) and hit enter.
+
+   > With HTTPS
+   > > git clone https://github.com/wtechgo/vidhop-docker.git
+   > 
+   > Or with SSH (optional)
+   > > git clone git@github.com:wtechgo/vidhop-docker.git
    
-   # SSH
-   git clone git@github.com:wtechgo/vidhop-docker.git && cd vidhop-docker
-   ```  
-   If you don't have `Git` installed, you can simply download the [zip file from GitHub](https://github.com/wtechgo/vidhop-docker/archive/refs/heads/master.zip).
-2. Navigate into the project with your terminal. `Dockerfile` should be in your present working directory.
-3. Build the VidHop Docker image.  
-   `docker build -t vidhop-docker .`
-4. Extra: A oneliner command in case you're rebuilding the Docker image a lot.  
-```
-# Build with cache.
-docker stop $(docker ps -a -q); docker rm $(docker ps -a -q); docker build -t vidhop-docker . ; docker run --name vidhop-docker -v $PWD/media:/vidhop -v $PWD/vidhop/.bash_history:/root/.bash_history -it vidhop-docker /bin/bash
+   **Option 2**: **Download [VidHop software ZIP file](https://github.com/wtechgo/vidhop-docker/archive/refs/heads/master.zip)** from GitHub.
 
-# Build without cache.
-docker stop $(docker ps -a -q); docker rm $(docker ps -a -q); docker build --no-cache -t vidhop-docker . ; docker run --name vidhop-docker -v $PWD/media:/vidhop -v $PWD/vidhop/.bash_history:/root/.bash_history -it vidhop-docker /bin/bash
-```
+
+2. Navigate into the project with your terminal with command:
+   ```
+   cd vidhop-docker
+   ```  
+   `Dockerfile` should be in your present working directory.  
+   You should see `Dockerfile` when you list the files in the directory.
+   ```
+   # In Windows
+   dir
+   
+   # In MAC & Linux
+   ls
+   ```  
+
+3. Build the VidHop Docker image.  
+   `docker build -t vidhop-docker .`  
+   This can take a few minutes, but we only have to do this once.
+4. Awesome! Now we can start using VidHop.
 
 ## Usage
 
-1. Run the Docker container that we have just built.
+1. **Start VidHop**.  
+   Copy the command bellow, paste it in the command prompt and hit enter.
    ```
-   docker run --name vidhop-docker -v $PWD/media:/vidhop -v $PWD/vidhop/.bash_history:/root/.bash_history -it vidhop-docker /bin/bash
+   docker run --name vidhop-docker -v ${PWD}/media:/vidhop -v ${PWD}/vidhop/.bash_history:/root/.bash_history -it vidhop-docker /bin/bash
    ```
+   Note: If you're working in Windows command prompt (cmd), replace `{PWD}` with `%cd%`.
 2. You are now in an Alpine Linux with VidHop pre-installed.  
    **Try a VidHop command !**  
 
    `dlv https://www.youtube.com/watch?v=-DT7bX-B1Mg`
-   
 
-3. Extra.
-   - When you run into this Docker error:  
-   `docker: Error response from daemon: Conflict. The container name "/vidhop-docker" is already in use`
-   - You can stop and remove all Docker containers with this command:  
-   `docker stop $(docker ps -a -q); docker rm $(docker ps -a -q)`
-   - To alleviate this workflow check sections 
-     [Configure Powershell Windows](#configure-powershell-windows) and 
-     [Configure .bashrc Linux](#configure-bashrc-linux). 
-   
-A complete list of the commands is available in the [commands section](https://github.com/wtechgo/vidhop-docker#commands). 
+A complete list of the VidHop commands is available in the [commands section](https://github.com/wtechgo/vidhop-docker#commands) 
+and you can get up to speed by watching the video at the top of this page.  
 
+## Troubleshooting
+
+- When you run into this Docker error:  
+`docker: Error response from daemon: Conflict. The container name "/vidhop-docker" is already in use`
+- You can stop and remove all Docker containers with this command:  
+`docker stop $(docker ps -a -q); docker rm $(docker ps -a -q)`
+- To alleviate this workflow check sections 
+  [Configure Powershell Windows](#configure-powershell-windows) and 
+  [Configure .bashrc Linux](#configure-bashrc-linux). 
+  
 ### Media directory file permissions in Linux
 
-Downloading with VidHop generates files in `$PWD/media` on the host computer (pwd is present working directory).
+Downloading with VidHop generates files in `${PWD}/media` on the host computer (pwd is present working directory).
 
 Those files however, are created by user `root` inside the Docker container.
 
@@ -129,7 +161,7 @@ Function Remove-Directory([string]$path) {
 }
 
 Function Start-Vidhop() {
-     if (-Not (Test-Path $PWD/media) -And -Not (Test-Path $PWD/vidhop/.bash_history)) {
+     if (-Not (Test-Path ${PWD}/media) -And -Not (Test-Path ${PWD}/vidhop/.bash_history)) {
           Write-Output "could not find /media and vidhop/.bash_history"
           Write-Output "you are not inside the vidhop-docker directory"
           Write-Output "navigate to the vidhop-docker directory and try again"
@@ -139,7 +171,7 @@ Function Start-Vidhop() {
      docker stop "$(docker ps -a -q)"
      docker rm "$(docker ps -a -q)"
      clear
-     docker run --name vidhop-docker -v $PWD/media:/vidhop -v $PWD/vidhop/.bash_history:/root/.bash_history -it vidhop-docker /bin/bash
+     docker run --name vidhop-docker -v ${PWD}/media:/vidhop -v ${PWD}/vidhop/.bash_history:/root/.bash_history -it vidhop-docker /bin/bash
 }
 
 Function Stop-Vidhop() {
@@ -206,8 +238,8 @@ To see some of these commands in action, watch [An Introduction to VidHop](https
     dlvpli <URL>  => download video playlist information into /VidHop/metadata/channels/<CHANNEL_NAME>/<PLAYLIST_NAME>
     dlc <URL>     => download channel, all videos, metadata and thumbnails into /VidHop/channels
     dlci <URL>    => download channel information, same as dlc but no video downloads into /VidHop/metadata/channels
-    dla <URL>     => download audio, as mp3 from music videos into /VidHop/music
-    dlalbum <URL> => download a music album as mp3 into /VidHop/music/<ALBUM_NAME>
+    dla <URL>     => download audio, as m4a from music videos into /VidHop/music
+    dlalbum <URL> => download a music album as m4a into /VidHop/music/<ALBUM_NAME>
     dlapl <URL>   => download audio playlist into /VidHop/music/<CHANNEL_NAME>/<PLAYLIST_NAME>
     dlapli <URL>  => download audio playlist information into /VidHop/metadata/music/<CHANNEL_NAME>/<PLAYLIST_NAME>
     dlpod <URL>   => download podcast or audio tape into /VidHop/podcasts
@@ -218,7 +250,7 @@ To see some of these commands in action, watch [An Introduction to VidHop](https
     dlw <URL>       => alias for dlwebsite
 
  Title: fvid
- Description: Searches for <SEARCH_WORD> in all videos and channels metadata.
+ Description: Find videos for <SEARCH_TEXT> in all videos and channels metadata.
  Commands:
     fvid <SEARCH_TEXT>  => find videos where title or description matches <SEARCH_TEXT> in all videos and channels metadata
     fvidv <SEARCH_TEXT> => find videos where title or description matches <SEARCH_TEXT> in all videos metadata (shorter search time)
@@ -311,6 +343,17 @@ To see some of these commands in action, watch [An Introduction to VidHop](https
    fetchvidhop fetches only metadata files to enable video searches in Termux via the fvid command
  Troubleshoot:
    No permissions error was solved by disabling the firewall on the workstation.
+    
+ Title: project
+ Description: Create projects scaffolding and link VidHop video files.
+ Commands:
+    project <PROJECT_NAME> => Create new project with <PROJECT_NAME> in $projects_dir.
+    subproject <PROJECT_NAME> <SUBPROJECT_NAME>      => Create new subproject in <PROJECT_NAME> as <SUBPROJECT_NAME>.
+    linkvid4project <VIDEO_FILE> <PROJECT_NAME>      => Creates a symbolic link of given <VIDEO_FILE> in project with name <PROJECT_NAME>.
+    link-videos4project <SEARCH_TEXT> <PROJECT_NAME> => Creates symbolic links in <PROJECT_NAME> for all video files found by fvidf <SEARCH_TEXT> (happens in the background).
+    fproj <SEARCH_TEXT>      => Find files whose name match <SEARCH_TEXT> in all projects.
+    absfproj <SEARCH_TEXT>   => Identical to fproj but results are displayed as absolute paths.
+    rmproject <PROJECT_NAME> => Remove the project with as name <PROJECT_NAME>.
 
  Title: loader
  Description: VidHop management functions.
@@ -357,6 +400,18 @@ for configuring `vidhopsync` and `SSH`.
 
 Special thanks to the incredibly awesome projects [YT-DLP](https://github.com/yt-dlp/yt-dlp),
 [JQ](https://github.com/stedolan/jq) and [Termux](https://f-droid.org/en/packages/com.termux/).
+
+## Rebuilding the Docker image
+
+A oneliner command in case you're rebuilding the Docker image a lot.  
+
+```
+# Build with cache.
+docker stop $(docker ps -a -q); docker rm $(docker ps -a -q); docker build -t vidhop-docker . ; docker run --name vidhop-docker -v ${PWD}/media:/vidhop -v ${PWD}/vidhop/.bash_history:/root/.bash_history -it vidhop-docker /bin/bash
+
+# Build without cache.
+docker stop $(docker ps -a -q); docker rm $(docker ps -a -q); docker build --no-cache -t vidhop-docker . ; docker run --name vidhop-docker -v ${PWD}/media:/vidhop -v ${PWD}/vidhop/.bash_history:/root/.bash_history -it vidhop-docker /bin/bash
+```
 
 ## Support
 

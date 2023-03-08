@@ -39,36 +39,27 @@ for your operating system and install it.
 It's highly recommended you install [Git](https://git-scm.com/downloads).  
 With Git, you can do the initial VidHop software download and more important, easily download updates in the future.
 
-### No fear of the terminal prompt aka command prompt
+### No fear of the command prompt
 
-The terminal or command prompt is a program, most of the time a black screen, where you type in commands, like the 
-hackers on TV :)
+The `command prompt` (aka terminal) is a program that allows you to type and execute commands. All computers have a command prompt.
 
 On **Windows**, hit Windows key, type "powershell" and hit enter.  
-If you don't want to use powershell and use `cmd` instead, watch out with 
-commands that contain `${PWD}` further down the document. 
 
-On **MAC**, hit command+space keys (at the same time) to bring up Apple’s Spotlight universial search, then
+On **MAC**, hit command+space keys (at the same time) to bring up Apple’s Spotlight universal search, then
 type “terminal” so “Terminal.app” appears.  
 
 On **Linux** it varies. On Gnome, hit super key and type "terminal" or look for Terminal in your application overview.
 
 ## Installation
 
-1. Copy the VidHop software to your computer.  
+1. Copy the VidHop software to your computer, in a location (directory) where you want VidHop, 
+   and all the videos you download with it, to be. I like to put VidHop in the default `Videos` directory.  
    <br>
-   Copy these files into the location (directory) where you want VidHop to live.   
-   I like the Videos directory of my user as location.  
-   <br>
-   **Option 1**: **Copy files with Git** using the command prompt.  
-   Copy the command, paste it in command prompt (with right-mouse-click) and hit enter.
+   **Option 1**: **Copy files with Git**.  
+   Copy the command, paste it in `command prompt` (with right-mouse-click) and hit enter.
 
    ```
-   #With HTTPS
    git clone https://github.com/wtechgo/vidhop-docker.git
-   
-   #Or with SSH (optional)
-   git clone git@github.com:wtechgo/vidhop-docker.git
    ```
    
    **Option 2**: **Download [VidHop software ZIP file](https://github.com/wtechgo/vidhop-docker/archive/refs/heads/master.zip)** from GitHub.  

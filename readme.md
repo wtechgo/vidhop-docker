@@ -53,20 +53,29 @@ On **Linux** it varies. On Gnome, hit super key and type "terminal" or look for 
 ## Installation
 
 1. Copy the VidHop software to your computer, in a location (directory) where you want VidHop, 
-   and all the videos you download with it, to be. I like to put VidHop in the default `Videos` directory.  
+   and all the videos you download with it, to be.  
+   <br>
+   These instructions will use the default `Videos` directory in Windows as the chosen directory for VidHop.  
    <br>
    **Option 1**: **Copy files with Git**.  
-   Copy the command, paste it in `command prompt` (with right-mouse-click) and hit enter.
+   1. Open a `command prompt` and navigate to `Videos`.  
+      ```
+      cd Videos
+      ```
+   2. Copy the command below, paste it in `command prompt` (with right-mouse-click) and hit enter.
 
-   ```
-   git clone https://github.com/wtechgo/vidhop-docker.git
-   ```
+      ```
+      git clone https://github.com/wtechgo/vidhop-docker.git
+      ```
    
    **Option 2**: **Download [VidHop software ZIP file](https://github.com/wtechgo/vidhop-docker/archive/refs/heads/master.zip)** from GitHub.  
-   Don't forget to unzip the file and use the unzipped content.
+   1. Rename the downloaded file from `vidhop-docker-master.zip` to `vidhop-docker.zip`
+   2. Unzip `vidhop-docker.zip`, when done you should have a directory `vidhop-docker`.
+   3. Move the unzipped directory `vidhop-docker` to `Videos`.  
+   4. Open a `command prompt` and navigate to `Videos` (required for the next step, 2.).  
+   
 
-
-2. Navigate the terminal into the project with command:
+2. Navigate the `command prompt` into the VidHop directory `vidhop-docker` with command:  
    ```
    cd vidhop-docker
    ```  
@@ -88,19 +97,26 @@ On **Linux** it varies. On Gnome, hit super key and type "terminal" or look for 
 ## Usage
 
 1. **Start VidHop**.  
-   Copy the command bellow, paste it in the command prompt and hit enter.
+   Copy the command below, paste it in the command prompt and hit enter.
    ```
    docker run --name vidhop-docker -v ${PWD}/media:/vidhop -v ${PWD}/vidhop/.bash_history:/root/.bash_history -it vidhop-docker /bin/bash
    ```
-   Note: If you're working in Windows command prompt (cmd), replace `{PWD}` with `%cd%`.
+   Note: If you're working in Windows command prompt (cmd), replace `${PWD}` with `%cd%`.
 2. The terminal changes its label to `root@vidhop8>`, congratulations!    
    You are now in a running Alpine Linux with VidHop pre-installed.  
    **Try a VidHop command !**  
-
-   `dlv https://www.youtube.com/watch?v=-DT7bX-B1Mg`
+   ```
+   dlv https://www.youtube.com/watch?v=-DT7bX-B1Mg`
+   ```
+3. See the files `dlv` downloaded with `ls`.    
+   <br>
+   Extra: Windows users might be confused at this point.  
+   Why not `dir` as we did before?  
+   When you are using VidHop, `command prompt` is inside a Linux operating system, not Windows.  
+   More precisely, inside an Alpine Linux that is running inside a Docker container.
 
 A complete list of the VidHop commands is available in the [commands section](https://github.com/wtechgo/vidhop-docker#commands) 
-and you can get up to speed by watching the video at the top of this page.  
+and you can get up to speed by watching the [video links at the top of this page](https://github.com/wtechgo/vidhop-docker#Videos).  
 
 ## Troubleshooting
 
@@ -123,6 +139,14 @@ For that scenario, run:
 `sudo chown -R $USER:$USER .`  
 And if you want to delete VidHop data:  
 `rm -rf media`
+
+## Update VidHop
+
+1. Start VidHop.
+2. Inside Vidhop, run:  
+`updatevidhop`
+   
+Most of the 
 
 ## Configure Powershell Windows
 

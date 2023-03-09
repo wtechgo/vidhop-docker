@@ -99,7 +99,7 @@ On **Linux** it varies. On Gnome, hit super key and type "terminal" or look for 
 1. **Start VidHop**.  
    Copy the command below, paste it in the command prompt and hit enter.
    ```
-   docker run --name vidhop-docker -v ${PWD}/media:/vidhop -v ${PWD}/vidhop/.bash_history:/root/.bash_history -it vidhop-docker /bin/bash
+   docker run --name vidhop-docker -v ${PWD}/media:/vidhop -v ${PWD}/vidhop/config/.bash_history:/root/.bash_history -it vidhop-docker /bin/bash
    ```
    Note: If you're working in Windows command prompt (cmd), replace `${PWD}` with `%cd%`.
 2. The terminal changes its label to `root@vidhop8>`, congratulations!    
@@ -142,11 +142,32 @@ And if you want to delete VidHop data:
 
 ## Update VidHop
 
-1. Start VidHop.
-2. Inside Vidhop, run:  
-`updatevidhop`
-   
-Most of the 
+To update Vidhop Docker, we need to:
+
+1. Download file updates from the GitHub repository.
+2. Rebuild the Docker container for VidHop.
+3. The instructions below accomplish these steps.
+
+Open a `command prompt`, navigate to your `vidhop-docker` directory and run these commands.
+
+```
+docker stop $(docker ps -a -q)
+docker rm $(docker ps -a -q)
+git pull
+docker build --no-cache -t vidhop-docker .
+docker run --name vidhop-docker -v ${PWD}/media:/vidhop -v ${PWD}/vidhop/config/.bash_history:/root/.bash_history -it vidhop-docker /bin/bash
+```
+
+Here we see why `Git` was recommended.
+
+If you want to update without `Git`, download the ZIP-file as you did before and execute the commands above, 
+while omitting the line with the Git-command.
+
+You can check if your `yt-dlp` has been updated, while being inside VidHop, with command:  
+
+```
+yt-dlp --version
+```
 
 ## Configure Powershell Windows
 
@@ -183,7 +204,7 @@ Function Remove-Directory([string]$path) {
 }
 
 Function Start-Vidhop() {
-     if (-Not (Test-Path ${PWD}/media) -And -Not (Test-Path ${PWD}/vidhop/.bash_history)) {
+     if (-Not (Test-Path ${PWD}/media) -And -Not (Test-Path ${PWD}/vidhop/config/.bash_history)) {
           Write-Output "could not find /media and vidhop/.bash_history"
           Write-Output "you are not inside the vidhop-docker directory"
           Write-Output "navigate to the vidhop-docker directory and try again"
@@ -193,7 +214,7 @@ Function Start-Vidhop() {
      docker stop "$(docker ps -a -q)"
      docker rm "$(docker ps -a -q)"
      clear
-     docker run --name vidhop-docker -v ${PWD}/media:/vidhop -v ${PWD}/vidhop/.bash_history:/root/.bash_history -it vidhop-docker /bin/bash
+     docker run --name vidhop-docker -v ${PWD}/media:/vidhop -v ${PWD}/vidhop/config/.bash_history:/root/.bash_history -it vidhop-docker /bin/bash
 }
 
 Function Stop-Vidhop() {
@@ -429,10 +450,10 @@ A oneliner command in case you're rebuilding the Docker image a lot.
 
 ```
 # Build with cache.
-docker stop $(docker ps -a -q); docker rm $(docker ps -a -q); docker build -t vidhop-docker . ; docker run --name vidhop-docker -v ${PWD}/media:/vidhop -v ${PWD}/vidhop/.bash_history:/root/.bash_history -it vidhop-docker /bin/bash
+docker stop $(docker ps -a -q); docker rm $(docker ps -a -q); docker build -t vidhop-docker . ; docker run --name vidhop-docker -v ${PWD}/media:/vidhop -v ${PWD}/vidhop/config/.bash_history:/root/.bash_history -it vidhop-docker /bin/bash
 
 # Build without cache.
-docker stop $(docker ps -a -q); docker rm $(docker ps -a -q); docker build --no-cache -t vidhop-docker . ; docker run --name vidhop-docker -v ${PWD}/media:/vidhop -v ${PWD}/vidhop/.bash_history:/root/.bash_history -it vidhop-docker /bin/bash
+docker stop $(docker ps -a -q); docker rm $(docker ps -a -q); docker build --no-cache -t vidhop-docker . ; docker run --name vidhop-docker -v ${PWD}/media:/vidhop -v ${PWD}/vidhop/config/.bash_history:/root/.bash_history -it vidhop-docker /bin/bash
 ```
 
 ## Support

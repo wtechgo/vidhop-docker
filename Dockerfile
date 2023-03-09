@@ -19,7 +19,7 @@ RUN rm -rf /opt/vidhop
 RUN mkdir /vidhop  # media dir
 RUN mkdir /opt/vidhop   # app dir
 
-COPY vidhop/.bashrc /root/.bashrc
+COPY vidhop/config/.bashrc /root/.bashrc
 ADD vidhop /opt/vidhop
 #RUN git clone https://github.com/wtechgo/vidhop-linux.git /opt/vidhop
 

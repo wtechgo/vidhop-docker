@@ -7,7 +7,7 @@ vidhop_start() {
   vidhop_stop 1>/dev/null
   docker run --name vidhop-docker \
     -v "$PWD/media:/vidhop" \
-    -v "$PWD/vidhop/.bash_history":"/root/.bash_history" \
+    -v "$PWD/vidhop/config/.bash_history":"/root/.bash_history" \
     -it vidhop-docker /bin/bash
 }
 

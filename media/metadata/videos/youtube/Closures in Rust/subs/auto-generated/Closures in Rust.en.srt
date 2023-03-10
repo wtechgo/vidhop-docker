@@ -1,0 +1,5845 @@
+1
+00:00:00,560 --> 00:00:02,629
+
+welcome back russ gang if you're new
+
+2
+00:00:02,629 --> 00:00:02,639
+welcome back russ gang if you're new
+ 
+
+3
+00:00:02,639 --> 00:00:04,630
+welcome back russ gang if you're new
+here my name is bogdan and this channel
+
+4
+00:00:04,630 --> 00:00:04,640
+here my name is bogdan and this channel
+ 
+
+5
+00:00:04,640 --> 00:00:05,829
+here my name is bogdan and this channel
+is all about
+
+6
+00:00:05,829 --> 00:00:05,839
+is all about
+ 
+
+7
+00:00:05,839 --> 00:00:07,990
+is all about
+the rust programming language in the
+
+8
+00:00:07,990 --> 00:00:08,000
+the rust programming language in the
+ 
+
+9
+00:00:08,000 --> 00:00:10,070
+the rust programming language in the
+last video we went over chapter 12 of
+
+10
+00:00:10,070 --> 00:00:10,080
+last video we went over chapter 12 of
+ 
+
+11
+00:00:10,080 --> 00:00:11,350
+last video we went over chapter 12 of
+the wrestling book
+
+12
+00:00:11,350 --> 00:00:11,360
+the wrestling book
+ 
+
+13
+00:00:11,360 --> 00:00:14,390
+the wrestling book
+in which we created a cli program
+
+14
+00:00:14,390 --> 00:00:14,400
+in which we created a cli program
+ 
+
+15
+00:00:14,400 --> 00:00:16,470
+in which we created a cli program
+in this video we're going over chapter
+
+16
+00:00:16,470 --> 00:00:16,480
+in this video we're going over chapter
+ 
+
+17
+00:00:16,480 --> 00:00:17,830
+in this video we're going over chapter
+13 specifically
+
+18
+00:00:17,830 --> 00:00:17,840
+13 specifically
+ 
+
+19
+00:00:17,840 --> 00:00:20,310
+13 specifically
+part 1 of chapter 13 in which we'll talk
+
+20
+00:00:20,310 --> 00:00:20,320
+part 1 of chapter 13 in which we'll talk
+ 
+
+21
+00:00:20,320 --> 00:00:21,109
+part 1 of chapter 13 in which we'll talk
+about
+
+22
+00:00:21,109 --> 00:00:21,119
+about
+ 
+
+23
+00:00:21,119 --> 00:00:30,550
+about
+closures so with that let's get rusty
+
+24
+00:00:30,550 --> 00:00:30,560
+closures so with that let's get rusty
+ 
+
+25
+00:00:30,560 --> 00:00:33,270
+closures so with that let's get rusty
+first of all what are closures closures
+
+26
+00:00:33,270 --> 00:00:33,280
+first of all what are closures closures
+ 
+
+27
+00:00:33,280 --> 00:00:34,470
+first of all what are closures closures
+are like functions
+
+28
+00:00:34,470 --> 00:00:34,480
+are like functions
+ 
+
+29
+00:00:34,480 --> 00:00:36,150
+are like functions
+except that they're anonymous meaning
+
+30
+00:00:36,150 --> 00:00:36,160
+except that they're anonymous meaning
+ 
+
+31
+00:00:36,160 --> 00:00:37,830
+except that they're anonymous meaning
+that they don't have names
+
+32
+00:00:37,830 --> 00:00:37,840
+that they don't have names
+ 
+
+33
+00:00:37,840 --> 00:00:40,150
+that they don't have names
+they could be stored as variables and
+
+34
+00:00:40,150 --> 00:00:40,160
+they could be stored as variables and
+ 
+
+35
+00:00:40,160 --> 00:00:41,030
+they could be stored as variables and
+passed around
+
+36
+00:00:41,030 --> 00:00:41,040
+passed around
+ 
+
+37
+00:00:41,040 --> 00:00:43,270
+passed around
+they could even be passed in as input
+
+38
+00:00:43,270 --> 00:00:43,280
+they could even be passed in as input
+ 
+
+39
+00:00:43,280 --> 00:00:44,150
+they could even be passed in as input
+parameters
+
+40
+00:00:44,150 --> 00:00:44,160
+parameters
+ 
+
+41
+00:00:44,160 --> 00:00:46,549
+parameters
+to a function and they capture the
+
+42
+00:00:46,549 --> 00:00:46,559
+to a function and they capture the
+ 
+
+43
+00:00:46,559 --> 00:00:47,590
+to a function and they capture the
+variables
+
+44
+00:00:47,590 --> 00:00:47,600
+variables
+ 
+
+45
+00:00:47,600 --> 00:00:50,150
+variables
+inside the scope in which they are
+
+46
+00:00:50,150 --> 00:00:50,160
+inside the scope in which they are
+ 
+
+47
+00:00:50,160 --> 00:00:50,950
+inside the scope in which they are
+defined
+
+48
+00:00:50,950 --> 00:00:50,960
+defined
+ 
+
+49
+00:00:50,960 --> 00:00:53,029
+defined
+in order to better understand closures
+
+50
+00:00:53,029 --> 00:00:53,039
+in order to better understand closures
+ 
+
+51
+00:00:53,039 --> 00:00:54,389
+in order to better understand closures
+we'll use them in the following
+
+52
+00:00:54,389 --> 00:00:54,399
+we'll use them in the following
+ 
+
+53
+00:00:54,399 --> 00:00:56,470
+we'll use them in the following
+example imagine you're building a back
+
+54
+00:00:56,470 --> 00:00:56,480
+example imagine you're building a back
+ 
+
+55
+00:00:56,480 --> 00:00:58,389
+example imagine you're building a back
+end for a fitness app
+
+56
+00:00:58,389 --> 00:00:58,399
+end for a fitness app
+ 
+
+57
+00:00:58,399 --> 00:01:00,950
+end for a fitness app
+and the back end is built in rust the
+
+58
+00:01:00,950 --> 00:01:00,960
+and the back end is built in rust the
+ 
+
+59
+00:01:00,960 --> 00:01:02,790
+and the back end is built in rust the
+fitness app will generate customized
+
+60
+00:01:02,790 --> 00:01:02,800
+fitness app will generate customized
+ 
+
+61
+00:01:02,800 --> 00:01:04,390
+fitness app will generate customized
+workouts for a user
+
+62
+00:01:04,390 --> 00:01:04,400
+workouts for a user
+ 
+
+63
+00:01:04,400 --> 00:01:07,109
+workouts for a user
+based on various factors like their age
+
+64
+00:01:07,109 --> 00:01:07,119
+based on various factors like their age
+ 
+
+65
+00:01:07,119 --> 00:01:07,910
+based on various factors like their age
+body mass
+
+66
+00:01:07,910 --> 00:01:07,920
+body mass
+ 
+
+67
+00:01:07,920 --> 00:01:11,190
+body mass
+index workout preference and intensity
+
+68
+00:01:11,190 --> 00:01:11,200
+index workout preference and intensity
+ 
+
+69
+00:01:11,200 --> 00:01:12,149
+index workout preference and intensity
+level
+
+70
+00:01:12,149 --> 00:01:12,159
+level
+ 
+
+71
+00:01:12,159 --> 00:01:14,310
+level
+now the implementation of this algorithm
+
+72
+00:01:14,310 --> 00:01:14,320
+now the implementation of this algorithm
+ 
+
+73
+00:01:14,320 --> 00:01:15,670
+now the implementation of this algorithm
+doesn't matter so much
+
+74
+00:01:15,670 --> 00:01:15,680
+doesn't matter so much
+ 
+
+75
+00:01:15,680 --> 00:01:17,270
+doesn't matter so much
+what matters is that part of this
+
+76
+00:01:17,270 --> 00:01:17,280
+what matters is that part of this
+ 
+
+77
+00:01:17,280 --> 00:01:19,510
+what matters is that part of this
+algorithm runs a calculation
+
+78
+00:01:19,510 --> 00:01:19,520
+algorithm runs a calculation
+ 
+
+79
+00:01:19,520 --> 00:01:21,590
+algorithm runs a calculation
+that is expensive and takes a few
+
+80
+00:01:21,590 --> 00:01:21,600
+that is expensive and takes a few
+ 
+
+81
+00:01:21,600 --> 00:01:23,109
+that is expensive and takes a few
+seconds to run
+
+82
+00:01:23,109 --> 00:01:23,119
+seconds to run
+ 
+
+83
+00:01:23,119 --> 00:01:25,510
+seconds to run
+here we've simulated this calculation
+
+84
+00:01:25,510 --> 00:01:25,520
+here we've simulated this calculation
+ 
+
+85
+00:01:25,520 --> 00:01:26,630
+here we've simulated this calculation
+with a function called
+
+86
+00:01:26,630 --> 00:01:26,640
+with a function called
+ 
+
+87
+00:01:26,640 --> 00:01:29,749
+with a function called
+simulated expensive calculation which
+
+88
+00:01:29,749 --> 00:01:29,759
+simulated expensive calculation which
+ 
+
+89
+00:01:29,759 --> 00:01:30,310
+simulated expensive calculation which
+takes in
+
+90
+00:01:30,310 --> 00:01:30,320
+takes in
+ 
+
+91
+00:01:30,320 --> 00:01:32,630
+takes in
+an intensity and then prints out
+
+92
+00:01:32,630 --> 00:01:32,640
+an intensity and then prints out
+ 
+
+93
+00:01:32,640 --> 00:01:34,390
+an intensity and then prints out
+calculating slowly
+
+94
+00:01:34,390 --> 00:01:34,400
+calculating slowly
+ 
+
+95
+00:01:34,400 --> 00:01:36,710
+calculating slowly
+lets the thread sleep for two seconds
+
+96
+00:01:36,710 --> 00:01:36,720
+lets the thread sleep for two seconds
+ 
+
+97
+00:01:36,720 --> 00:01:38,950
+lets the thread sleep for two seconds
+and returns the intensity
+
+98
+00:01:38,950 --> 00:01:38,960
+and returns the intensity
+ 
+
+99
+00:01:38,960 --> 00:01:41,030
+and returns the intensity
+now here in maine we're simulating the
+
+100
+00:01:41,030 --> 00:01:41,040
+now here in maine we're simulating the
+ 
+
+101
+00:01:41,040 --> 00:01:42,230
+now here in maine we're simulating the
+code that would be called
+
+102
+00:01:42,230 --> 00:01:42,240
+code that would be called
+ 
+
+103
+00:01:42,240 --> 00:01:44,870
+code that would be called
+if the user wanted a new workout we're
+
+104
+00:01:44,870 --> 00:01:44,880
+if the user wanted a new workout we're
+ 
+
+105
+00:01:44,880 --> 00:01:46,710
+if the user wanted a new workout we're
+calling generate workout which is a
+
+106
+00:01:46,710 --> 00:01:46,720
+calling generate workout which is a
+ 
+
+107
+00:01:46,720 --> 00:01:48,630
+calling generate workout which is a
+function we haven't created yet
+
+108
+00:01:48,630 --> 00:01:48,640
+function we haven't created yet
+ 
+
+109
+00:01:48,640 --> 00:01:50,310
+function we haven't created yet
+and generate workout takes two
+
+110
+00:01:50,310 --> 00:01:50,320
+and generate workout takes two
+ 
+
+111
+00:01:50,320 --> 00:01:52,710
+and generate workout takes two
+parameters the intensity a user has
+
+112
+00:01:52,710 --> 00:01:52,720
+parameters the intensity a user has
+ 
+
+113
+00:01:52,720 --> 00:01:53,670
+parameters the intensity a user has
+specified
+
+114
+00:01:53,670 --> 00:01:53,680
+specified
+ 
+
+115
+00:01:53,680 --> 00:01:55,830
+specified
+and a random number to provide some
+
+116
+00:01:55,830 --> 00:01:55,840
+and a random number to provide some
+ 
+
+117
+00:01:55,840 --> 00:01:58,149
+and a random number to provide some
+variety to the generated workout
+
+118
+00:01:58,149 --> 00:01:58,159
+variety to the generated workout
+ 
+
+119
+00:01:58,159 --> 00:01:59,990
+variety to the generated workout
+now because we're not actually building
+
+120
+00:01:59,990 --> 00:02:00,000
+now because we're not actually building
+ 
+
+121
+00:02:00,000 --> 00:02:01,830
+now because we're not actually building
+the front end in this example
+
+122
+00:02:01,830 --> 00:02:01,840
+the front end in this example
+ 
+
+123
+00:02:01,840 --> 00:02:04,469
+the front end in this example
+we'll pass in a simulated intensity of
+
+124
+00:02:04,469 --> 00:02:04,479
+we'll pass in a simulated intensity of
+ 
+
+125
+00:02:04,479 --> 00:02:05,030
+we'll pass in a simulated intensity of
+10
+
+126
+00:02:05,030 --> 00:02:05,040
+10
+ 
+
+127
+00:02:05,040 --> 00:02:07,109
+10
+and for the random number we could use
+
+128
+00:02:07,109 --> 00:02:07,119
+and for the random number we could use
+ 
+
+129
+00:02:07,119 --> 00:02:08,949
+and for the random number we could use
+the rand crate and actually generate a
+
+130
+00:02:08,949 --> 00:02:08,959
+the rand crate and actually generate a
+ 
+
+131
+00:02:08,959 --> 00:02:09,749
+the rand crate and actually generate a
+random number
+
+132
+00:02:09,749 --> 00:02:09,759
+random number
+ 
+
+133
+00:02:09,759 --> 00:02:11,510
+random number
+but again that's not our focus in this
+
+134
+00:02:11,510 --> 00:02:11,520
+but again that's not our focus in this
+ 
+
+135
+00:02:11,520 --> 00:02:13,589
+but again that's not our focus in this
+example so we'll just set the random
+
+136
+00:02:13,589 --> 00:02:13,599
+example so we'll just set the random
+ 
+
+137
+00:02:13,599 --> 00:02:15,350
+example so we'll just set the random
+number to a hard-coded
+
+138
+00:02:15,350 --> 00:02:15,360
+number to a hard-coded
+ 
+
+139
+00:02:15,360 --> 00:02:17,670
+number to a hard-coded
+seven next we'll define the generated
+
+140
+00:02:17,670 --> 00:02:17,680
+seven next we'll define the generated
+ 
+
+141
+00:02:17,680 --> 00:02:18,869
+seven next we'll define the generated
+workout function
+
+142
+00:02:18,869 --> 00:02:18,879
+workout function
+ 
+
+143
+00:02:18,879 --> 00:02:21,990
+workout function
+right underneath main
+
+144
+00:02:21,990 --> 00:02:22,000
+right underneath main
+ 
+
+145
+00:02:22,000 --> 00:02:23,990
+right underneath main
+generate workout function takes in an
+
+146
+00:02:23,990 --> 00:02:24,000
+generate workout function takes in an
+ 
+
+147
+00:02:24,000 --> 00:02:25,910
+generate workout function takes in an
+intensity and random number
+
+148
+00:02:25,910 --> 00:02:25,920
+intensity and random number
+ 
+
+149
+00:02:25,920 --> 00:02:28,630
+intensity and random number
+if the intensity is less than 25 we
+
+150
+00:02:28,630 --> 00:02:28,640
+if the intensity is less than 25 we
+ 
+
+151
+00:02:28,640 --> 00:02:30,710
+if the intensity is less than 25 we
+print out do x number of push-ups
+
+152
+00:02:30,710 --> 00:02:30,720
+print out do x number of push-ups
+ 
+
+153
+00:02:30,720 --> 00:02:33,030
+print out do x number of push-ups
+and do x number of sit-ups to figure out
+
+154
+00:02:33,030 --> 00:02:33,040
+and do x number of sit-ups to figure out
+ 
+
+155
+00:02:33,040 --> 00:02:34,949
+and do x number of sit-ups to figure out
+how many push-ups and setups to do
+
+156
+00:02:34,949 --> 00:02:34,959
+how many push-ups and setups to do
+ 
+
+157
+00:02:34,959 --> 00:02:37,990
+how many push-ups and setups to do
+we call our expensive calculation if the
+
+158
+00:02:37,990 --> 00:02:38,000
+we call our expensive calculation if the
+ 
+
+159
+00:02:38,000 --> 00:02:39,910
+we call our expensive calculation if the
+intensity is over 25
+
+160
+00:02:39,910 --> 00:02:39,920
+intensity is over 25
+ 
+
+161
+00:02:39,920 --> 00:02:42,710
+intensity is over 25
+then we go into the else clause here we
+
+162
+00:02:42,710 --> 00:02:42,720
+then we go into the else clause here we
+ 
+
+163
+00:02:42,720 --> 00:02:43,030
+then we go into the else clause here we
+check
+
+164
+00:02:43,030 --> 00:02:43,040
+check
+ 
+
+165
+00:02:43,040 --> 00:02:45,750
+check
+our random number if it's exactly three
+
+166
+00:02:45,750 --> 00:02:45,760
+our random number if it's exactly three
+ 
+
+167
+00:02:45,760 --> 00:02:47,509
+our random number if it's exactly three
+we print out take a break
+
+168
+00:02:47,509 --> 00:02:47,519
+we print out take a break
+ 
+
+169
+00:02:47,519 --> 00:02:49,910
+we print out take a break
+otherwise we pronoun run x amount of
+
+170
+00:02:49,910 --> 00:02:49,920
+otherwise we pronoun run x amount of
+ 
+
+171
+00:02:49,920 --> 00:02:51,670
+otherwise we pronoun run x amount of
+minutes and again to calculate the
+
+172
+00:02:51,670 --> 00:02:51,680
+minutes and again to calculate the
+ 
+
+173
+00:02:51,680 --> 00:02:53,110
+minutes and again to calculate the
+number of minutes to run
+
+174
+00:02:53,110 --> 00:02:53,120
+number of minutes to run
+ 
+
+175
+00:02:53,120 --> 00:02:55,350
+number of minutes to run
+we use our expensive calculation
+
+176
+00:02:55,350 --> 00:02:55,360
+we use our expensive calculation
+ 
+
+177
+00:02:55,360 --> 00:02:56,150
+we use our expensive calculation
+function
+
+178
+00:02:56,150 --> 00:02:56,160
+function
+ 
+
+179
+00:02:56,160 --> 00:02:57,910
+function
+now this works but it could use some
+
+180
+00:02:57,910 --> 00:02:57,920
+now this works but it could use some
+ 
+
+181
+00:02:57,920 --> 00:02:59,750
+now this works but it could use some
+refactoring one issue is that we're
+
+182
+00:02:59,750 --> 00:02:59,760
+refactoring one issue is that we're
+ 
+
+183
+00:02:59,760 --> 00:03:01,350
+refactoring one issue is that we're
+calling our expensive function
+
+184
+00:03:01,350 --> 00:03:01,360
+calling our expensive function
+ 
+
+185
+00:03:01,360 --> 00:03:03,910
+calling our expensive function
+in multiple places so if we change the
+
+186
+00:03:03,910 --> 00:03:03,920
+in multiple places so if we change the
+ 
+
+187
+00:03:03,920 --> 00:03:05,350
+in multiple places so if we change the
+way the function gets called
+
+188
+00:03:05,350 --> 00:03:05,360
+way the function gets called
+ 
+
+189
+00:03:05,360 --> 00:03:07,910
+way the function gets called
+for example if we add another parameter
+
+190
+00:03:07,910 --> 00:03:07,920
+for example if we add another parameter
+ 
+
+191
+00:03:07,920 --> 00:03:09,110
+for example if we add another parameter
+then we have to change
+
+192
+00:03:09,110 --> 00:03:09,120
+then we have to change
+ 
+
+193
+00:03:09,120 --> 00:03:11,589
+then we have to change
+all the call sites also we call our
+
+194
+00:03:11,589 --> 00:03:11,599
+all the call sites also we call our
+ 
+
+195
+00:03:11,599 --> 00:03:12,710
+all the call sites also we call our
+expensive function
+
+196
+00:03:12,710 --> 00:03:12,720
+expensive function
+ 
+
+197
+00:03:12,720 --> 00:03:15,589
+expensive function
+multiple times unnecessarily for example
+
+198
+00:03:15,589 --> 00:03:15,599
+multiple times unnecessarily for example
+ 
+
+199
+00:03:15,599 --> 00:03:16,710
+multiple times unnecessarily for example
+in this if block
+
+200
+00:03:16,710 --> 00:03:16,720
+in this if block
+ 
+
+201
+00:03:16,720 --> 00:03:18,790
+in this if block
+we call our expensive function twice
+
+202
+00:03:18,790 --> 00:03:18,800
+we call our expensive function twice
+ 
+
+203
+00:03:18,800 --> 00:03:21,030
+we call our expensive function twice
+when we really only need to call it once
+
+204
+00:03:21,030 --> 00:03:21,040
+when we really only need to call it once
+ 
+
+205
+00:03:21,040 --> 00:03:23,190
+when we really only need to call it once
+and then pass the return value to both
+
+206
+00:03:23,190 --> 00:03:23,200
+and then pass the return value to both
+ 
+
+207
+00:03:23,200 --> 00:03:24,789
+and then pass the return value to both
+these print statements
+
+208
+00:03:24,789 --> 00:03:24,799
+these print statements
+ 
+
+209
+00:03:24,799 --> 00:03:26,630
+these print statements
+now this might be fine for normal
+
+210
+00:03:26,630 --> 00:03:26,640
+now this might be fine for normal
+ 
+
+211
+00:03:26,640 --> 00:03:28,470
+now this might be fine for normal
+functions but remember this is an
+
+212
+00:03:28,470 --> 00:03:28,480
+functions but remember this is an
+ 
+
+213
+00:03:28,480 --> 00:03:30,229
+functions but remember this is an
+expensive function which takes two
+
+214
+00:03:30,229 --> 00:03:30,239
+expensive function which takes two
+ 
+
+215
+00:03:30,239 --> 00:03:32,550
+expensive function which takes two
+seconds to run so we want to limit the
+
+216
+00:03:32,550 --> 00:03:32,560
+seconds to run so we want to limit the
+ 
+
+217
+00:03:32,560 --> 00:03:34,470
+seconds to run so we want to limit the
+amount of times we call this function
+
+218
+00:03:34,470 --> 00:03:34,480
+amount of times we call this function
+ 
+
+219
+00:03:34,480 --> 00:03:37,110
+amount of times we call this function
+as much as possible let's fix these two
+
+220
+00:03:37,110 --> 00:03:37,120
+as much as possible let's fix these two
+ 
+
+221
+00:03:37,120 --> 00:03:37,750
+as much as possible let's fix these two
+issues
+
+222
+00:03:37,750 --> 00:03:37,760
+issues
+ 
+
+223
+00:03:37,760 --> 00:03:39,670
+issues
+by storing the result of our expensive
+
+224
+00:03:39,670 --> 00:03:39,680
+by storing the result of our expensive
+ 
+
+225
+00:03:39,680 --> 00:03:41,830
+by storing the result of our expensive
+function call inside a variable
+
+226
+00:03:41,830 --> 00:03:41,840
+function call inside a variable
+ 
+
+227
+00:03:41,840 --> 00:03:43,270
+function call inside a variable
+so we'll create a new variable at the
+
+228
+00:03:43,270 --> 00:03:43,280
+so we'll create a new variable at the
+ 
+
+229
+00:03:43,280 --> 00:03:44,869
+so we'll create a new variable at the
+top of our function
+
+230
+00:03:44,869 --> 00:03:44,879
+top of our function
+ 
+
+231
+00:03:44,879 --> 00:03:50,470
+top of our function
+we'll call it expensive result
+
+232
+00:03:50,470 --> 00:03:50,480
+
+ 
+
+233
+00:03:50,480 --> 00:03:52,789
+
+and we'll set it equal to our expensive
+
+234
+00:03:52,789 --> 00:03:52,799
+and we'll set it equal to our expensive
+ 
+
+235
+00:03:52,799 --> 00:03:56,710
+and we'll set it equal to our expensive
+function call
+
+236
+00:03:56,710 --> 00:03:56,720
+
+ 
+
+237
+00:03:56,720 --> 00:03:58,550
+
+then we'll use our variable in all our
+
+238
+00:03:58,550 --> 00:03:58,560
+then we'll use our variable in all our
+ 
+
+239
+00:03:58,560 --> 00:04:07,509
+then we'll use our variable in all our
+print line statements
+
+240
+00:04:07,509 --> 00:04:07,519
+
+ 
+
+241
+00:04:07,519 --> 00:04:09,509
+
+now this takes care of our duplication
+
+242
+00:04:09,509 --> 00:04:09,519
+now this takes care of our duplication
+ 
+
+243
+00:04:09,519 --> 00:04:11,670
+now this takes care of our duplication
+issue but now we have another issue
+
+244
+00:04:11,670 --> 00:04:11,680
+issue but now we have another issue
+ 
+
+245
+00:04:11,680 --> 00:04:13,910
+issue but now we have another issue
+we're calling our expensive function in
+
+246
+00:04:13,910 --> 00:04:13,920
+we're calling our expensive function in
+ 
+
+247
+00:04:13,920 --> 00:04:15,429
+we're calling our expensive function in
+every single case
+
+248
+00:04:15,429 --> 00:04:15,439
+every single case
+ 
+
+249
+00:04:15,439 --> 00:04:17,509
+every single case
+here at the top no matter what gets
+
+250
+00:04:17,509 --> 00:04:17,519
+here at the top no matter what gets
+ 
+
+251
+00:04:17,519 --> 00:04:18,629
+here at the top no matter what gets
+executed below
+
+252
+00:04:18,629 --> 00:04:18,639
+executed below
+ 
+
+253
+00:04:18,639 --> 00:04:20,310
+executed below
+we're going to call our expensive
+
+254
+00:04:20,310 --> 00:04:20,320
+we're going to call our expensive
+ 
+
+255
+00:04:20,320 --> 00:04:22,870
+we're going to call our expensive
+function but here you can see that if
+
+256
+00:04:22,870 --> 00:04:22,880
+function but here you can see that if
+ 
+
+257
+00:04:22,880 --> 00:04:24,390
+function but here you can see that if
+the random number is 3
+
+258
+00:04:24,390 --> 00:04:24,400
+the random number is 3
+ 
+
+259
+00:04:24,400 --> 00:04:26,070
+the random number is 3
+we don't need our expensive function
+
+260
+00:04:26,070 --> 00:04:26,080
+we don't need our expensive function
+ 
+
+261
+00:04:26,080 --> 00:04:27,430
+we don't need our expensive function
+because we just simply
+
+262
+00:04:27,430 --> 00:04:27,440
+because we just simply
+ 
+
+263
+00:04:27,440 --> 00:04:30,310
+because we just simply
+print out this text what we want is to
+
+264
+00:04:30,310 --> 00:04:30,320
+print out this text what we want is to
+ 
+
+265
+00:04:30,320 --> 00:04:32,310
+print out this text what we want is to
+define our code in one place
+
+266
+00:04:32,310 --> 00:04:32,320
+define our code in one place
+ 
+
+267
+00:04:32,320 --> 00:04:35,270
+define our code in one place
+but only execute it when necessary so
+
+268
+00:04:35,270 --> 00:04:35,280
+but only execute it when necessary so
+ 
+
+269
+00:04:35,280 --> 00:04:37,189
+but only execute it when necessary so
+let's try refactoring this
+
+270
+00:04:37,189 --> 00:04:37,199
+let's try refactoring this
+ 
+
+271
+00:04:37,199 --> 00:04:39,749
+let's try refactoring this
+using closures let's scroll back up to
+
+272
+00:04:39,749 --> 00:04:39,759
+using closures let's scroll back up to
+ 
+
+273
+00:04:39,759 --> 00:04:41,030
+using closures let's scroll back up to
+the top of our program
+
+274
+00:04:41,030 --> 00:04:41,040
+the top of our program
+ 
+
+275
+00:04:41,040 --> 00:04:43,270
+the top of our program
+and instead of defining this expensive
+
+276
+00:04:43,270 --> 00:04:43,280
+and instead of defining this expensive
+ 
+
+277
+00:04:43,280 --> 00:04:44,550
+and instead of defining this expensive
+result variable
+
+278
+00:04:44,550 --> 00:04:44,560
+result variable
+ 
+
+279
+00:04:44,560 --> 00:04:48,150
+result variable
+we'll define a closure
+
+280
+00:04:48,150 --> 00:04:48,160
+
+ 
+
+281
+00:04:48,160 --> 00:04:50,310
+
+here we have a variable called expensive
+
+282
+00:04:50,310 --> 00:04:50,320
+here we have a variable called expensive
+ 
+
+283
+00:04:50,320 --> 00:04:52,550
+here we have a variable called expensive
+closure which is equal to
+
+284
+00:04:52,550 --> 00:04:52,560
+closure which is equal to
+ 
+
+285
+00:04:52,560 --> 00:04:55,030
+closure which is equal to
+our closure now remember closures are
+
+286
+00:04:55,030 --> 00:04:55,040
+our closure now remember closures are
+ 
+
+287
+00:04:55,040 --> 00:04:56,469
+our closure now remember closures are
+anonymous functions
+
+288
+00:04:56,469 --> 00:04:56,479
+anonymous functions
+ 
+
+289
+00:04:56,479 --> 00:04:58,390
+anonymous functions
+and the difference between a closure and
+
+290
+00:04:58,390 --> 00:04:58,400
+and the difference between a closure and
+ 
+
+291
+00:04:58,400 --> 00:05:00,230
+and the difference between a closure and
+a function or at least the main visual
+
+292
+00:05:00,230 --> 00:05:00,240
+a function or at least the main visual
+ 
+
+293
+00:05:00,240 --> 00:05:00,870
+a function or at least the main visual
+difference
+
+294
+00:05:00,870 --> 00:05:00,880
+difference
+ 
+
+295
+00:05:00,880 --> 00:05:03,029
+difference
+is instead of the input parameters being
+
+296
+00:05:03,029 --> 00:05:03,039
+is instead of the input parameters being
+ 
+
+297
+00:05:03,039 --> 00:05:04,629
+is instead of the input parameters being
+inside of parentheses
+
+298
+00:05:04,629 --> 00:05:04,639
+inside of parentheses
+ 
+
+299
+00:05:04,639 --> 00:05:06,790
+inside of parentheses
+they're inside of these vertical pipes
+
+300
+00:05:06,790 --> 00:05:06,800
+they're inside of these vertical pipes
+ 
+
+301
+00:05:06,800 --> 00:05:07,749
+they're inside of these vertical pipes
+so here we have one
+
+302
+00:05:07,749 --> 00:05:07,759
+so here we have one
+ 
+
+303
+00:05:07,759 --> 00:05:10,230
+so here we have one
+input parameter which is num followed by
+
+304
+00:05:10,230 --> 00:05:10,240
+input parameter which is num followed by
+ 
+
+305
+00:05:10,240 --> 00:05:10,950
+input parameter which is num followed by
+brackets
+
+306
+00:05:10,950 --> 00:05:10,960
+brackets
+ 
+
+307
+00:05:10,960 --> 00:05:13,590
+brackets
+which hold the body of our closure and
+
+308
+00:05:13,590 --> 00:05:13,600
+which hold the body of our closure and
+ 
+
+309
+00:05:13,600 --> 00:05:14,790
+which hold the body of our closure and
+if our closure was only
+
+310
+00:05:14,790 --> 00:05:14,800
+if our closure was only
+ 
+
+311
+00:05:14,800 --> 00:05:16,629
+if our closure was only
+one line then we don't even need the
+
+312
+00:05:16,629 --> 00:05:16,639
+one line then we don't even need the
+ 
+
+313
+00:05:16,639 --> 00:05:19,189
+one line then we don't even need the
+brackets so inside our closure body
+
+314
+00:05:19,189 --> 00:05:19,199
+brackets so inside our closure body
+ 
+
+315
+00:05:19,199 --> 00:05:21,909
+brackets so inside our closure body
+we execute our expensive calculation and
+
+316
+00:05:21,909 --> 00:05:21,919
+we execute our expensive calculation and
+ 
+
+317
+00:05:21,919 --> 00:05:22,629
+we execute our expensive calculation and
+then we
+
+318
+00:05:22,629 --> 00:05:22,639
+then we
+ 
+
+319
+00:05:22,639 --> 00:05:25,990
+then we
+return num finally at the end we need
+
+320
+00:05:25,990 --> 00:05:26,000
+return num finally at the end we need
+ 
+
+321
+00:05:26,000 --> 00:05:28,790
+return num finally at the end we need
+this semicolon here to finish off the
+
+322
+00:05:28,790 --> 00:05:28,800
+this semicolon here to finish off the
+ 
+
+323
+00:05:28,800 --> 00:05:29,830
+this semicolon here to finish off the
+let statement
+
+324
+00:05:29,830 --> 00:05:29,840
+let statement
+ 
+
+325
+00:05:29,840 --> 00:05:31,830
+let statement
+note that our expensive closure variable
+
+326
+00:05:31,830 --> 00:05:31,840
+note that our expensive closure variable
+ 
+
+327
+00:05:31,840 --> 00:05:34,070
+note that our expensive closure variable
+is not storing the return value of our
+
+328
+00:05:34,070 --> 00:05:34,080
+is not storing the return value of our
+ 
+
+329
+00:05:34,080 --> 00:05:34,870
+is not storing the return value of our
+closure
+
+330
+00:05:34,870 --> 00:05:34,880
+closure
+ 
+
+331
+00:05:34,880 --> 00:05:37,189
+closure
+rather it's storing the closure itself
+
+332
+00:05:37,189 --> 00:05:37,199
+rather it's storing the closure itself
+ 
+
+333
+00:05:37,199 --> 00:05:39,590
+rather it's storing the closure itself
+also note that the body of our closure
+
+334
+00:05:39,590 --> 00:05:39,600
+also note that the body of our closure
+ 
+
+335
+00:05:39,600 --> 00:05:41,990
+also note that the body of our closure
+is identical to the body of our
+
+336
+00:05:41,990 --> 00:05:42,000
+is identical to the body of our
+ 
+
+337
+00:05:42,000 --> 00:05:43,670
+is identical to the body of our
+expensive function defined
+
+338
+00:05:43,670 --> 00:05:43,680
+expensive function defined
+ 
+
+339
+00:05:43,680 --> 00:05:46,230
+expensive function defined
+up here now that our closure is defined
+
+340
+00:05:46,230 --> 00:05:46,240
+up here now that our closure is defined
+ 
+
+341
+00:05:46,240 --> 00:05:47,670
+up here now that our closure is defined
+we can call it inside
+
+342
+00:05:47,670 --> 00:05:47,680
+we can call it inside
+ 
+
+343
+00:05:47,680 --> 00:05:54,550
+we can call it inside
+our print line statements
+
+344
+00:05:54,550 --> 00:05:54,560
+
+ 
+
+345
+00:05:54,560 --> 00:05:56,230
+
+as you can see the syntax for calling
+
+346
+00:05:56,230 --> 00:05:56,240
+as you can see the syntax for calling
+ 
+
+347
+00:05:56,240 --> 00:05:58,629
+as you can see the syntax for calling
+our closure is similar to the syntax for
+
+348
+00:05:58,629 --> 00:05:58,639
+our closure is similar to the syntax for
+ 
+
+349
+00:05:58,639 --> 00:06:00,150
+our closure is similar to the syntax for
+calling a function
+
+350
+00:06:00,150 --> 00:06:00,160
+calling a function
+ 
+
+351
+00:06:00,160 --> 00:06:02,469
+calling a function
+we specify our variable name which holds
+
+352
+00:06:02,469 --> 00:06:02,479
+we specify our variable name which holds
+ 
+
+353
+00:06:02,479 --> 00:06:03,430
+we specify our variable name which holds
+our closure
+
+354
+00:06:03,430 --> 00:06:03,440
+our closure
+ 
+
+355
+00:06:03,440 --> 00:06:06,150
+our closure
+followed by parentheses and then pass in
+
+356
+00:06:06,150 --> 00:06:06,160
+followed by parentheses and then pass in
+ 
+
+357
+00:06:06,160 --> 00:06:07,590
+followed by parentheses and then pass in
+the input parameters
+
+358
+00:06:07,590 --> 00:06:07,600
+the input parameters
+ 
+
+359
+00:06:07,600 --> 00:06:09,590
+the input parameters
+now our logic is defined in one place
+
+360
+00:06:09,590 --> 00:06:09,600
+now our logic is defined in one place
+ 
+
+361
+00:06:09,600 --> 00:06:11,189
+now our logic is defined in one place
+and we're only calling our expensive
+
+362
+00:06:11,189 --> 00:06:11,199
+and we're only calling our expensive
+ 
+
+363
+00:06:11,199 --> 00:06:12,150
+and we're only calling our expensive
+operation
+
+364
+00:06:12,150 --> 00:06:12,160
+operation
+ 
+
+365
+00:06:12,160 --> 00:06:14,550
+operation
+when needed but we're back with an old
+
+366
+00:06:14,550 --> 00:06:14,560
+when needed but we're back with an old
+ 
+
+367
+00:06:14,560 --> 00:06:15,749
+when needed but we're back with an old
+problem which is that
+
+368
+00:06:15,749 --> 00:06:15,759
+problem which is that
+ 
+
+369
+00:06:15,759 --> 00:06:17,670
+problem which is that
+in this if block we're calling our
+
+370
+00:06:17,670 --> 00:06:17,680
+in this if block we're calling our
+ 
+
+371
+00:06:17,680 --> 00:06:19,110
+in this if block we're calling our
+expensive operation
+
+372
+00:06:19,110 --> 00:06:19,120
+expensive operation
+ 
+
+373
+00:06:19,120 --> 00:06:21,830
+expensive operation
+twice which isn't good now we could fix
+
+374
+00:06:21,830 --> 00:06:21,840
+twice which isn't good now we could fix
+ 
+
+375
+00:06:21,840 --> 00:06:23,590
+twice which isn't good now we could fix
+this problem by storing the result of
+
+376
+00:06:23,590 --> 00:06:23,600
+this problem by storing the result of
+ 
+
+377
+00:06:23,600 --> 00:06:25,189
+this problem by storing the result of
+our expensive closure call
+
+378
+00:06:25,189 --> 00:06:25,199
+our expensive closure call
+ 
+
+379
+00:06:25,199 --> 00:06:27,350
+our expensive closure call
+at the top of this if statement but
+
+380
+00:06:27,350 --> 00:06:27,360
+at the top of this if statement but
+ 
+
+381
+00:06:27,360 --> 00:06:28,710
+at the top of this if statement but
+there's another way we could solve this
+
+382
+00:06:28,710 --> 00:06:28,720
+there's another way we could solve this
+ 
+
+383
+00:06:28,720 --> 00:06:29,270
+there's another way we could solve this
+problem
+
+384
+00:06:29,270 --> 00:06:29,280
+problem
+ 
+
+385
+00:06:29,280 --> 00:06:31,670
+problem
+which we'll talk about in just a bit
+
+386
+00:06:31,670 --> 00:06:31,680
+which we'll talk about in just a bit
+ 
+
+387
+00:06:31,680 --> 00:06:33,430
+which we'll talk about in just a bit
+before we solve that problem
+
+388
+00:06:33,430 --> 00:06:33,440
+before we solve that problem
+ 
+
+389
+00:06:33,440 --> 00:06:34,870
+before we solve that problem
+you might have noticed that we didn't
+
+390
+00:06:34,870 --> 00:06:34,880
+you might have noticed that we didn't
+ 
+
+391
+00:06:34,880 --> 00:06:36,629
+you might have noticed that we didn't
+have to annotate the type of our
+
+392
+00:06:36,629 --> 00:06:36,639
+have to annotate the type of our
+ 
+
+393
+00:06:36,639 --> 00:06:37,270
+have to annotate the type of our
+closure's
+
+394
+00:06:37,270 --> 00:06:37,280
+closure's
+ 
+
+395
+00:06:37,280 --> 00:06:39,350
+closure's
+input parameter nor did we have to
+
+396
+00:06:39,350 --> 00:06:39,360
+input parameter nor did we have to
+ 
+
+397
+00:06:39,360 --> 00:06:40,710
+input parameter nor did we have to
+annotate our closure's
+
+398
+00:06:40,710 --> 00:06:40,720
+annotate our closure's
+ 
+
+399
+00:06:40,720 --> 00:06:42,950
+annotate our closure's
+return value for regular functions we
+
+400
+00:06:42,950 --> 00:06:42,960
+return value for regular functions we
+ 
+
+401
+00:06:42,960 --> 00:06:44,790
+return value for regular functions we
+would have to specify the type of our
+
+402
+00:06:44,790 --> 00:06:44,800
+would have to specify the type of our
+ 
+
+403
+00:06:44,800 --> 00:06:45,909
+would have to specify the type of our
+input parameters
+
+404
+00:06:45,909 --> 00:06:45,919
+input parameters
+ 
+
+405
+00:06:45,919 --> 00:06:48,070
+input parameters
+and the type of our return values and
+
+406
+00:06:48,070 --> 00:06:48,080
+and the type of our return values and
+ 
+
+407
+00:06:48,080 --> 00:06:49,990
+and the type of our return values and
+that's because functions are part of an
+
+408
+00:06:49,990 --> 00:06:50,000
+that's because functions are part of an
+ 
+
+409
+00:06:50,000 --> 00:06:51,350
+that's because functions are part of an
+explicit interface
+
+410
+00:06:51,350 --> 00:06:51,360
+explicit interface
+ 
+
+411
+00:06:51,360 --> 00:06:53,749
+explicit interface
+exposed to users so agreeing on the
+
+412
+00:06:53,749 --> 00:06:53,759
+exposed to users so agreeing on the
+ 
+
+413
+00:06:53,759 --> 00:06:55,110
+exposed to users so agreeing on the
+types being passed in
+
+414
+00:06:55,110 --> 00:06:55,120
+types being passed in
+ 
+
+415
+00:06:55,120 --> 00:06:57,830
+types being passed in
+and returned is important closures on
+
+416
+00:06:57,830 --> 00:06:57,840
+and returned is important closures on
+ 
+
+417
+00:06:57,840 --> 00:06:59,510
+and returned is important closures on
+the other hand are usually short and
+
+418
+00:06:59,510 --> 00:06:59,520
+the other hand are usually short and
+ 
+
+419
+00:06:59,520 --> 00:07:02,150
+the other hand are usually short and
+only relevant within a narrow context so
+
+420
+00:07:02,150 --> 00:07:02,160
+only relevant within a narrow context so
+ 
+
+421
+00:07:02,160 --> 00:07:02,550
+only relevant within a narrow context so
+the
+
+422
+00:07:02,550 --> 00:07:02,560
+the
+ 
+
+423
+00:07:02,560 --> 00:07:04,870
+the
+compiler is able to determine the input
+
+424
+00:07:04,870 --> 00:07:04,880
+compiler is able to determine the input
+ 
+
+425
+00:07:04,880 --> 00:07:05,990
+compiler is able to determine the input
+parameter types
+
+426
+00:07:05,990 --> 00:07:06,000
+parameter types
+ 
+
+427
+00:07:06,000 --> 00:07:08,230
+parameter types
+and the return types this is similar to
+
+428
+00:07:08,230 --> 00:07:08,240
+and the return types this is similar to
+ 
+
+429
+00:07:08,240 --> 00:07:10,150
+and the return types this is similar to
+how the compiler is able to determine
+
+430
+00:07:10,150 --> 00:07:10,160
+how the compiler is able to determine
+ 
+
+431
+00:07:10,160 --> 00:07:12,070
+how the compiler is able to determine
+the types of most variables
+
+432
+00:07:12,070 --> 00:07:12,080
+the types of most variables
+ 
+
+433
+00:07:12,080 --> 00:07:13,749
+the types of most variables
+note that we could make the types
+
+434
+00:07:13,749 --> 00:07:13,759
+note that we could make the types
+ 
+
+435
+00:07:13,759 --> 00:07:17,430
+note that we could make the types
+explicit if we want like so
+
+436
+00:07:17,430 --> 00:07:17,440
+explicit if we want like so
+ 
+
+437
+00:07:17,440 --> 00:07:19,270
+explicit if we want like so
+this makes the types explicit at the
+
+438
+00:07:19,270 --> 00:07:19,280
+this makes the types explicit at the
+ 
+
+439
+00:07:19,280 --> 00:07:21,350
+this makes the types explicit at the
+cost of being more verbose
+
+440
+00:07:21,350 --> 00:07:21,360
+cost of being more verbose
+ 
+
+441
+00:07:21,360 --> 00:07:23,189
+cost of being more verbose
+note that closure definitions could only
+
+442
+00:07:23,189 --> 00:07:23,199
+note that closure definitions could only
+ 
+
+443
+00:07:23,199 --> 00:07:25,350
+note that closure definitions could only
+have one concrete type inferred
+
+444
+00:07:25,350 --> 00:07:25,360
+have one concrete type inferred
+ 
+
+445
+00:07:25,360 --> 00:07:27,749
+have one concrete type inferred
+for each input parameter for instance
+
+446
+00:07:27,749 --> 00:07:27,759
+for each input parameter for instance
+ 
+
+447
+00:07:27,759 --> 00:07:29,110
+for each input parameter for instance
+here we have a variable called
+
+448
+00:07:29,110 --> 00:07:29,120
+here we have a variable called
+ 
+
+449
+00:07:29,120 --> 00:07:31,189
+here we have a variable called
+example closure which is equal to a
+
+450
+00:07:31,189 --> 00:07:31,199
+example closure which is equal to a
+ 
+
+451
+00:07:31,199 --> 00:07:33,270
+example closure which is equal to a
+closure that takes in x
+
+452
+00:07:33,270 --> 00:07:33,280
+closure that takes in x
+ 
+
+453
+00:07:33,280 --> 00:07:36,150
+closure that takes in x
+and then returns x now because the
+
+454
+00:07:36,150 --> 00:07:36,160
+and then returns x now because the
+ 
+
+455
+00:07:36,160 --> 00:07:37,589
+and then returns x now because the
+closure is used
+
+456
+00:07:37,589 --> 00:07:37,599
+closure is used
+ 
+
+457
+00:07:37,599 --> 00:07:40,309
+closure is used
+here on line 26 with a string the
+
+458
+00:07:40,309 --> 00:07:40,319
+here on line 26 with a string the
+ 
+
+459
+00:07:40,319 --> 00:07:41,670
+here on line 26 with a string the
+compiler infers
+
+460
+00:07:41,670 --> 00:07:41,680
+compiler infers
+ 
+
+461
+00:07:41,680 --> 00:07:43,830
+compiler infers
+that the input parameter type is a
+
+462
+00:07:43,830 --> 00:07:43,840
+that the input parameter type is a
+ 
+
+463
+00:07:43,840 --> 00:07:46,230
+that the input parameter type is a
+string but then right underneath on line
+
+464
+00:07:46,230 --> 00:07:46,240
+string but then right underneath on line
+ 
+
+465
+00:07:46,240 --> 00:07:47,270
+string but then right underneath on line
+27
+
+466
+00:07:47,270 --> 00:07:47,280
+27
+ 
+
+467
+00:07:47,280 --> 00:07:50,309
+27
+we call our example closure variable
+
+468
+00:07:50,309 --> 00:07:50,319
+we call our example closure variable
+ 
+
+469
+00:07:50,319 --> 00:07:53,110
+we call our example closure variable
+with an integer now the compiler will
+
+470
+00:07:53,110 --> 00:07:53,120
+with an integer now the compiler will
+ 
+
+471
+00:07:53,120 --> 00:07:53,830
+with an integer now the compiler will
+complain
+
+472
+00:07:53,830 --> 00:07:53,840
+complain
+ 
+
+473
+00:07:53,840 --> 00:07:55,350
+complain
+and the arrow will say that we have
+
+474
+00:07:55,350 --> 00:07:55,360
+and the arrow will say that we have
+ 
+
+475
+00:07:55,360 --> 00:07:57,510
+and the arrow will say that we have
+mismatched types we're expecting a
+
+476
+00:07:57,510 --> 00:07:57,520
+mismatched types we're expecting a
+ 
+
+477
+00:07:57,520 --> 00:07:58,550
+mismatched types we're expecting a
+string but we get
+
+478
+00:07:58,550 --> 00:07:58,560
+string but we get
+ 
+
+479
+00:07:58,560 --> 00:08:00,950
+string but we get
+an integer so the way the compiler works
+
+480
+00:08:00,950 --> 00:08:00,960
+an integer so the way the compiler works
+ 
+
+481
+00:08:00,960 --> 00:08:02,869
+an integer so the way the compiler works
+is that the first type passed into our
+
+482
+00:08:02,869 --> 00:08:02,879
+is that the first type passed into our
+ 
+
+483
+00:08:02,879 --> 00:08:03,670
+is that the first type passed into our
+closure
+
+484
+00:08:03,670 --> 00:08:03,680
+closure
+ 
+
+485
+00:08:03,680 --> 00:08:06,309
+closure
+will be the concrete type of our input
+
+486
+00:08:06,309 --> 00:08:06,319
+will be the concrete type of our input
+ 
+
+487
+00:08:06,319 --> 00:08:07,189
+will be the concrete type of our input
+parameters
+
+488
+00:08:07,189 --> 00:08:07,199
+parameters
+ 
+
+489
+00:08:07,199 --> 00:08:08,790
+parameters
+now let's get back to the problem of
+
+490
+00:08:08,790 --> 00:08:08,800
+now let's get back to the problem of
+ 
+
+491
+00:08:08,800 --> 00:08:11,029
+now let's get back to the problem of
+calling our expensive closure twice
+
+492
+00:08:11,029 --> 00:08:11,039
+calling our expensive closure twice
+ 
+
+493
+00:08:11,039 --> 00:08:13,830
+calling our expensive closure twice
+in this if block again we could solve
+
+494
+00:08:13,830 --> 00:08:13,840
+in this if block again we could solve
+ 
+
+495
+00:08:13,840 --> 00:08:15,830
+in this if block again we could solve
+this function by creating a variable at
+
+496
+00:08:15,830 --> 00:08:15,840
+this function by creating a variable at
+ 
+
+497
+00:08:15,840 --> 00:08:16,710
+this function by creating a variable at
+the top of our
+
+498
+00:08:16,710 --> 00:08:16,720
+the top of our
+ 
+
+499
+00:08:16,720 --> 00:08:18,950
+the top of our
+if block and just storing the result of
+
+500
+00:08:18,950 --> 00:08:18,960
+if block and just storing the result of
+ 
+
+501
+00:08:18,960 --> 00:08:20,309
+if block and just storing the result of
+our expensive closure
+
+502
+00:08:20,309 --> 00:08:20,319
+our expensive closure
+ 
+
+503
+00:08:20,319 --> 00:08:22,309
+our expensive closure
+and then using that result in both of
+
+504
+00:08:22,309 --> 00:08:22,319
+and then using that result in both of
+ 
+
+505
+00:08:22,319 --> 00:08:23,990
+and then using that result in both of
+these print line statements
+
+506
+00:08:23,990 --> 00:08:24,000
+these print line statements
+ 
+
+507
+00:08:24,000 --> 00:08:25,830
+these print line statements
+but we're going to do something else
+
+508
+00:08:25,830 --> 00:08:25,840
+but we're going to do something else
+ 
+
+509
+00:08:25,840 --> 00:08:28,070
+but we're going to do something else
+what we'll do is use the memoization
+
+510
+00:08:28,070 --> 00:08:28,080
+what we'll do is use the memoization
+ 
+
+511
+00:08:28,080 --> 00:08:28,869
+what we'll do is use the memoization
+pattern
+
+512
+00:08:28,869 --> 00:08:28,879
+pattern
+ 
+
+513
+00:08:28,879 --> 00:08:31,670
+pattern
+by creating a struct which will hold our
+
+514
+00:08:31,670 --> 00:08:31,680
+by creating a struct which will hold our
+ 
+
+515
+00:08:31,680 --> 00:08:32,630
+by creating a struct which will hold our
+closure
+
+516
+00:08:32,630 --> 00:08:32,640
+closure
+ 
+
+517
+00:08:32,640 --> 00:08:35,430
+closure
+and the result of our closure here i
+
+518
+00:08:35,430 --> 00:08:35,440
+and the result of our closure here i
+ 
+
+519
+00:08:35,440 --> 00:08:37,110
+and the result of our closure here i
+created a struct called
+
+520
+00:08:37,110 --> 00:08:37,120
+created a struct called
+ 
+
+521
+00:08:37,120 --> 00:08:40,070
+created a struct called
+cacher right above our generate workout
+
+522
+00:08:40,070 --> 00:08:40,080
+cacher right above our generate workout
+ 
+
+523
+00:08:40,080 --> 00:08:40,870
+cacher right above our generate workout
+function
+
+524
+00:08:40,870 --> 00:08:40,880
+function
+ 
+
+525
+00:08:40,880 --> 00:08:43,670
+function
+now in order to define structs enums or
+
+526
+00:08:43,670 --> 00:08:43,680
+now in order to define structs enums or
+ 
+
+527
+00:08:43,680 --> 00:08:45,269
+now in order to define structs enums or
+even function parameters
+
+528
+00:08:45,269 --> 00:08:45,279
+even function parameters
+ 
+
+529
+00:08:45,279 --> 00:08:47,910
+even function parameters
+that use closures we need to use
+
+530
+00:08:47,910 --> 00:08:47,920
+that use closures we need to use
+ 
+
+531
+00:08:47,920 --> 00:08:48,870
+that use closures we need to use
+generics
+
+532
+00:08:48,870 --> 00:08:48,880
+generics
+ 
+
+533
+00:08:48,880 --> 00:08:51,590
+generics
+and trait bounds here our cache instruct
+
+534
+00:08:51,590 --> 00:08:51,600
+and trait bounds here our cache instruct
+ 
+
+535
+00:08:51,600 --> 00:08:52,230
+and trait bounds here our cache instruct
+is using
+
+536
+00:08:52,230 --> 00:08:52,240
+is using
+ 
+
+537
+00:08:52,240 --> 00:08:55,430
+is using
+a generic called t and below we define a
+
+538
+00:08:55,430 --> 00:08:55,440
+a generic called t and below we define a
+ 
+
+539
+00:08:55,440 --> 00:08:56,949
+a generic called t and below we define a
+trait bound for generic
+
+540
+00:08:56,949 --> 00:08:56,959
+trait bound for generic
+ 
+
+541
+00:08:56,959 --> 00:08:59,590
+trait bound for generic
+and the trait we're using is fn short
+
+542
+00:08:59,590 --> 00:08:59,600
+and the trait we're using is fn short
+ 
+
+543
+00:08:59,600 --> 00:09:00,150
+and the trait we're using is fn short
+for
+
+544
+00:09:00,150 --> 00:09:00,160
+for
+ 
+
+545
+00:09:00,160 --> 00:09:02,070
+for
+function now without going into what the
+
+546
+00:09:02,070 --> 00:09:02,080
+function now without going into what the
+ 
+
+547
+00:09:02,080 --> 00:09:04,310
+function now without going into what the
+fn trait is just know that it's provided
+
+548
+00:09:04,310 --> 00:09:04,320
+fn trait is just know that it's provided
+ 
+
+549
+00:09:04,320 --> 00:09:05,750
+fn trait is just know that it's provided
+by the standard library
+
+550
+00:09:05,750 --> 00:09:05,760
+by the standard library
+ 
+
+551
+00:09:05,760 --> 00:09:07,829
+by the standard library
+and all closures implement one of the
+
+552
+00:09:07,829 --> 00:09:07,839
+and all closures implement one of the
+ 
+
+553
+00:09:07,839 --> 00:09:09,670
+and all closures implement one of the
+three fn traits
+
+554
+00:09:09,670 --> 00:09:09,680
+three fn traits
+ 
+
+555
+00:09:09,680 --> 00:09:12,389
+three fn traits
+one of them is fn the other one is fn
+
+556
+00:09:12,389 --> 00:09:12,399
+one of them is fn the other one is fn
+ 
+
+557
+00:09:12,399 --> 00:09:13,350
+one of them is fn the other one is fn
+mute
+
+558
+00:09:13,350 --> 00:09:13,360
+mute
+ 
+
+559
+00:09:13,360 --> 00:09:17,269
+mute
+and the last one is fn once
+
+560
+00:09:17,269 --> 00:09:17,279
+and the last one is fn once
+ 
+
+561
+00:09:17,279 --> 00:09:19,110
+and the last one is fn once
+we'll go into the differences between
+
+562
+00:09:19,110 --> 00:09:19,120
+we'll go into the differences between
+ 
+
+563
+00:09:19,120 --> 00:09:21,190
+we'll go into the differences between
+these three traits in just a bit
+
+564
+00:09:21,190 --> 00:09:21,200
+these three traits in just a bit
+ 
+
+565
+00:09:21,200 --> 00:09:23,190
+these three traits in just a bit
+here we added types to the fn tray to
+
+566
+00:09:23,190 --> 00:09:23,200
+here we added types to the fn tray to
+ 
+
+567
+00:09:23,200 --> 00:09:25,030
+here we added types to the fn tray to
+represent the input parameters
+
+568
+00:09:25,030 --> 00:09:25,040
+represent the input parameters
+ 
+
+569
+00:09:25,040 --> 00:09:27,509
+represent the input parameters
+of our closure which is going to be one
+
+570
+00:09:27,509 --> 00:09:27,519
+of our closure which is going to be one
+ 
+
+571
+00:09:27,519 --> 00:09:29,430
+of our closure which is going to be one
+unsigned 32-bit integer
+
+572
+00:09:29,430 --> 00:09:29,440
+unsigned 32-bit integer
+ 
+
+573
+00:09:29,440 --> 00:09:31,670
+unsigned 32-bit integer
+and also the output parameters which is
+
+574
+00:09:31,670 --> 00:09:31,680
+and also the output parameters which is
+ 
+
+575
+00:09:31,680 --> 00:09:32,630
+and also the output parameters which is
+going to be again
+
+576
+00:09:32,630 --> 00:09:32,640
+going to be again
+ 
+
+577
+00:09:32,640 --> 00:09:35,269
+going to be again
+an unsigned 32-bit integer then in the
+
+578
+00:09:35,269 --> 00:09:35,279
+an unsigned 32-bit integer then in the
+ 
+
+579
+00:09:35,279 --> 00:09:37,190
+an unsigned 32-bit integer then in the
+body of our struct we have
+
+580
+00:09:37,190 --> 00:09:37,200
+body of our struct we have
+ 
+
+581
+00:09:37,200 --> 00:09:39,509
+body of our struct we have
+two fields the first one is calculation
+
+582
+00:09:39,509 --> 00:09:39,519
+two fields the first one is calculation
+ 
+
+583
+00:09:39,519 --> 00:09:41,350
+two fields the first one is calculation
+which will store our generic type
+
+584
+00:09:41,350 --> 00:09:41,360
+which will store our generic type
+ 
+
+585
+00:09:41,360 --> 00:09:44,070
+which will store our generic type
+so calculation could be any closure that
+
+586
+00:09:44,070 --> 00:09:44,080
+so calculation could be any closure that
+ 
+
+587
+00:09:44,080 --> 00:09:44,949
+so calculation could be any closure that
+meets this
+
+588
+00:09:44,949 --> 00:09:44,959
+meets this
+ 
+
+589
+00:09:44,959 --> 00:09:48,310
+meets this
+tray bound up here then we have
+
+590
+00:09:48,310 --> 00:09:48,320
+tray bound up here then we have
+ 
+
+591
+00:09:48,320 --> 00:09:50,710
+tray bound up here then we have
+value which is going to be an optional
+
+592
+00:09:50,710 --> 00:09:50,720
+value which is going to be an optional
+ 
+
+593
+00:09:50,720 --> 00:09:51,670
+value which is going to be an optional
+32-bit
+
+594
+00:09:51,670 --> 00:09:51,680
+32-bit
+ 
+
+595
+00:09:51,680 --> 00:09:54,230
+32-bit
+integer value is optional because when
+
+596
+00:09:54,230 --> 00:09:54,240
+integer value is optional because when
+ 
+
+597
+00:09:54,240 --> 00:09:55,110
+integer value is optional because when
+our cacher is
+
+598
+00:09:55,110 --> 00:09:55,120
+our cacher is
+ 
+
+599
+00:09:55,120 --> 00:09:57,190
+our cacher is
+initialized it's going to be none and
+
+600
+00:09:57,190 --> 00:09:57,200
+initialized it's going to be none and
+ 
+
+601
+00:09:57,200 --> 00:09:59,110
+initialized it's going to be none and
+then once we call our calculation
+
+602
+00:09:59,110 --> 00:09:59,120
+then once we call our calculation
+ 
+
+603
+00:09:59,120 --> 00:10:01,590
+then once we call our calculation
+we'll store the return value inside of
+
+604
+00:10:01,590 --> 00:10:01,600
+we'll store the return value inside of
+ 
+
+605
+00:10:01,600 --> 00:10:02,870
+we'll store the return value inside of
+our value field
+
+606
+00:10:02,870 --> 00:10:02,880
+our value field
+ 
+
+607
+00:10:02,880 --> 00:10:05,190
+our value field
+note that regular functions also
+
+608
+00:10:05,190 --> 00:10:05,200
+note that regular functions also
+ 
+
+609
+00:10:05,200 --> 00:10:06,710
+note that regular functions also
+implement these three
+
+610
+00:10:06,710 --> 00:10:06,720
+implement these three
+ 
+
+611
+00:10:06,720 --> 00:10:09,829
+implement these three
+fn traits so we can store a regular
+
+612
+00:10:09,829 --> 00:10:09,839
+fn traits so we can store a regular
+ 
+
+613
+00:10:09,839 --> 00:10:10,310
+fn traits so we can store a regular
+function
+
+614
+00:10:10,310 --> 00:10:10,320
+function
+ 
+
+615
+00:10:10,320 --> 00:10:13,190
+function
+inside our calculation field as well
+
+616
+00:10:13,190 --> 00:10:13,200
+inside our calculation field as well
+ 
+
+617
+00:10:13,200 --> 00:10:15,190
+inside our calculation field as well
+next i'll paste in the implementation
+
+618
+00:10:15,190 --> 00:10:15,200
+next i'll paste in the implementation
+ 
+
+619
+00:10:15,200 --> 00:10:16,949
+next i'll paste in the implementation
+block for a cache or struct
+
+620
+00:10:16,949 --> 00:10:16,959
+block for a cache or struct
+ 
+
+621
+00:10:16,959 --> 00:10:21,110
+block for a cache or struct
+and we'll talk about it
+
+622
+00:10:21,110 --> 00:10:21,120
+
+ 
+
+623
+00:10:21,120 --> 00:10:23,269
+
+okay let's walk through this we have our
+
+624
+00:10:23,269 --> 00:10:23,279
+okay let's walk through this we have our
+ 
+
+625
+00:10:23,279 --> 00:10:24,389
+okay let's walk through this we have our
+implementation block
+
+626
+00:10:24,389 --> 00:10:24,399
+implementation block
+ 
+
+627
+00:10:24,399 --> 00:10:27,110
+implementation block
+for cacher which has the same generic
+
+628
+00:10:27,110 --> 00:10:27,120
+for cacher which has the same generic
+ 
+
+629
+00:10:27,120 --> 00:10:28,230
+for cacher which has the same generic
+and trait bound
+
+630
+00:10:28,230 --> 00:10:28,240
+and trait bound
+ 
+
+631
+00:10:28,240 --> 00:10:30,630
+and trait bound
+as our cache or struct and then the
+
+632
+00:10:30,630 --> 00:10:30,640
+as our cache or struct and then the
+ 
+
+633
+00:10:30,640 --> 00:10:31,590
+as our cache or struct and then the
+first function
+
+634
+00:10:31,590 --> 00:10:31,600
+first function
+ 
+
+635
+00:10:31,600 --> 00:10:34,150
+first function
+inside is called new new is a
+
+636
+00:10:34,150 --> 00:10:34,160
+inside is called new new is a
+ 
+
+637
+00:10:34,160 --> 00:10:35,750
+inside is called new new is a
+constructor function it takes in a
+
+638
+00:10:35,750 --> 00:10:35,760
+constructor function it takes in a
+ 
+
+639
+00:10:35,760 --> 00:10:37,829
+constructor function it takes in a
+calculation which is of type t
+
+640
+00:10:37,829 --> 00:10:37,839
+calculation which is of type t
+ 
+
+641
+00:10:37,839 --> 00:10:39,910
+calculation which is of type t
+our closure and then creates a new
+
+642
+00:10:39,910 --> 00:10:39,920
+our closure and then creates a new
+ 
+
+643
+00:10:39,920 --> 00:10:41,190
+our closure and then creates a new
+cacher passing in
+
+644
+00:10:41,190 --> 00:10:41,200
+cacher passing in
+ 
+
+645
+00:10:41,200 --> 00:10:44,069
+cacher passing in
+the calculation and setting value to
+
+646
+00:10:44,069 --> 00:10:44,079
+the calculation and setting value to
+ 
+
+647
+00:10:44,079 --> 00:10:44,790
+the calculation and setting value to
+none
+
+648
+00:10:44,790 --> 00:10:44,800
+none
+ 
+
+649
+00:10:44,800 --> 00:10:47,910
+none
+then we have our value method and it's a
+
+650
+00:10:47,910 --> 00:10:47,920
+then we have our value method and it's a
+ 
+
+651
+00:10:47,920 --> 00:10:49,670
+then we have our value method and it's a
+method because the first parameter
+
+652
+00:10:49,670 --> 00:10:49,680
+method because the first parameter
+ 
+
+653
+00:10:49,680 --> 00:10:52,389
+method because the first parameter
+is a reference to self and in fact we
+
+654
+00:10:52,389 --> 00:10:52,399
+is a reference to self and in fact we
+ 
+
+655
+00:10:52,399 --> 00:10:54,470
+is a reference to self and in fact we
+have a mutable reference to self
+
+656
+00:10:54,470 --> 00:10:54,480
+have a mutable reference to self
+ 
+
+657
+00:10:54,480 --> 00:10:57,590
+have a mutable reference to self
+the next parameter is arg which is the
+
+658
+00:10:57,590 --> 00:10:57,600
+the next parameter is arg which is the
+ 
+
+659
+00:10:57,600 --> 00:11:00,150
+the next parameter is arg which is the
+argument we'll pass into our closure and
+
+660
+00:11:00,150 --> 00:11:00,160
+argument we'll pass into our closure and
+ 
+
+661
+00:11:00,160 --> 00:11:02,550
+argument we'll pass into our closure and
+it's an unsigned 32-bit integer the
+
+662
+00:11:02,550 --> 00:11:02,560
+it's an unsigned 32-bit integer the
+ 
+
+663
+00:11:02,560 --> 00:11:05,110
+it's an unsigned 32-bit integer the
+return type is also an unsigned 32-bit
+
+664
+00:11:05,110 --> 00:11:05,120
+return type is also an unsigned 32-bit
+ 
+
+665
+00:11:05,120 --> 00:11:05,829
+return type is also an unsigned 32-bit
+integer
+
+666
+00:11:05,829 --> 00:11:05,839
+integer
+ 
+
+667
+00:11:05,839 --> 00:11:08,069
+integer
+inside the value method we're going to
+
+668
+00:11:08,069 --> 00:11:08,079
+inside the value method we're going to
+ 
+
+669
+00:11:08,079 --> 00:11:09,590
+inside the value method we're going to
+do a match expression
+
+670
+00:11:09,590 --> 00:11:09,600
+do a match expression
+ 
+
+671
+00:11:09,600 --> 00:11:12,710
+do a match expression
+on self dot value so we're checking the
+
+672
+00:11:12,710 --> 00:11:12,720
+on self dot value so we're checking the
+ 
+
+673
+00:11:12,720 --> 00:11:13,829
+on self dot value so we're checking the
+self dot
+
+674
+00:11:13,829 --> 00:11:13,839
+self dot
+ 
+
+675
+00:11:13,839 --> 00:11:16,550
+self dot
+type and remember self.value is an
+
+676
+00:11:16,550 --> 00:11:16,560
+type and remember self.value is an
+ 
+
+677
+00:11:16,560 --> 00:11:17,509
+type and remember self.value is an
+optional type
+
+678
+00:11:17,509 --> 00:11:17,519
+optional type
+ 
+
+679
+00:11:17,519 --> 00:11:19,829
+optional type
+and when we first create our cacher it
+
+680
+00:11:19,829 --> 00:11:19,839
+and when we first create our cacher it
+ 
+
+681
+00:11:19,839 --> 00:11:21,269
+and when we first create our cacher it
+will be set to none
+
+682
+00:11:21,269 --> 00:11:21,279
+will be set to none
+ 
+
+683
+00:11:21,279 --> 00:11:24,310
+will be set to none
+so we'll execute this none branch
+
+684
+00:11:24,310 --> 00:11:24,320
+so we'll execute this none branch
+ 
+
+685
+00:11:24,320 --> 00:11:26,389
+so we'll execute this none branch
+inside the none arm we're creating a
+
+686
+00:11:26,389 --> 00:11:26,399
+inside the none arm we're creating a
+ 
+
+687
+00:11:26,399 --> 00:11:27,430
+inside the none arm we're creating a
+variable called v
+
+688
+00:11:27,430 --> 00:11:27,440
+variable called v
+ 
+
+689
+00:11:27,440 --> 00:11:29,590
+variable called v
+and setting it equal to the result of
+
+690
+00:11:29,590 --> 00:11:29,600
+and setting it equal to the result of
+ 
+
+691
+00:11:29,600 --> 00:11:31,350
+and setting it equal to the result of
+calling our calculation
+
+692
+00:11:31,350 --> 00:11:31,360
+calling our calculation
+ 
+
+693
+00:11:31,360 --> 00:11:35,030
+calling our calculation
+closure and passing in the arg variable
+
+694
+00:11:35,030 --> 00:11:35,040
+closure and passing in the arg variable
+ 
+
+695
+00:11:35,040 --> 00:11:37,110
+closure and passing in the arg variable
+then we're mutating the value field of
+
+696
+00:11:37,110 --> 00:11:37,120
+then we're mutating the value field of
+ 
+
+697
+00:11:37,120 --> 00:11:38,710
+then we're mutating the value field of
+the current cache or instance
+
+698
+00:11:38,710 --> 00:11:38,720
+the current cache or instance
+ 
+
+699
+00:11:38,720 --> 00:11:42,069
+the current cache or instance
+and setting it to some passing in v
+
+700
+00:11:42,069 --> 00:11:42,079
+and setting it to some passing in v
+ 
+
+701
+00:11:42,079 --> 00:11:44,069
+and setting it to some passing in v
+this is where the caching happens we're
+
+702
+00:11:44,069 --> 00:11:44,079
+this is where the caching happens we're
+ 
+
+703
+00:11:44,079 --> 00:11:45,829
+this is where the caching happens we're
+caching the return value of our
+
+704
+00:11:45,829 --> 00:11:45,839
+caching the return value of our
+ 
+
+705
+00:11:45,839 --> 00:11:46,949
+caching the return value of our
+calculation
+
+706
+00:11:46,949 --> 00:11:46,959
+calculation
+ 
+
+707
+00:11:46,959 --> 00:11:49,110
+calculation
+inside the value field and then we
+
+708
+00:11:49,110 --> 00:11:49,120
+inside the value field and then we
+ 
+
+709
+00:11:49,120 --> 00:11:50,710
+inside the value field and then we
+simply return
+
+710
+00:11:50,710 --> 00:11:50,720
+simply return
+ 
+
+711
+00:11:50,720 --> 00:11:53,190
+simply return
+v next let's use our cash or struct
+
+712
+00:11:53,190 --> 00:11:53,200
+v next let's use our cash or struct
+ 
+
+713
+00:11:53,200 --> 00:11:55,350
+v next let's use our cash or struct
+inside the generate workout function
+
+714
+00:11:55,350 --> 00:11:55,360
+inside the generate workout function
+ 
+
+715
+00:11:55,360 --> 00:11:57,430
+inside the generate workout function
+but before we do that let's first run
+
+716
+00:11:57,430 --> 00:11:57,440
+but before we do that let's first run
+ 
+
+717
+00:11:57,440 --> 00:12:03,509
+but before we do that let's first run
+our program
+
+718
+00:12:03,509 --> 00:12:03,519
+
+ 
+
+719
+00:12:03,519 --> 00:12:05,590
+
+as you can see our expensive closure was
+
+720
+00:12:05,590 --> 00:12:05,600
+as you can see our expensive closure was
+ 
+
+721
+00:12:05,600 --> 00:12:06,710
+as you can see our expensive closure was
+called twice
+
+722
+00:12:06,710 --> 00:12:06,720
+called twice
+ 
+
+723
+00:12:06,720 --> 00:12:08,949
+called twice
+once to calculate the number of push-ups
+
+724
+00:12:08,949 --> 00:12:08,959
+once to calculate the number of push-ups
+ 
+
+725
+00:12:08,959 --> 00:12:10,550
+once to calculate the number of push-ups
+and the second time to calculate
+
+726
+00:12:10,550 --> 00:12:10,560
+and the second time to calculate
+ 
+
+727
+00:12:10,560 --> 00:12:12,870
+and the second time to calculate
+the number of sit-ups let's make this
+
+728
+00:12:12,870 --> 00:12:12,880
+the number of sit-ups let's make this
+ 
+
+729
+00:12:12,880 --> 00:12:14,710
+the number of sit-ups let's make this
+more efficient by wrapping our closure
+
+730
+00:12:14,710 --> 00:12:14,720
+more efficient by wrapping our closure
+ 
+
+731
+00:12:14,720 --> 00:12:15,430
+more efficient by wrapping our closure
+definition
+
+732
+00:12:15,430 --> 00:12:15,440
+definition
+ 
+
+733
+00:12:15,440 --> 00:12:27,990
+definition
+up here inside our casher struct
+
+734
+00:12:27,990 --> 00:12:28,000
+
+ 
+
+735
+00:12:28,000 --> 00:12:29,750
+
+here we're calling the new function on
+
+736
+00:12:29,750 --> 00:12:29,760
+here we're calling the new function on
+ 
+
+737
+00:12:29,760 --> 00:12:31,829
+here we're calling the new function on
+our cash or struct and passing in
+
+738
+00:12:31,829 --> 00:12:31,839
+our cash or struct and passing in
+ 
+
+739
+00:12:31,839 --> 00:12:34,069
+our cash or struct and passing in
+our closure which will be set to the
+
+740
+00:12:34,069 --> 00:12:34,079
+our closure which will be set to the
+ 
+
+741
+00:12:34,079 --> 00:12:35,430
+our closure which will be set to the
+calculation field
+
+742
+00:12:35,430 --> 00:12:35,440
+calculation field
+ 
+
+743
+00:12:35,440 --> 00:12:37,670
+calculation field
+on our cash restruct let's change our
+
+744
+00:12:37,670 --> 00:12:37,680
+on our cash restruct let's change our
+ 
+
+745
+00:12:37,680 --> 00:12:42,870
+on our cash restruct let's change our
+variable name to cached result
+
+746
+00:12:42,870 --> 00:12:42,880
+
+ 
+
+747
+00:12:42,880 --> 00:12:44,310
+
+we'll also want to make our variable
+
+748
+00:12:44,310 --> 00:12:44,320
+we'll also want to make our variable
+ 
+
+749
+00:12:44,320 --> 00:12:45,910
+we'll also want to make our variable
+mutable because we'll be calling the
+
+750
+00:12:45,910 --> 00:12:45,920
+mutable because we'll be calling the
+ 
+
+751
+00:12:45,920 --> 00:12:46,790
+mutable because we'll be calling the
+value method
+
+752
+00:12:46,790 --> 00:12:46,800
+value method
+ 
+
+753
+00:12:46,800 --> 00:12:52,389
+value method
+which will mutate our cache or struct
+
+754
+00:12:52,389 --> 00:12:52,399
+which will mutate our cache or struct
+ 
+
+755
+00:12:52,399 --> 00:12:54,230
+which will mutate our cache or struct
+then instead of calling expensive
+
+756
+00:12:54,230 --> 00:12:54,240
+then instead of calling expensive
+ 
+
+757
+00:12:54,240 --> 00:12:55,509
+then instead of calling expensive
+closure we'll call
+
+758
+00:12:55,509 --> 00:12:55,519
+closure we'll call
+ 
+
+759
+00:12:55,519 --> 00:13:07,590
+closure we'll call
+cachedresult dot value
+
+760
+00:13:07,590 --> 00:13:07,600
+cachedresult dot value
+ 
+
+761
+00:13:07,600 --> 00:13:13,269
+cachedresult dot value
+let's go ahead and run our program again
+
+762
+00:13:13,269 --> 00:13:13,279
+
+ 
+
+763
+00:13:13,279 --> 00:13:15,269
+
+and as you can see this time we only
+
+764
+00:13:15,269 --> 00:13:15,279
+and as you can see this time we only
+ 
+
+765
+00:13:15,279 --> 00:13:17,590
+and as you can see this time we only
+call our expensive operation
+
+766
+00:13:17,590 --> 00:13:17,600
+call our expensive operation
+ 
+
+767
+00:13:17,600 --> 00:13:20,389
+call our expensive operation
+once now caching values is generally a
+
+768
+00:13:20,389 --> 00:13:20,399
+once now caching values is generally a
+ 
+
+769
+00:13:20,399 --> 00:13:22,470
+once now caching values is generally a
+useful behavior so we might want to use
+
+770
+00:13:22,470 --> 00:13:22,480
+useful behavior so we might want to use
+ 
+
+771
+00:13:22,480 --> 00:13:23,350
+useful behavior so we might want to use
+our cacher
+
+772
+00:13:23,350 --> 00:13:23,360
+our cacher
+ 
+
+773
+00:13:23,360 --> 00:13:25,590
+our cacher
+in different contexts but there are two
+
+774
+00:13:25,590 --> 00:13:25,600
+in different contexts but there are two
+ 
+
+775
+00:13:25,600 --> 00:13:27,910
+in different contexts but there are two
+problems preventing us from doing this
+
+776
+00:13:27,910 --> 00:13:27,920
+problems preventing us from doing this
+ 
+
+777
+00:13:27,920 --> 00:13:30,230
+problems preventing us from doing this
+problem number one is calling our value
+
+778
+00:13:30,230 --> 00:13:30,240
+problem number one is calling our value
+ 
+
+779
+00:13:30,240 --> 00:13:32,069
+problem number one is calling our value
+method is going to return
+
+780
+00:13:32,069 --> 00:13:32,079
+method is going to return
+ 
+
+781
+00:13:32,079 --> 00:13:35,190
+method is going to return
+the same value no matter what the arg
+
+782
+00:13:35,190 --> 00:13:35,200
+the same value no matter what the arg
+ 
+
+783
+00:13:35,200 --> 00:13:37,829
+the same value no matter what the arg
+input parameter is for example let's say
+
+784
+00:13:37,829 --> 00:13:37,839
+input parameter is for example let's say
+ 
+
+785
+00:13:37,839 --> 00:13:39,910
+input parameter is for example let's say
+the first time we call the value method
+
+786
+00:13:39,910 --> 00:13:39,920
+the first time we call the value method
+ 
+
+787
+00:13:39,920 --> 00:13:43,110
+the first time we call the value method
+we pass in one as the value for arg
+
+788
+00:13:43,110 --> 00:13:43,120
+we pass in one as the value for arg
+ 
+
+789
+00:13:43,120 --> 00:13:44,389
+we pass in one as the value for arg
+because this is the first time we're
+
+790
+00:13:44,389 --> 00:13:44,399
+because this is the first time we're
+ 
+
+791
+00:13:44,399 --> 00:13:46,790
+because this is the first time we're
+calling the value method self.value is
+
+792
+00:13:46,790 --> 00:13:46,800
+calling the value method self.value is
+ 
+
+793
+00:13:46,800 --> 00:13:48,230
+calling the value method self.value is
+going to evaluate to none
+
+794
+00:13:48,230 --> 00:13:48,240
+going to evaluate to none
+ 
+
+795
+00:13:48,240 --> 00:13:50,150
+going to evaluate to none
+so we'll go into the none branch and
+
+796
+00:13:50,150 --> 00:13:50,160
+so we'll go into the none branch and
+ 
+
+797
+00:13:50,160 --> 00:13:51,350
+so we'll go into the none branch and
+then call our
+
+798
+00:13:51,350 --> 00:13:51,360
+then call our
+ 
+
+799
+00:13:51,360 --> 00:13:53,910
+then call our
+closure with our arg which is going to
+
+800
+00:13:53,910 --> 00:13:53,920
+closure with our arg which is going to
+ 
+
+801
+00:13:53,920 --> 00:13:55,269
+closure with our arg which is going to
+be equal to 1.
+
+802
+00:13:55,269 --> 00:13:55,279
+be equal to 1.
+ 
+
+803
+00:13:55,279 --> 00:13:57,670
+be equal to 1.
+then we'll take the resulting value and
+
+804
+00:13:57,670 --> 00:13:57,680
+then we'll take the resulting value and
+ 
+
+805
+00:13:57,680 --> 00:13:58,870
+then we'll take the resulting value and
+save it inside
+
+806
+00:13:58,870 --> 00:13:58,880
+save it inside
+ 
+
+807
+00:13:58,880 --> 00:14:01,670
+save it inside
+self.value now imagine we call our value
+
+808
+00:14:01,670 --> 00:14:01,680
+self.value now imagine we call our value
+ 
+
+809
+00:14:01,680 --> 00:14:02,150
+self.value now imagine we call our value
+method
+
+810
+00:14:02,150 --> 00:14:02,160
+method
+ 
+
+811
+00:14:02,160 --> 00:14:04,870
+method
+again but this time we pass in 2 as the
+
+812
+00:14:04,870 --> 00:14:04,880
+again but this time we pass in 2 as the
+ 
+
+813
+00:14:04,880 --> 00:14:05,590
+again but this time we pass in 2 as the
+value for
+
+814
+00:14:05,590 --> 00:14:05,600
+value for
+ 
+
+815
+00:14:05,600 --> 00:14:08,470
+value for
+arg this time self.value already exists
+
+816
+00:14:08,470 --> 00:14:08,480
+arg this time self.value already exists
+ 
+
+817
+00:14:08,480 --> 00:14:10,550
+arg this time self.value already exists
+so we'll go into the sum arm and just
+
+818
+00:14:10,550 --> 00:14:10,560
+so we'll go into the sum arm and just
+ 
+
+819
+00:14:10,560 --> 00:14:13,350
+so we'll go into the sum arm and just
+return the value stored in sum this is
+
+820
+00:14:13,350 --> 00:14:13,360
+return the value stored in sum this is
+ 
+
+821
+00:14:13,360 --> 00:14:14,389
+return the value stored in sum this is
+problematic because
+
+822
+00:14:14,389 --> 00:14:14,399
+problematic because
+ 
+
+823
+00:14:14,399 --> 00:14:16,790
+problematic because
+r gets passed to our closure which means
+
+824
+00:14:16,790 --> 00:14:16,800
+r gets passed to our closure which means
+ 
+
+825
+00:14:16,800 --> 00:14:18,790
+r gets passed to our closure which means
+that it could change the resulting value
+
+826
+00:14:18,790 --> 00:14:18,800
+that it could change the resulting value
+ 
+
+827
+00:14:18,800 --> 00:14:19,430
+that it could change the resulting value
+coming
+
+828
+00:14:19,430 --> 00:14:19,440
+coming
+ 
+
+829
+00:14:19,440 --> 00:14:21,269
+coming
+from our closure but with our current
+
+830
+00:14:21,269 --> 00:14:21,279
+from our closure but with our current
+ 
+
+831
+00:14:21,279 --> 00:14:23,430
+from our closure but with our current
+implementation value is always going to
+
+832
+00:14:23,430 --> 00:14:23,440
+implementation value is always going to
+ 
+
+833
+00:14:23,440 --> 00:14:25,590
+implementation value is always going to
+be equal to the result of calling
+
+834
+00:14:25,590 --> 00:14:25,600
+be equal to the result of calling
+ 
+
+835
+00:14:25,600 --> 00:14:27,829
+be equal to the result of calling
+our closure with the argument passed
+
+836
+00:14:27,829 --> 00:14:27,839
+our closure with the argument passed
+ 
+
+837
+00:14:27,839 --> 00:14:29,110
+our closure with the argument passed
+into the first call
+
+838
+00:14:29,110 --> 00:14:29,120
+into the first call
+ 
+
+839
+00:14:29,120 --> 00:14:31,350
+into the first call
+to value what i'm basically saying is
+
+840
+00:14:31,350 --> 00:14:31,360
+to value what i'm basically saying is
+ 
+
+841
+00:14:31,360 --> 00:14:33,189
+to value what i'm basically saying is
+instead of cashing one value
+
+842
+00:14:33,189 --> 00:14:33,199
+instead of cashing one value
+ 
+
+843
+00:14:33,199 --> 00:14:35,590
+instead of cashing one value
+no matter what the argument passed in is
+
+844
+00:14:35,590 --> 00:14:35,600
+no matter what the argument passed in is
+ 
+
+845
+00:14:35,600 --> 00:14:36,710
+no matter what the argument passed in is
+we need to cash
+
+846
+00:14:36,710 --> 00:14:36,720
+we need to cash
+ 
+
+847
+00:14:36,720 --> 00:14:39,110
+we need to cash
+one value for each argument being passed
+
+848
+00:14:39,110 --> 00:14:39,120
+one value for each argument being passed
+ 
+
+849
+00:14:39,120 --> 00:14:40,790
+one value for each argument being passed
+in because the argument
+
+850
+00:14:40,790 --> 00:14:40,800
+in because the argument
+ 
+
+851
+00:14:40,800 --> 00:14:43,750
+in because the argument
+influences the value as an exercise you
+
+852
+00:14:43,750 --> 00:14:43,760
+influences the value as an exercise you
+ 
+
+853
+00:14:43,760 --> 00:14:45,910
+influences the value as an exercise you
+can fix this implementation by storing a
+
+854
+00:14:45,910 --> 00:14:45,920
+can fix this implementation by storing a
+ 
+
+855
+00:14:45,920 --> 00:14:46,629
+can fix this implementation by storing a
+hashmap
+
+856
+00:14:46,629 --> 00:14:46,639
+hashmap
+ 
+
+857
+00:14:46,639 --> 00:14:48,949
+hashmap
+instead of a single value the keys of
+
+858
+00:14:48,949 --> 00:14:48,959
+instead of a single value the keys of
+ 
+
+859
+00:14:48,959 --> 00:14:50,389
+instead of a single value the keys of
+the hashmap will be
+
+860
+00:14:50,389 --> 00:14:50,399
+the hashmap will be
+ 
+
+861
+00:14:50,399 --> 00:14:53,110
+the hashmap will be
+the argument passed into value and the
+
+862
+00:14:53,110 --> 00:14:53,120
+the argument passed into value and the
+ 
+
+863
+00:14:53,120 --> 00:14:54,470
+the argument passed into value and the
+values in your hashmap
+
+864
+00:14:54,470 --> 00:14:54,480
+values in your hashmap
+ 
+
+865
+00:14:54,480 --> 00:14:57,189
+values in your hashmap
+will be the result of calling the
+
+866
+00:14:57,189 --> 00:14:57,199
+will be the result of calling the
+ 
+
+867
+00:14:57,199 --> 00:14:58,069
+will be the result of calling the
+closure
+
+868
+00:14:58,069 --> 00:14:58,079
+closure
+ 
+
+869
+00:14:58,079 --> 00:15:00,550
+closure
+with the argument then inside the body
+
+870
+00:15:00,550 --> 00:15:00,560
+with the argument then inside the body
+ 
+
+871
+00:15:00,560 --> 00:15:01,670
+with the argument then inside the body
+of this value method
+
+872
+00:15:01,670 --> 00:15:01,680
+of this value method
+ 
+
+873
+00:15:01,680 --> 00:15:04,150
+of this value method
+you'll need to look up the arg inside
+
+874
+00:15:04,150 --> 00:15:04,160
+you'll need to look up the arg inside
+ 
+
+875
+00:15:04,160 --> 00:15:05,110
+you'll need to look up the arg inside
+your hash map
+
+876
+00:15:05,110 --> 00:15:05,120
+your hash map
+ 
+
+877
+00:15:05,120 --> 00:15:07,829
+your hash map
+and if a value for that arg exists then
+
+878
+00:15:07,829 --> 00:15:07,839
+and if a value for that arg exists then
+ 
+
+879
+00:15:07,839 --> 00:15:09,110
+and if a value for that arg exists then
+just simply return
+
+880
+00:15:09,110 --> 00:15:09,120
+just simply return
+ 
+
+881
+00:15:09,120 --> 00:15:11,590
+just simply return
+the value and if it doesn't exist run
+
+882
+00:15:11,590 --> 00:15:11,600
+the value and if it doesn't exist run
+ 
+
+883
+00:15:11,600 --> 00:15:13,829
+the value and if it doesn't exist run
+your expensive calculation and store the
+
+884
+00:15:13,829 --> 00:15:13,839
+your expensive calculation and store the
+ 
+
+885
+00:15:13,839 --> 00:15:14,550
+your expensive calculation and store the
+result
+
+886
+00:15:14,550 --> 00:15:14,560
+result
+ 
+
+887
+00:15:14,560 --> 00:15:16,790
+result
+inside your hash map the second problem
+
+888
+00:15:16,790 --> 00:15:16,800
+inside your hash map the second problem
+ 
+
+889
+00:15:16,800 --> 00:15:18,949
+inside your hash map the second problem
+with our cacher implementation
+
+890
+00:15:18,949 --> 00:15:18,959
+with our cacher implementation
+ 
+
+891
+00:15:18,959 --> 00:15:21,350
+with our cacher implementation
+is that we're using hard-coded types for
+
+892
+00:15:21,350 --> 00:15:21,360
+is that we're using hard-coded types for
+ 
+
+893
+00:15:21,360 --> 00:15:22,710
+is that we're using hard-coded types for
+example we're saying that our
+
+894
+00:15:22,710 --> 00:15:22,720
+example we're saying that our
+ 
+
+895
+00:15:22,720 --> 00:15:25,189
+example we're saying that our
+closure needs to accept an integer and
+
+896
+00:15:25,189 --> 00:15:25,199
+closure needs to accept an integer and
+ 
+
+897
+00:15:25,199 --> 00:15:26,470
+closure needs to accept an integer and
+return an integer
+
+898
+00:15:26,470 --> 00:15:26,480
+return an integer
+ 
+
+899
+00:15:26,480 --> 00:15:28,949
+return an integer
+and our value needs to be an integer as
+
+900
+00:15:28,949 --> 00:15:28,959
+and our value needs to be an integer as
+ 
+
+901
+00:15:28,959 --> 00:15:29,590
+and our value needs to be an integer as
+well
+
+902
+00:15:29,590 --> 00:15:29,600
+well
+ 
+
+903
+00:15:29,600 --> 00:15:32,069
+well
+to fix this you can simply use generics
+
+904
+00:15:32,069 --> 00:15:32,079
+to fix this you can simply use generics
+ 
+
+905
+00:15:32,079 --> 00:15:32,710
+to fix this you can simply use generics
+instead of
+
+906
+00:15:32,710 --> 00:15:32,720
+instead of
+ 
+
+907
+00:15:32,720 --> 00:15:34,870
+instead of
+hard-coded values the last thing i want
+
+908
+00:15:34,870 --> 00:15:34,880
+hard-coded values the last thing i want
+ 
+
+909
+00:15:34,880 --> 00:15:36,629
+hard-coded values the last thing i want
+to talk about is capturing the
+
+910
+00:15:36,629 --> 00:15:36,639
+to talk about is capturing the
+ 
+
+911
+00:15:36,639 --> 00:15:38,389
+to talk about is capturing the
+environment with closures
+
+912
+00:15:38,389 --> 00:15:38,399
+environment with closures
+ 
+
+913
+00:15:38,399 --> 00:15:41,189
+environment with closures
+unlike functions closures have access to
+
+914
+00:15:41,189 --> 00:15:41,199
+unlike functions closures have access to
+ 
+
+915
+00:15:41,199 --> 00:15:42,069
+unlike functions closures have access to
+variables
+
+916
+00:15:42,069 --> 00:15:42,079
+variables
+ 
+
+917
+00:15:42,079 --> 00:15:43,990
+variables
+that are defined within the scope in
+
+918
+00:15:43,990 --> 00:15:44,000
+that are defined within the scope in
+ 
+
+919
+00:15:44,000 --> 00:15:45,829
+that are defined within the scope in
+which the closure is defined
+
+920
+00:15:45,829 --> 00:15:45,839
+which the closure is defined
+ 
+
+921
+00:15:45,839 --> 00:15:47,749
+which the closure is defined
+here's a simple example at the top we
+
+922
+00:15:47,749 --> 00:15:47,759
+here's a simple example at the top we
+ 
+
+923
+00:15:47,759 --> 00:15:48,870
+here's a simple example at the top we
+have a variable called
+
+924
+00:15:48,870 --> 00:15:48,880
+have a variable called
+ 
+
+925
+00:15:48,880 --> 00:15:51,590
+have a variable called
+x which is equal to four then we have a
+
+926
+00:15:51,590 --> 00:15:51,600
+x which is equal to four then we have a
+ 
+
+927
+00:15:51,600 --> 00:15:53,350
+x which is equal to four then we have a
+closure called equal to x
+
+928
+00:15:53,350 --> 00:15:53,360
+closure called equal to x
+ 
+
+929
+00:15:53,360 --> 00:15:55,749
+closure called equal to x
+which takes in a variable called z and
+
+930
+00:15:55,749 --> 00:15:55,759
+which takes in a variable called z and
+ 
+
+931
+00:15:55,759 --> 00:15:57,509
+which takes in a variable called z and
+then returns a boolean
+
+932
+00:15:57,509 --> 00:15:57,519
+then returns a boolean
+ 
+
+933
+00:15:57,519 --> 00:15:59,110
+then returns a boolean
+the boolean is going to be equal to this
+
+934
+00:15:59,110 --> 00:15:59,120
+the boolean is going to be equal to this
+ 
+
+935
+00:15:59,120 --> 00:16:00,949
+the boolean is going to be equal to this
+expression z is equal
+
+936
+00:16:00,949 --> 00:16:00,959
+expression z is equal
+ 
+
+937
+00:16:00,959 --> 00:16:03,590
+expression z is equal
+to x now even though x is defined
+
+938
+00:16:03,590 --> 00:16:03,600
+to x now even though x is defined
+ 
+
+939
+00:16:03,600 --> 00:16:05,110
+to x now even though x is defined
+outside of our closure
+
+940
+00:16:05,110 --> 00:16:05,120
+outside of our closure
+ 
+
+941
+00:16:05,120 --> 00:16:07,430
+outside of our closure
+our closure still has access to x
+
+942
+00:16:07,430 --> 00:16:07,440
+our closure still has access to x
+ 
+
+943
+00:16:07,440 --> 00:16:09,030
+our closure still has access to x
+because they're both defined within the
+
+944
+00:16:09,030 --> 00:16:09,040
+because they're both defined within the
+ 
+
+945
+00:16:09,040 --> 00:16:09,990
+because they're both defined within the
+same scope
+
+946
+00:16:09,990 --> 00:16:10,000
+same scope
+ 
+
+947
+00:16:10,000 --> 00:16:11,990
+same scope
+then we define a variable called y and
+
+948
+00:16:11,990 --> 00:16:12,000
+then we define a variable called y and
+ 
+
+949
+00:16:12,000 --> 00:16:13,749
+then we define a variable called y and
+set it also equal to four
+
+950
+00:16:13,749 --> 00:16:13,759
+set it also equal to four
+ 
+
+951
+00:16:13,759 --> 00:16:16,710
+set it also equal to four
+finally we call our closure passing in y
+
+952
+00:16:16,710 --> 00:16:16,720
+finally we call our closure passing in y
+ 
+
+953
+00:16:16,720 --> 00:16:18,470
+finally we call our closure passing in y
+the call to our closure is wrapped
+
+954
+00:16:18,470 --> 00:16:18,480
+the call to our closure is wrapped
+ 
+
+955
+00:16:18,480 --> 00:16:20,310
+the call to our closure is wrapped
+inside an assert macro
+
+956
+00:16:20,310 --> 00:16:20,320
+inside an assert macro
+ 
+
+957
+00:16:20,320 --> 00:16:22,629
+inside an assert macro
+which will panic if the call tower
+
+958
+00:16:22,629 --> 00:16:22,639
+which will panic if the call tower
+ 
+
+959
+00:16:22,639 --> 00:16:23,590
+which will panic if the call tower
+function results
+
+960
+00:16:23,590 --> 00:16:23,600
+function results
+ 
+
+961
+00:16:23,600 --> 00:16:26,069
+function results
+in false so let's go ahead and run our
+
+962
+00:16:26,069 --> 00:16:26,079
+in false so let's go ahead and run our
+ 
+
+963
+00:16:26,079 --> 00:16:28,710
+in false so let's go ahead and run our
+program
+
+964
+00:16:28,710 --> 00:16:28,720
+
+ 
+
+965
+00:16:28,720 --> 00:16:31,670
+
+and as you can see we did not panic now
+
+966
+00:16:31,670 --> 00:16:31,680
+and as you can see we did not panic now
+ 
+
+967
+00:16:31,680 --> 00:16:33,509
+and as you can see we did not panic now
+let's see what would happen if we used a
+
+968
+00:16:33,509 --> 00:16:33,519
+let's see what would happen if we used a
+ 
+
+969
+00:16:33,519 --> 00:16:34,230
+let's see what would happen if we used a
+function
+
+970
+00:16:34,230 --> 00:16:34,240
+function
+ 
+
+971
+00:16:34,240 --> 00:16:36,710
+function
+instead of a closure so we'll change our
+
+972
+00:16:36,710 --> 00:16:36,720
+instead of a closure so we'll change our
+ 
+
+973
+00:16:36,720 --> 00:16:37,670
+instead of a closure so we'll change our
+equal to x
+
+974
+00:16:37,670 --> 00:16:37,680
+equal to x
+ 
+
+975
+00:16:37,680 --> 00:16:41,829
+equal to x
+closure into a function
+
+976
+00:16:41,829 --> 00:16:41,839
+
+ 
+
+977
+00:16:41,839 --> 00:16:43,910
+
+here you can see some red squiggly lines
+
+978
+00:16:43,910 --> 00:16:43,920
+here you can see some red squiggly lines
+ 
+
+979
+00:16:43,920 --> 00:16:45,910
+here you can see some red squiggly lines
+underneath x and if i hover over you can
+
+980
+00:16:45,910 --> 00:16:45,920
+underneath x and if i hover over you can
+ 
+
+981
+00:16:45,920 --> 00:16:47,030
+underneath x and if i hover over you can
+see the error is
+
+982
+00:16:47,030 --> 00:16:47,040
+see the error is
+ 
+
+983
+00:16:47,040 --> 00:16:49,509
+see the error is
+can't capture dynamic environment inside
+
+984
+00:16:49,509 --> 00:16:49,519
+can't capture dynamic environment inside
+ 
+
+985
+00:16:49,519 --> 00:16:50,470
+can't capture dynamic environment inside
+a function
+
+986
+00:16:50,470 --> 00:16:50,480
+a function
+ 
+
+987
+00:16:50,480 --> 00:16:52,710
+a function
+use a closure instead so the compiler is
+
+988
+00:16:52,710 --> 00:16:52,720
+use a closure instead so the compiler is
+ 
+
+989
+00:16:52,720 --> 00:16:54,230
+use a closure instead so the compiler is
+actually telling us to use
+
+990
+00:16:54,230 --> 00:16:54,240
+actually telling us to use
+ 
+
+991
+00:16:54,240 --> 00:16:56,550
+actually telling us to use
+a closure instead of a function because
+
+992
+00:16:56,550 --> 00:16:56,560
+a closure instead of a function because
+ 
+
+993
+00:16:56,560 --> 00:16:58,230
+a closure instead of a function because
+closures are able to capture their
+
+994
+00:16:58,230 --> 00:16:58,240
+closures are able to capture their
+ 
+
+995
+00:16:58,240 --> 00:16:58,949
+closures are able to capture their
+environment
+
+996
+00:16:58,949 --> 00:16:58,959
+environment
+ 
+
+997
+00:16:58,959 --> 00:17:01,189
+environment
+they have to use extra memory to store
+
+998
+00:17:01,189 --> 00:17:01,199
+they have to use extra memory to store
+ 
+
+999
+00:17:01,199 --> 00:17:02,310
+they have to use extra memory to store
+that context
+
+1000
+00:17:02,310 --> 00:17:02,320
+that context
+ 
+
+1001
+00:17:02,320 --> 00:17:04,069
+that context
+but because functions don't capture
+
+1002
+00:17:04,069 --> 00:17:04,079
+but because functions don't capture
+ 
+
+1003
+00:17:04,079 --> 00:17:06,069
+but because functions don't capture
+their environment they don't incur the
+
+1004
+00:17:06,069 --> 00:17:06,079
+their environment they don't incur the
+ 
+
+1005
+00:17:06,079 --> 00:17:07,429
+their environment they don't incur the
+same overhead
+
+1006
+00:17:07,429 --> 00:17:07,439
+same overhead
+ 
+
+1007
+00:17:07,439 --> 00:17:09,189
+same overhead
+closures capture values from their
+
+1008
+00:17:09,189 --> 00:17:09,199
+closures capture values from their
+ 
+
+1009
+00:17:09,199 --> 00:17:10,870
+closures capture values from their
+environment in three ways
+
+1010
+00:17:10,870 --> 00:17:10,880
+environment in three ways
+ 
+
+1011
+00:17:10,880 --> 00:17:13,110
+environment in three ways
+which directly map to the three ways a
+
+1012
+00:17:13,110 --> 00:17:13,120
+which directly map to the three ways a
+ 
+
+1013
+00:17:13,120 --> 00:17:14,549
+which directly map to the three ways a
+function could take in
+
+1014
+00:17:14,549 --> 00:17:14,559
+function could take in
+ 
+
+1015
+00:17:14,559 --> 00:17:17,590
+function could take in
+input parameters by taking ownership by
+
+1016
+00:17:17,590 --> 00:17:17,600
+input parameters by taking ownership by
+ 
+
+1017
+00:17:17,600 --> 00:17:18,870
+input parameters by taking ownership by
+borrowing immutably
+
+1018
+00:17:18,870 --> 00:17:18,880
+borrowing immutably
+ 
+
+1019
+00:17:18,880 --> 00:17:21,909
+borrowing immutably
+or by borrowing immutably these three
+
+1020
+00:17:21,909 --> 00:17:21,919
+or by borrowing immutably these three
+ 
+
+1021
+00:17:21,919 --> 00:17:23,669
+or by borrowing immutably these three
+ways to capture the environment
+
+1022
+00:17:23,669 --> 00:17:23,679
+ways to capture the environment
+ 
+
+1023
+00:17:23,679 --> 00:17:26,069
+ways to capture the environment
+are encoded in the function traits we
+
+1024
+00:17:26,069 --> 00:17:26,079
+are encoded in the function traits we
+ 
+
+1025
+00:17:26,079 --> 00:17:27,350
+are encoded in the function traits we
+talked about earlier
+
+1026
+00:17:27,350 --> 00:17:27,360
+talked about earlier
+ 
+
+1027
+00:17:27,360 --> 00:17:30,470
+talked about earlier
+which are fn once f and mu and
+
+1028
+00:17:30,470 --> 00:17:30,480
+which are fn once f and mu and
+ 
+
+1029
+00:17:30,480 --> 00:17:33,270
+which are fn once f and mu and
+fn fn once takes ownership of the
+
+1030
+00:17:33,270 --> 00:17:33,280
+fn fn once takes ownership of the
+ 
+
+1031
+00:17:33,280 --> 00:17:34,870
+fn fn once takes ownership of the
+variables inside the closures
+
+1032
+00:17:34,870 --> 00:17:34,880
+variables inside the closures
+ 
+
+1033
+00:17:34,880 --> 00:17:36,710
+variables inside the closures
+environment the once part of the name
+
+1034
+00:17:36,710 --> 00:17:36,720
+environment the once part of the name
+ 
+
+1035
+00:17:36,720 --> 00:17:38,630
+environment the once part of the name
+represents the fact that closures
+
+1036
+00:17:38,630 --> 00:17:38,640
+represents the fact that closures
+ 
+
+1037
+00:17:38,640 --> 00:17:40,230
+represents the fact that closures
+can't take ownership of the same
+
+1038
+00:17:40,230 --> 00:17:40,240
+can't take ownership of the same
+ 
+
+1039
+00:17:40,240 --> 00:17:42,150
+can't take ownership of the same
+variables more than once
+
+1040
+00:17:42,150 --> 00:17:42,160
+variables more than once
+ 
+
+1041
+00:17:42,160 --> 00:17:43,990
+variables more than once
+so these closures can only be called
+
+1042
+00:17:43,990 --> 00:17:44,000
+so these closures can only be called
+ 
+
+1043
+00:17:44,000 --> 00:17:45,510
+so these closures can only be called
+ones fn mu
+
+1044
+00:17:45,510 --> 00:17:45,520
+ones fn mu
+ 
+
+1045
+00:17:45,520 --> 00:17:48,549
+ones fn mu
+mutably borrows values and fn
+
+1046
+00:17:48,549 --> 00:17:48,559
+mutably borrows values and fn
+ 
+
+1047
+00:17:48,559 --> 00:17:51,029
+mutably borrows values and fn
+immutably borrows values when you create
+
+1048
+00:17:51,029 --> 00:17:51,039
+immutably borrows values when you create
+ 
+
+1049
+00:17:51,039 --> 00:17:52,870
+immutably borrows values when you create
+a closure rust infers which of these
+
+1050
+00:17:52,870 --> 00:17:52,880
+a closure rust infers which of these
+ 
+
+1051
+00:17:52,880 --> 00:17:54,070
+a closure rust infers which of these
+traits to use
+
+1052
+00:17:54,070 --> 00:17:54,080
+traits to use
+ 
+
+1053
+00:17:54,080 --> 00:17:56,630
+traits to use
+based on how you use the values inside
+
+1054
+00:17:56,630 --> 00:17:56,640
+based on how you use the values inside
+ 
+
+1055
+00:17:56,640 --> 00:17:58,230
+based on how you use the values inside
+the closures environment
+
+1056
+00:17:58,230 --> 00:17:58,240
+the closures environment
+ 
+
+1057
+00:17:58,240 --> 00:18:00,230
+the closures environment
+we could however force the closure to
+
+1058
+00:18:00,230 --> 00:18:00,240
+we could however force the closure to
+ 
+
+1059
+00:18:00,240 --> 00:18:02,710
+we could however force the closure to
+take ownership of the values it uses
+
+1060
+00:18:02,710 --> 00:18:02,720
+take ownership of the values it uses
+ 
+
+1061
+00:18:02,720 --> 00:18:05,270
+take ownership of the values it uses
+inside its environment by using the move
+
+1062
+00:18:05,270 --> 00:18:05,280
+inside its environment by using the move
+ 
+
+1063
+00:18:05,280 --> 00:18:05,909
+inside its environment by using the move
+keyword
+
+1064
+00:18:05,909 --> 00:18:05,919
+keyword
+ 
+
+1065
+00:18:05,919 --> 00:18:08,070
+keyword
+in front of the closure this is mostly
+
+1066
+00:18:08,070 --> 00:18:08,080
+in front of the closure this is mostly
+ 
+
+1067
+00:18:08,080 --> 00:18:09,590
+in front of the closure this is mostly
+useful when you're passing a closure
+
+1068
+00:18:09,590 --> 00:18:09,600
+useful when you're passing a closure
+ 
+
+1069
+00:18:09,600 --> 00:18:10,470
+useful when you're passing a closure
+from one thread
+
+1070
+00:18:10,470 --> 00:18:10,480
+from one thread
+ 
+
+1071
+00:18:10,480 --> 00:18:12,470
+from one thread
+to another thread so you can also pass
+
+1072
+00:18:12,470 --> 00:18:12,480
+to another thread so you can also pass
+ 
+
+1073
+00:18:12,480 --> 00:18:14,310
+to another thread so you can also pass
+the ownership of the variables from one
+
+1074
+00:18:14,310 --> 00:18:14,320
+the ownership of the variables from one
+ 
+
+1075
+00:18:14,320 --> 00:18:14,789
+the ownership of the variables from one
+thread
+
+1076
+00:18:14,789 --> 00:18:14,799
+thread
+ 
+
+1077
+00:18:14,799 --> 00:18:17,029
+thread
+to the other thread for example in this
+
+1078
+00:18:17,029 --> 00:18:17,039
+to the other thread for example in this
+ 
+
+1079
+00:18:17,039 --> 00:18:19,029
+to the other thread for example in this
+case x is equal to a vector
+
+1080
+00:18:19,029 --> 00:18:19,039
+case x is equal to a vector
+ 
+
+1081
+00:18:19,039 --> 00:18:21,750
+case x is equal to a vector
+we have our closure which doesn't change
+
+1082
+00:18:21,750 --> 00:18:21,760
+we have our closure which doesn't change
+ 
+
+1083
+00:18:21,760 --> 00:18:22,789
+we have our closure which doesn't change
+then we print
+
+1084
+00:18:22,789 --> 00:18:22,799
+then we print
+ 
+
+1085
+00:18:22,799 --> 00:18:25,990
+then we print
+x out and then we have y equal to a
+
+1086
+00:18:25,990 --> 00:18:26,000
+x out and then we have y equal to a
+ 
+
+1087
+00:18:26,000 --> 00:18:26,950
+x out and then we have y equal to a
+vector as well
+
+1088
+00:18:26,950 --> 00:18:26,960
+vector as well
+ 
+
+1089
+00:18:26,960 --> 00:18:28,950
+vector as well
+and then we call our closure again
+
+1090
+00:18:28,950 --> 00:18:28,960
+and then we call our closure again
+ 
+
+1091
+00:18:28,960 --> 00:18:31,110
+and then we call our closure again
+passing in y and asserting
+
+1092
+00:18:31,110 --> 00:18:31,120
+passing in y and asserting
+ 
+
+1093
+00:18:31,120 --> 00:18:33,750
+passing in y and asserting
+that it returns true now because inside
+
+1094
+00:18:33,750 --> 00:18:33,760
+that it returns true now because inside
+ 
+
+1095
+00:18:33,760 --> 00:18:34,549
+that it returns true now because inside
+our closure
+
+1096
+00:18:34,549 --> 00:18:34,559
+our closure
+ 
+
+1097
+00:18:34,559 --> 00:18:37,590
+our closure
+we're just evaluating x against z
+
+1098
+00:18:37,590 --> 00:18:37,600
+we're just evaluating x against z
+ 
+
+1099
+00:18:37,600 --> 00:18:40,150
+we're just evaluating x against z
+we're not taking ownership of x inside
+
+1100
+00:18:40,150 --> 00:18:40,160
+we're not taking ownership of x inside
+ 
+
+1101
+00:18:40,160 --> 00:18:41,029
+we're not taking ownership of x inside
+our closure
+
+1102
+00:18:41,029 --> 00:18:41,039
+our closure
+ 
+
+1103
+00:18:41,039 --> 00:18:43,350
+our closure
+but again we could force the closure to
+
+1104
+00:18:43,350 --> 00:18:43,360
+but again we could force the closure to
+ 
+
+1105
+00:18:43,360 --> 00:18:44,390
+but again we could force the closure to
+take ownership
+
+1106
+00:18:44,390 --> 00:18:44,400
+take ownership
+ 
+
+1107
+00:18:44,400 --> 00:18:46,870
+take ownership
+by specifying the move keyword in front
+
+1108
+00:18:46,870 --> 00:18:46,880
+by specifying the move keyword in front
+ 
+
+1109
+00:18:46,880 --> 00:18:50,710
+by specifying the move keyword in front
+of our closure definition
+
+1110
+00:18:50,710 --> 00:18:50,720
+
+ 
+
+1111
+00:18:50,720 --> 00:18:53,669
+
+now our closure does take ownership of x
+
+1112
+00:18:53,669 --> 00:18:53,679
+now our closure does take ownership of x
+ 
+
+1113
+00:18:53,679 --> 00:18:54,070
+now our closure does take ownership of x
+and
+
+1114
+00:18:54,070 --> 00:18:54,080
+and
+ 
+
+1115
+00:18:54,080 --> 00:18:56,310
+and
+we get an error in our print statement
+
+1116
+00:18:56,310 --> 00:18:56,320
+we get an error in our print statement
+ 
+
+1117
+00:18:56,320 --> 00:18:58,390
+we get an error in our print statement
+below the definition of our closure
+
+1118
+00:18:58,390 --> 00:18:58,400
+below the definition of our closure
+ 
+
+1119
+00:18:58,400 --> 00:19:00,310
+below the definition of our closure
+if i hover over the red squigglies you
+
+1120
+00:19:00,310 --> 00:19:00,320
+if i hover over the red squigglies you
+ 
+
+1121
+00:19:00,320 --> 00:19:01,590
+if i hover over the red squigglies you
+can see that it says
+
+1122
+00:19:01,590 --> 00:19:01,600
+can see that it says
+ 
+
+1123
+00:19:01,600 --> 00:19:04,230
+can see that it says
+we're using a borrowed value after it's
+
+1124
+00:19:04,230 --> 00:19:04,240
+we're using a borrowed value after it's
+ 
+
+1125
+00:19:04,240 --> 00:19:04,950
+we're using a borrowed value after it's
+been moved
+
+1126
+00:19:04,950 --> 00:19:04,960
+been moved
+ 
+
+1127
+00:19:04,960 --> 00:19:07,350
+been moved
+this makes sense because up above our
+
+1128
+00:19:07,350 --> 00:19:07,360
+this makes sense because up above our
+ 
+
+1129
+00:19:07,360 --> 00:19:09,270
+this makes sense because up above our
+closure takes ownership of x
+
+1130
+00:19:09,270 --> 00:19:09,280
+closure takes ownership of x
+ 
+
+1131
+00:19:09,280 --> 00:19:12,150
+closure takes ownership of x
+so we can't use x after it's been moved
+
+1132
+00:19:12,150 --> 00:19:12,160
+so we can't use x after it's been moved
+ 
+
+1133
+00:19:12,160 --> 00:19:13,029
+so we can't use x after it's been moved
+down here
+
+1134
+00:19:13,029 --> 00:19:13,039
+down here
+ 
+
+1135
+00:19:13,039 --> 00:19:14,789
+down here
+all right that concludes part one of
+
+1136
+00:19:14,789 --> 00:19:14,799
+all right that concludes part one of
+ 
+
+1137
+00:19:14,799 --> 00:19:16,870
+all right that concludes part one of
+chapter 13 in which we covered
+
+1138
+00:19:16,870 --> 00:19:16,880
+chapter 13 in which we covered
+ 
+
+1139
+00:19:16,880 --> 00:19:19,029
+chapter 13 in which we covered
+closures now i know closures could be
+
+1140
+00:19:19,029 --> 00:19:19,039
+closures now i know closures could be
+ 
+
+1141
+00:19:19,039 --> 00:19:20,470
+closures now i know closures could be
+difficult to digest
+
+1142
+00:19:20,470 --> 00:19:20,480
+difficult to digest
+ 
+
+1143
+00:19:20,480 --> 00:19:22,230
+difficult to digest
+and we didn't go through all the
+
+1144
+00:19:22,230 --> 00:19:22,240
+and we didn't go through all the
+ 
+
+1145
+00:19:22,240 --> 00:19:24,070
+and we didn't go through all the
+possible ways to use closures
+
+1146
+00:19:24,070 --> 00:19:24,080
+possible ways to use closures
+ 
+
+1147
+00:19:24,080 --> 00:19:25,909
+possible ways to use closures
+so if you want to see another video
+
+1148
+00:19:25,909 --> 00:19:25,919
+so if you want to see another video
+ 
+
+1149
+00:19:25,919 --> 00:19:28,150
+so if you want to see another video
+about closures with more examples
+
+1150
+00:19:28,150 --> 00:19:28,160
+about closures with more examples
+ 
+
+1151
+00:19:28,160 --> 00:19:30,470
+about closures with more examples
+comment down below and of course if you
+
+1152
+00:19:30,470 --> 00:19:30,480
+comment down below and of course if you
+ 
+
+1153
+00:19:30,480 --> 00:19:31,510
+comment down below and of course if you
+enjoy this video
+
+1154
+00:19:31,510 --> 00:19:31,520
+enjoy this video
+ 
+
+1155
+00:19:31,520 --> 00:19:33,350
+enjoy this video
+make sure to give it a thumbs up in the
+
+1156
+00:19:33,350 --> 00:19:33,360
+make sure to give it a thumbs up in the
+ 
+
+1157
+00:19:33,360 --> 00:19:34,630
+make sure to give it a thumbs up in the
+next video we're going over
+
+1158
+00:19:34,630 --> 00:19:34,640
+next video we're going over
+ 
+
+1159
+00:19:34,640 --> 00:19:36,870
+next video we're going over
+iterators so if you want to be notified
+
+1160
+00:19:36,870 --> 00:19:36,880
+iterators so if you want to be notified
+ 
+
+1161
+00:19:36,880 --> 00:19:37,990
+iterators so if you want to be notified
+of that make sure
+
+1162
+00:19:37,990 --> 00:19:38,000
+of that make sure
+ 
+
+1163
+00:19:38,000 --> 00:19:40,870
+of that make sure
+to hit subscribe and with that i'll see
+
+1164
+00:19:40,870 --> 00:19:40,880
+to hit subscribe and with that i'll see
+ 
+
+1165
+00:19:40,880 --> 00:19:41,590
+to hit subscribe and with that i'll see
+you
+
+1166
+00:19:41,590 --> 00:19:41,600
+you
+ 
+
+1167
+00:19:41,600 --> 00:19:52,470
+you
+in the next one
+
+1168
+00:19:52,470 --> 00:19:52,480
+in the next one
+ 
+
+1169
+00:19:52,480 --> 00:19:54,559
+in the next one
+you
+

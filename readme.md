@@ -1,10 +1,53 @@
-# VidHop Docker
+# VidHop Linux
 
-*An Alpine Linux Docker image with VidHop installed for Windows and other.*
+## Description
+
+Download videos, channels, playlists, music and thumbnails from any video platform on Linux.
+
+VidHop stores metadata of the video files you process as JSON files, metadata through which you can easily search.
+
+VidHop is like a Swiss knife for anyone interested in saving audiovisual content from the internet.
+
+VidHop for Linux also exists. Sync functionality is built-in on both Linux and Android versions of VidHop though that 
+requires a working SSH connection between laptop and phone.
+
+Windows users can head over to [VidHop for Docker](https://github.com/wtechgo/vidhop-docker). This repo gets updated less 
+frequently though.
+
+### Videos
+
+- [An Introduction to VidHop](https://odysee.com/@WTechGo:e/Introduction-to-VidHop:0)
+- [Installing VidHop from Scratch](https://odysee.com/@WTechGo:e/Install-VidHop-from-Scratch:c)
+- [Sync VidHop between laptop and phone](https://odysee.com/@WTechGo:e/sync-vidhop-between-laptop-and-phone:1)
+- [VidHop Docker on Windows](https://odysee.com/@WTechGo:e/VidHop-for-Docker-Install-demo-extra-information:a)
+- [Explanation project module, config.ini, batch download and switch environment](https://odysee.com/@WTechGo:e/VidHop---Project-module,-config.ini,-batch-import,-switch-env:a)
+
+## Installation
+
+1. Open a `terminal`, copy-paste this command an hit ENTER.
+
+    ```   
+       curl -sL https://raw.githubusercontent.com/wtechgo/vidhop-linux/master/install.sh > install.sh && 
+       chmod +x install.sh && ./install.sh && rm install.sh && . vidhop
+    ```   
+
+4. Check if it works: download a video and play it !
+
+    ```
+       dlv https://www.youtube.com/watch?v=-DT7bX-B1Mg && ls -l && sleep 3 && play
+     ```
+## Update & Uninstall
+
+>To update, execute `updatevidhop`.  
+>>This command will update all Python packages used by VidHop and download new code from GitHub using `git fetch`.
+
+>To uninstall, execute  `uninstallvidhop`.  
+>>This will remove the code at `/opt/vidhop`, the loader at `/usr/local/bin/vidhop` and the program will ask you 
+>>if you want to delete your VidHop media and metadata directory at `$HOME/Videos/VidHop`.
 
 ## Functional Information
 
-VidHop enables users to download videos, songs, thumbnails, complete channels and playlists from popular video
+VidHop enables Linux users to download videos, songs, thumbnails, complete channels and playlists from popular video
 platforms to their workstation.
 
 Each download also saves the video **metadata** and its thumbnail (video banner image). When users download a channel or
@@ -19,249 +62,19 @@ video), json (metadata) and jpg (thumbnails).
 Finally, VidHop provides many utilities for day-to-day use such as keeping a history, renaming of downloaded files,
 inspect video specs of files and URLs, remove the last download or play it...
 
-### Videos
+## Technical Information
 
-- [VidHop Docker on Windows](https://odysee.com/@WTechGo:e/VidHop-for-Docker-Install-demo-extra-information:a)
-- [An Introduction to VidHop](https://odysee.com/@WTechGo:e/Introduction-to-VidHop:0)
-- [Installing VidHop from Scratch](https://odysee.com/@WTechGo:e/Install-VidHop-from-Scratch:c)
-- [Sync VidHop between laptop and phone](https://odysee.com/@WTechGo:e/sync-vidhop-between-laptop-and-phone:1)
-- [Explanation project module, config.ini, batch download and switch environment](https://odysee.com/@WTechGo:e/VidHop---Project-module,-config.ini,-batch-import,-switch-env:a)
+VidHop is in essence a collection of bash scripts users load in terminal via `.bashrc` or by calling the loader
+`. vidhop` or `source vidhop` or another shell (also tested on zsh).
 
-## Prerequisites
+VidHop uses [YT-DLP](https://github.com/yt-dlp/yt-dlp) (written in Python) for downloading videos and metadata.
+`install.sh` also installs FFmpeg for converting YT-DLP downloads when necessary.
 
-### Docker
+Handling metadata JSON files happens with [JQ](https://github.com/stedolan/jq).
 
-You have `Docker` installed. If you haven't, [download Docker](https://docs.docker.com/get-docker/) 
-for your operating system and install it.
-
-### Git
-
-It's highly recommended you install [Git](https://git-scm.com/downloads).  
-With Git, you can do the initial VidHop software download and more important, easily download updates in the future.
-
-### No fear of the command prompt
-
-The `command prompt` (aka terminal) is a program that allows you to type and execute commands. All computers have a command prompt.
-
-On **Windows**, hit Windows key, type "powershell" and hit enter.  
-
-On **MAC**, hit command+space keys (at the same time) to bring up Apple’s Spotlight universal search, then
-type “terminal” so “Terminal.app” appears.  
-
-On **Linux** it varies. On Gnome, hit super key and type "terminal" or look for Terminal in your application overview.
-
-## Installation
-
-1. Copy the VidHop software to your computer, in a location (directory) where you want VidHop, 
-   and all the videos you download with it, to be.  
-   <br>
-   These instructions will use the default `Videos` directory in Windows as the chosen directory for VidHop.  
-   <br>
-   **Option 1**: **Copy files with Git**.  
-   1. Open a `command prompt` and navigate to `Videos`.  
-      ```
-      cd Videos
-      ```
-   2. Copy the command below, paste it in `command prompt` (with right-mouse-click) and hit enter.
-
-      ```
-      git clone https://github.com/wtechgo/vidhop-docker.git
-      ```
-   
-   **Option 2**: **Download [VidHop software ZIP file](https://github.com/wtechgo/vidhop-docker/archive/refs/heads/master.zip)** from GitHub.  
-   1. Rename the downloaded file from `vidhop-docker-master.zip` to `vidhop-docker.zip`
-   2. Unzip `vidhop-docker.zip`, when done you should have a directory `vidhop-docker`.
-   3. Move the unzipped directory `vidhop-docker` to `Videos`.  
-   4. Open a `command prompt` and navigate to `Videos` (required for the next step, 2.).  
-   
-
-2. Navigate the `command prompt` into the VidHop directory `vidhop-docker` with command:  
-   ```
-   cd vidhop-docker
-   ```  
-   You should be able to see `Dockerfile` when you are in the correct directory.  
-   You can list the contents of your current directory with these commands.
-   ```
-   # In Windows
-   dir
-   
-   # In MAC & Linux
-   ls
-   ```  
-
-3. Build the VidHop Docker image.  
-   `docker build -t vidhop-docker .`  
-   This can take a few minutes, but we only have to do this once.
-4. Awesome! Now we can start using VidHop.
-
-## Usage
-
-1. **Start VidHop**.  
-   Copy the command below, paste it in the command prompt and hit enter.
-   ```
-   docker run --name vidhop-docker -v ${PWD}/media:/vidhop -v ${PWD}/vidhop/config/.bash_history:/root/.bash_history -it vidhop-docker /bin/bash
-   ```
-   Note: If you're working in Windows command prompt (cmd), replace `${PWD}` with `%cd%`.
-2. The terminal changes its label to `root@vidhop8>`, congratulations!    
-   You are now in a running Alpine Linux with VidHop pre-installed.  
-   **Try a VidHop command !**  
-   ```
-   dlv https://www.youtube.com/watch?v=-DT7bX-B1Mg`
-   ```
-3. See the files `dlv` downloaded with `ls`.    
-   <br>
-   Extra: Windows users might be confused at this point.  
-   Why not `dir` as we did before?  
-   When you are using VidHop, `command prompt` is inside a Linux operating system, not Windows.  
-   More precisely, inside an Alpine Linux that is running inside a Docker container.
-
-A complete list of the VidHop commands is available in the [commands section](https://github.com/wtechgo/vidhop-docker#commands) 
-and you can get up to speed by watching the [video links at the top of this page](https://github.com/wtechgo/vidhop-docker#Videos).  
-
-## Troubleshooting
-
-- When you run into this Docker error:  
-`docker: Error response from daemon: Conflict. The container name "/vidhop-docker" is already in use`
-- You can stop and remove all Docker containers with this command:  
-`docker stop $(docker ps -a -q); docker rm $(docker ps -a -q)`
-- To alleviate this workflow check sections 
-  [Configure Powershell Windows](#configure-powershell-windows) and 
-  [Configure .bashrc Linux](#configure-bashrc-linux). 
-  
-### Media directory file permissions in Linux
-
-Downloading with VidHop generates files in `${PWD}/media` on the host computer (pwd is present working directory).
-
-Those files however, are created by user `root` inside the Docker container.
-
-Your user on host is not `root` in all likelihood, hence an error about permissions.  
-For that scenario, run:    
-`sudo chown -R $USER:$USER .`  
-And if you want to delete VidHop data:  
-`rm -rf media`
-
-## Update VidHop
-
-To update Vidhop Docker, we need to:
-
-1. Download file updates from the GitHub repository.
-2. Rebuild the Docker container for VidHop.
-3. The instructions below accomplish these steps.
-
-Open a `command prompt`, navigate to your `vidhop-docker` directory and run these commands.
-
-```
-docker stop $(docker ps -a -q)
-docker rm $(docker ps -a -q)
-git pull
-docker build --no-cache -t vidhop-docker .
-docker run --name vidhop-docker -v ${PWD}/media:/vidhop -v ${PWD}/vidhop/config/.bash_history:/root/.bash_history -it vidhop-docker /bin/bash
-```
-
-Here we see why `Git` was recommended.
-
-If you want to update without `Git`, download the ZIP-file as you did before and execute the commands above, 
-while omitting the line with the Git-command.
-
-You can check if your `yt-dlp` has been updated, while being inside VidHop, with command:  
-
-```
-yt-dlp --version
-```
-
-## Configure Powershell Windows
-
-### Install VidHop scripts into Powershell
-
-The file `Microsoft.PowerShell_profile.ps1` in this project, needs to be in one of these two locations.
-
-```
-C:\Users\<username>\Documents\PowerShell\Microsoft.PowerShell_profile.ps1
-C:\Users\<username>\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1  # PS versions < 5
-```
-
-A `Microsoft.PowerShell_profile.ps1` file will be created in one of the above locations with command.  
-``New-item –type file –force $profile``
-
-`Microsoft.PowerShell_profile.ps1` is very similar to the `.bashrc` concept in Linux. It is a profile for all terminal 
-sessions thereafter and ideal for declaring persistent custom variables and functions.
-
-    ~/.bashrc <=> `%userprofile%\Documents\PowerShell\Microsoft.PowerShell_profile.ps1
-
-*Source: [https://superuser.com/a/1009553/633101](https://superuser.com/a/1009553/633101).*
-
-### Startup scripts inside `Microsoft.PowerShell_profile.ps1`
-
-```
-Function Prompt {"$(Get-Location) $ "}
-
-Function Remove-Directory([string]$path) {
-     if ($path -eq ""){
-          Write-Output "usage:`n  Remove-Directory <PATH>"
-          return
-     }
-     Remove-Item $path -Force  -Recurse -ErrorAction SilentlyContinue
-}
-
-Function Start-Vidhop() {
-     if (-Not (Test-Path ${PWD}/media) -And -Not (Test-Path ${PWD}/vidhop/config/.bash_history)) {
-          Write-Output "could not find /media and vidhop/.bash_history"
-          Write-Output "you are not inside the vidhop-docker directory"
-          Write-Output "navigate to the vidhop-docker directory and try again"
-          return
-     }
-     echo "clearing running instances of vidhop-docker..."
-     docker stop "$(docker ps -a -q)"
-     docker rm "$(docker ps -a -q)"
-     clear
-     docker run --name vidhop-docker -v ${PWD}/media:/vidhop -v ${PWD}/vidhop/config/.bash_history:/root/.bash_history -it vidhop-docker /bin/bash
-}
-
-Function Stop-Vidhop() {
-     docker stop "$(docker ps -a -q)"
-     docker rm "$(docker ps -a -q)"
-}
-
-Function Build-Vidhop() {
-     if ( -Not (Test-Path Dockerfile)){
-          Write-Output "no Dockerfile in this directory, abort"
-          return
-     }
-     docker build -t vidhop-docker .
-}
-
-Function BuildNoCache-Vidhop() {
-     if ( -Not (Test-Path Dockerfile)){
-          Write-Output "no Dockerfile in this directory, abort"
-          return
-     }
-     docker build --no-cache -t vidhop-docker .
-}
-
-Function Clear-DockerContainers {
-     docker stop $(docker ps -a -q)
-     docker rm $(docker ps -a -q)
-}
-```
-
-### Result
-
-After you open a new Powershell terminal, you should be able to call `Start-Vidhop`, `Stop-Vidhop` etc.
-
-### A suggestion for a better Powershell experience
-
-Install `Windows Terminal` from the `Microsoft Store` and tune the appearance to your liking.
-
-[Tutorial Free Code Camp: How to customize Windows Terminal appearance](https://www.freecodecamp.org/news/windows-terminal-themes-color-schemes-powershell-customize/).
-
-[Windows Terminal themes](https://windowsterminalthemes.dev/).
-
-The color scheme I used in the Docker video is `Dark Pastel` from [windowsterminalthemes.dev](https://windowsterminalthemes.dev).
-
-## Configure .bashrc Linux
-
-VidHop functions for a better terminal experience are in project file `.bashrc`. You can copy the content into `~/.bashrc` 
-or copy the file over `~/.bashrc`.
+Finally, VidHop (`install.sh`) installs a bunch of useful packages
+like `openssh, rsync, mediainfo, selenium and beautifulsoup4 (for scraping channel avatar images) and tor, proxychains-ng (for dealing with censored videos)`
+.
 
 ## Commands
 
@@ -293,7 +106,7 @@ To see some of these commands in action, watch [An Introduction to VidHop](https
     dlw <URL>       => alias for dlwebsite
 
  Title: fvid
- Description: Find videos for <SEARCH_TEXT> in all videos and channels metadata.
+ Description: Find videos for <SEARCH_WORD> in all videos and channels metadata.
  Commands:
     fvid <SEARCH_TEXT>  => find videos where title or description matches <SEARCH_TEXT> in all videos and channels metadata
     fvidv <SEARCH_TEXT> => find videos where title or description matches <SEARCH_TEXT> in all videos metadata (shorter search time)
@@ -357,9 +170,9 @@ To see some of these commands in action, watch [An Introduction to VidHop](https
  Description: Do work in bulk aka batch processing.
  Commands:
     dlalist [<LIST_FILE_PATH>]     => download all URLs in list file at /VidHop/import/list/dla.list
-    dlaclist [<LIST_FILE_PATH>]RL> => download all URLs in list file at /VidHop/import/list/dlac.list
+    dlaclist [<LIST_FILE_PATH>] => download all URLs in list file at /VidHop/import/list/dlac.list
     dlacilist [<LIST_FILE_PATH>]   => download all URLs in list file at /VidHop/import/list/dlaci.list
-    dlalbumlist [<LIST_FILE_PATH>> => download all URLs in list file at /VidHop/import/list/dlalbum.list
+    dlalbumlist [<LIST_FILE_PATH>] => download all URLs in list file at /VidHop/import/list/dlalbum.list
     dlapllist [<LIST_FILE_PATH>]   => download all URLs in list file at /VidHop/import/list/dlapl.list
     dlaplilist [<LIST_FILE_PATH>]  => download all URLs in list file at /VidHop/import/list/dlapli.list
     dlclist [<LIST_FILE_PATH>]     => download all URLs in list file at /VidHop/import/list/dlc.list
@@ -404,10 +217,121 @@ To see some of these commands in action, watch [An Introduction to VidHop](https
     updatevidhop    => default update
     uninstallvidhop => remove all VidHop executables, downloaded data in the VidHop directory will NOT be deleted
     installloader   => alias for install_loader
-    install_loader  => enables users to reload with '. vidhop
+    install_loader  => enables users to reload with '. vidhop'
     fetch_github    => download the newest VidHop code from GitHub
     update_python_packages => updates Python packages with pip (package manager)
 ```
+
+## Sync
+
+Phones have limited storage so users will want to transfer their downloads from their phone to their computer.
+
+Moreover, metadata collected on the computer has to be copied to the phone so users can query their video library 
+while on the move.
+
+VidHop provides command `syncvidhop` for this scenario though SSH has to be configured such that laptop and phone can 
+establish an SSH connection.
+
+Note: Configuring VidHop Sync is not required for downloading videos, channels, metadata etc. to work.
+
+### Configuration
+
+For explanation purposes, we'll use the scenario of syncing between laptop and phone (bi-directional).
+
+If you ran `install.sh`, `openssh` (SSH) and rsync have already been installed. If `install.sh` wasn't used or if it failed, 
+install these packages manually with your package manager.
+
+The easiest way to go about this, is to establish an SSH connection from laptop to phone first, to avoid typing on the phone. 
+**Termux SSH requires RSA keys**.
+
+#### Overview
+
+Let's first consider an overview of how to configure SSH. The next chapter goes into detail.
+
+- Generate SSH keys on laptop.
+- Copy laptop public SSH key onto phone.
+- Establish an initial SSH connection from laptop to phone and **accept the device fingerprint**.
+- On phone, repeat the 3 previous steps.
+- Inform VidHop on laptop of the IP-address and user of phone.
+- Inform VidHop on phone of the IP-address and user of laptop.
+
+#### SSH Configuration on Laptop
+
+Note: the instructions below create new SSH keys with as name 'id_vidhop'.
+
+Check that you have SSH installed with `which sshd` or `type sshd`. If not install package `openssh`.
+
+check that you have rsync installed with `which rsync` or `type rsync`. If not install package `rsync`.
+
+For the next steps, we need to get hold of the **user** and **IP-address** of the **phone**. Open Termux on your phone 
+and run `sshconfig` (a VidHop function), which will output the information.
+
+```
+USER_PHONE="FILL_IN_USER_OF_PHONE"
+IP_PHONE="FILL_IN_IP_OF_PHONE"
+
+# Generate RSA keys. To dodge password prompts, leave password empty, just hit enter for each question.
+yes | ssh-keygen -t rsa -b 4096 -f id_vidhop
+
+# Copy you public key to phone.
+# Make sure `sshd` is running on phone first. Open Termux and run `sshd`.
+ssh-copy-id -i "$HOME/.ssh/id_vidhop" -p 8022 $USER_PHONE@$IP_PHONE
+
+# Make an initial SSH connection and accept the the device fingerprint of laptop.
+ssh -4 -i "$HOME/.ssh/id_vidhop" -p 8022 $USER_PHONE@$IP_PHONE 
+```
+
+If the last command was successful, you are now in Termux which you can verify with command `uname -a`.
+
+#### SSH Configuration on Phone
+
+We recommend you use the SSH connection from the previous part to do the configuration on your phone as doing 
+configuration via finger-typing on screens is not particularly pleasant.
+
+```
+USER_WS="FILL_IN_USER_OF_WS"
+IP_WS="FILL_IN_IP_OF_WS"
+
+# Generate RSA keys. To dodge password prompts, leave password empty, just hit enter for each question.
+yes | ssh-keygen -t rsa -b 4096 -f id_vidhop
+
+# Copy you public key to laptop.
+# Make sure `sshd` is running on laptop first. Open a terminal and run `systemctl start sshd` (or distro equivalent).
+ssh-copy-id -i "$HOME/.ssh/id_vidhop" -p 22 $USER_WS@$IP_WS
+
+# Make an initial SSH connection and accept the the device fingerprint of phone.
+ssh -i "$HOME/.ssh/id_vidhop" $USER_WS@$IP_WS
+```
+
+
+#### Inform VidHop of your SSH connection
+
+1. On **Phone**
+   - 1.1. Open the sync script in nano editor.
+        > nanosync
+   
+   - 1.2. Replace the placeholders (REPLACE_WITH...) with the IP-address and user of laptop.
+      > IP_WS="REPLACE_WITH_YOUR_IP_WS_ADDRESS"  
+        USER_WS="REPLACE_WITH_YOUR_USER_WS"
+   - 1.3. **Save** the file with CTRL+x, type 'y', press 'enter'
+2. On **Laptop** (similar to 1.) 
+   - 1.1. Open the sync script in nano editor.
+     > nanosync
+   
+   - 1.2. Replace the placeholders (REPLACE_WITH...) with the IP-address and user of **phone**.
+     > IP_WS="REPLACE_WITH_YOUR_IP_WS_ADDRESS"  
+       USER_WS="REPLACE_WITH_YOUR_USER_WS"
+
+      To get hold of the **user** and **IP-address** of **phone**,  
+      open Termux and run `sshconfig` (sshconfig is a VidHop function).
+   - 1.3. **Save** the file with CTRL+x, type 'y', press 'enter'
+3. Make sure `sshd` is running on the other device.
+    - Start `sshd` on **laptop** with `systemctl start sshd`.  
+    - Start `sshd` on **phone** with `sshd`.
+4. Run `syncvidhop`
+5. Alternatively, you can run `sendvidhop` or `fetchvidhop` for one-directional file sync.
+
+Here are the [Termux docs for configuring SSH](https://wiki.termux.com/wiki/Remote_Access) just in case.
 
 ## `config.ini` for user-specific settings
 
@@ -419,42 +343,33 @@ You can copy and, or rename `config.ini.template` to `config.ini` and customize 
 
 Configurations defined in `config.ini` will "survive" updates which would otherwise overwrite `sync` and `vars` files.
 
-## Technical Information
+## Censored videos
 
-VidHop is in essence a collection of bash scripts users load in terminal via `.bashrc` or by calling the loader
-`. vidhop` or `source vidhop`.
+Censored videos are often still accessible via [Tor browser](https://www.torproject.org/download/). You can still use
+VidHop in such scenarios with this workaround. Note `tor` and `proxychains-ng` are already installed if you ran `install.sh`.
 
-VidHop uses [YT-DLP](https://github.com/yt-dlp/yt-dlp) (written in Python) for downloading videos and metadata.
-`install.sh` also installs FFmpeg for converting YT-DLP downloads when necessary.
-
-Handling metadata JSON files happens with [JQ](https://github.com/stedolan/jq).
-
-Finally, VidHop (`install.sh`) installs a bunch of useful packages
-like `openssh, rsync, mediainfo, selenium and beautifulsoup4 (for scraping channel avatar images) and tor, proxychains-ng (for dealing with censored videos)`
-.
-
-## Other repositories
-
-The `readme.md` in the [Vidhop Android](https://github.com/wtechgo/vidhop-android) 
-and [VidHop Linux](https://github.com/wtechgo/vidhop-linux) repositories contain extra information 
-for configuring `vidhopsync` and `SSH`.
+1. Install tor. `pkg install tor`
+2. Install proxychains-ng. `pkg install proxychains-ng`
+3. [**Optional**: [Configure proxychains-ng SOCKs5](https://www.youtube.com/watch?v=ebxUrLIoesE)]
+    - 3.1. `nano $prefix/etc/proxychains.conf`. 
+    - 3.2. Comment `strict_chain`. 
+    - 3.3. Uncomment `dynamic_chain`. 
+    - 3.4. Add `socks5 127.0.0.1 9050` under `socks5 127.0.0.1 9050`. 
+    - 3.5. I bumped on error for SOCKs5 `WARN: Rejecting SOCKS request for anonymous connection to private address [scrubbed]`.
+4. Start Tor. two options.
+    - 4.1. Run Tor in the background. `tor &`. Press enter to regain your keyboard after Tor has
+   finished loading.
+     - 4.2. Run `tor` and switch to another shell session.
+     - 4.3. Explanation: when you run Tor it occupies the terminal as a running process which blocks
+   interaction with the terminal.
+5. Start a new shell session under proxychains-ng. `proxychains4 bash`.
+6. Inside the new shell, verify you have another IP-address. `curl ifconfig.me`.
+7. Execute a VidHop command e.g. `dlv https://www.youtube.com/watch?v=-DT7bX-B1Mg`.
 
 ## Credits
 
 Special thanks to the incredibly awesome projects [YT-DLP](https://github.com/yt-dlp/yt-dlp),
 [JQ](https://github.com/stedolan/jq) and [Termux](https://f-droid.org/en/packages/com.termux/).
-
-## Rebuilding the Docker image
-
-A oneliner command in case you're rebuilding the Docker image a lot.  
-
-```
-# Build with cache.
-docker stop $(docker ps -a -q); docker rm $(docker ps -a -q); docker build -t vidhop-docker . ; docker run --name vidhop-docker -v ${PWD}/media:/vidhop -v ${PWD}/vidhop/config/.bash_history:/root/.bash_history -it vidhop-docker /bin/bash
-
-# Build without cache.
-docker stop $(docker ps -a -q); docker rm $(docker ps -a -q); docker build --no-cache -t vidhop-docker . ; docker run --name vidhop-docker -v ${PWD}/media:/vidhop -v ${PWD}/vidhop/config/.bash_history:/root/.bash_history -it vidhop-docker /bin/bash
-```
 
 ## Support
 
@@ -463,12 +378,12 @@ docker stop $(docker ps -a -q); docker rm $(docker ps -a -q); docker build --no-
 <img src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png" alt="Buy Me A Coffee - WTechGO" width="150" />
 </a>
 <h3>Bitcoin</h3>
-<a href="https://github.com/wtechgo/vidhop-android/blob/master/img/qr_bitcoin_wtechgo.png?raw=true">
-<img src="https://github.com/wtechgo/vidhop-android/blob/master/img/qr_bitcoin_wtechgo.png?raw=true" alt="Bitcoin" width="100"/>
+<a href="https://github.com/wtechgo/vidhop-linux/blob/master/img/qr_bitcoin_wtechgo.png?raw=true">
+<img src="https://github.com/wtechgo/vidhop-linux/blob/master/img/qr_bitcoin_wtechgo.png?raw=true" alt="Bitcoin" width="100"/>
 </a>
 <pre>bc1qkxqz0frjhx6gshm0uc668zx6686xtfsxdm67u3</pre>
 <h3>Monero</h3>
-<a href="https://github.com/wtechgo/vidhop-android/blob/master/img/qr_monero_wtechgo.png?raw=true">
-<img src="https://github.com/wtechgo/vidhop-android/blob/master/img/qr_monero_wtechgo.png?raw=true" alt="Monero" width="100" />
+<a href="https://github.com/wtechgo/vidhop-linux/blob/master/img/qr_monero_wtechgo.png?raw=true">
+<img src="https://github.com/wtechgo/vidhop-linux/blob/master/img/qr_monero_wtechgo.png?raw=true" alt="Monero" width="100" />
 </a>
 <pre>8BNDojnvwYkacFwztY3XsjefCr28zTDraTgzdFLH8JiL5W4eMjTuHCu57LkCy9UHKHZfGzWDo6ErDYDP4jBK814aG2T8z8c</pre>

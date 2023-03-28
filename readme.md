@@ -64,9 +64,9 @@ On **Linux** it varies. On Gnome, hit super key and type "terminal" or look for 
    
    | OS      | Path                              |
    | ------- | --------------------------------- |
-   | Windows | C:\Users\<YOUR_USERNAME>\Videos |
-   | Linux   | /home/<YOUR_USERNAME>/Videos    |
-   | MAC     | /Users/<YOUR_USERNAME>/Videos   |
+   | Windows | `C:\Users\<YOUR_USERNAME>\Videos` |
+   | Linux   | `/home/<YOUR_USERNAME>/Videos`    |
+   | MAC     | `/Users/<YOUR_USERNAME>/Videos`   |
 
    **Option 1**: **Copy files with Git** (recommended).  
    1. Open a `command prompt` and navigate to `Videos`.  

@@ -21,8 +21,8 @@ Function Remove-Directory([string]$path) {
 }
 
 Function Start-Vidhop() {
-     if (-Not (Test-Path $PWD/media) -And -Not (Test-Path $PWD/vidhop/.bash_history)) {
-          Write-Output "could not find /media and vidhop/.bash_history"
+     if (-Not (Test-Path $PWD/media) -And -Not (Test-Path $PWD/vidhop/config/.bash_history)) {
+          Write-Output "could not find /media or /vidhop/config/.bash_history"
           Write-Output "you are not inside the vidhop-docker directory"
           Write-Output "navigate to the vidhop-docker directory and try again"
           return
@@ -31,7 +31,7 @@ Function Start-Vidhop() {
      docker stop "$(docker ps -a -q)"
      docker rm "$(docker ps -a -q)"
      clear
-     docker run --name vidhop-docker -v $PWD/media:/vidhop -v $PWD/vidhop/.bash_history:/root/.bash_history -it vidhop-docker /bin/bash
+     docker run --name vidhop-docker -v $PWD/media:/vidhop -v $PWD/vidhop/config/.bash_history:/root/.bash_history -it vidhop-docker /bin/bash
 }
 
 Function Stop-Vidhop() {

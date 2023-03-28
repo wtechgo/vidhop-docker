@@ -110,7 +110,7 @@ On **Linux** it varies. On Gnome, hit super key and type "terminal" or look for 
 1. **Start VidHop**.  
    Copy the command below, paste it in the command prompt and hit enter.
    ```
-   docker run --name vidhop-docker -v ${PWD}/media:/vidhop -v ${PWD}/vidhop/.bash_history:/root/.bash_history -it vidhop-docker /bin/bash
+   docker run --name vidhop-docker -v ${PWD}/media:/vidhop -v ${PWD}/vidhop/config/.bash_history:/root/.bash_history -it vidhop-docker /bin/bash
    ```
    Note: If you're working in Windows command prompt (cmd), replace `${PWD}` with `%cd%`.
 2. The terminal changes its label to `root@vidhop8>`, congratulations!    
@@ -194,7 +194,7 @@ Function Remove-Directory([string]$path) {
 }
 
 Function Start-Vidhop() {
-     if (-Not (Test-Path ${PWD}/media) -And -Not (Test-Path ${PWD}/vidhop/.bash_history)) {
+     if (-Not (Test-Path ${PWD}/media) -And -Not (Test-Path ${PWD}/vidhop/config/.bash_history)) {
           Write-Output "could not find /media and vidhop/.bash_history"
           Write-Output "you are not inside the vidhop-docker directory"
           Write-Output "navigate to the vidhop-docker directory and try again"
@@ -204,7 +204,7 @@ Function Start-Vidhop() {
      docker stop "$(docker ps -a -q)"
      docker rm "$(docker ps -a -q)"
      clear
-     docker run --name vidhop-docker -v ${PWD}/media:/vidhop -v ${PWD}/vidhop/.bash_history:/root/.bash_history -it vidhop-docker /bin/bash
+     docker run --name vidhop-docker -v ${PWD}/media:/vidhop -v ${PWD}/vidhop/config/.bash_history:/root/.bash_history -it vidhop-docker /bin/bash
 }
 
 Function Stop-Vidhop() {
@@ -440,10 +440,10 @@ A oneliner command in case you're rebuilding the Docker image a lot.
 
 ```
 # Build with cache.
-docker stop $(docker ps -a -q); docker rm $(docker ps -a -q); docker build -t vidhop-docker . ; docker run --name vidhop-docker -v ${PWD}/media:/vidhop -v ${PWD}/vidhop/.bash_history:/root/.bash_history -it vidhop-docker /bin/bash
+docker stop $(docker ps -a -q); docker rm $(docker ps -a -q); docker build -t vidhop-docker . ; docker run --name vidhop-docker -v ${PWD}/media:/vidhop -v ${PWD}/vidhop/config/.bash_history:/root/.bash_history -it vidhop-docker /bin/bash
 
 # Build without cache.
-docker stop $(docker ps -a -q); docker rm $(docker ps -a -q); docker build --no-cache -t vidhop-docker . ; docker run --name vidhop-docker -v ${PWD}/media:/vidhop -v ${PWD}/vidhop/.bash_history:/root/.bash_history -it vidhop-docker /bin/bash
+docker stop $(docker ps -a -q); docker rm $(docker ps -a -q); docker build --no-cache -t vidhop-docker . ; docker run --name vidhop-docker -v ${PWD}/media:/vidhop -v ${PWD}/vidhop/config/.bash_history:/root/.bash_history -it vidhop-docker /bin/bash
 ```
 
 ## Support

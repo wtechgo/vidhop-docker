@@ -11,13 +11,14 @@ Each download also saves the video **metadata** and its thumbnail (video banner 
 playlist, the same happens for each video while also saving channel metadata. It's also possible to fetch **only** the
 metadata of a video, channel or playlist.
 
-**The metadata is what makes application powerful** as VidHop provides functions for users to query their collected metadata
+**The metadata is what makes the application powerful** as VidHop provides functions for users to query their collected metadata
 using search words or sentences. Effectively, VidHop will look for the search word in video titles and descriptions
 though the metadata contains other useful data like video, channel and thumbnail URLs. File extensions include mp4 (
 video), json (metadata) and jpg (thumbnails).
 
 Finally, VidHop provides many utilities for day-to-day use such as keeping a history, renaming of downloaded files,
-inspect video specs of files and URLs, remove the last download or play it...
+inspect video specs of files and URLs, remove the last download or play it... Read the 
+[commands section](https://github.com/wtechgo/vidhop-docker#commands) for more information.
 
 ### Videos
 
@@ -49,8 +50,6 @@ On **MAC**, hit command+space keys (at the same time) to bring up Apple’s Spot
 type “terminal” so “Terminal.app” appears.  
 
 On **Linux** it varies. On Gnome, hit super key and type "terminal" or look for Terminal in your application overview.
-
-  
 
 ## Installation
 
@@ -110,9 +109,12 @@ On **Linux** it varies. On Gnome, hit super key and type "terminal" or look for 
 1. **Start VidHop**.  
    Copy the command below, paste it in the command prompt and hit enter.
    ```
+   # Linux & macOS
    docker run --name vidhop-docker -v ${PWD}/media:/vidhop -v ${PWD}/vidhop/config/.bash_history:/root/.bash_history -it vidhop-docker /bin/bash
+   
+   # Windows (replaced `${PWD}` with `%cd%`)
+   docker run --name vidhop-docker -v %cd%/media:/vidhop -v %cd%/vidhop/config/.bash_history:/root/.bash_history -it vidhop-docker /bin/bash
    ```
-   Note: If you're working in Windows command prompt (cmd), replace `${PWD}` with `%cd%`.
 2. The terminal changes its label to `root@vidhop8>`, congratulations!    
    You are now in a running Alpine Linux with VidHop pre-installed.  
    **Try a VidHop command !**  

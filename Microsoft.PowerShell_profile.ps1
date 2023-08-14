@@ -30,16 +30,15 @@ Function Start-Vidhop() {
      docker rm "$(docker ps -a -q)"
      clear
      if ($vidhop_dir) {
-          docker run --name vidhop-docker -v ${vidhop_dir}:/vidhop -v $PWD/vidhop/.bash_history:/root/.bash_history -it vidhop-docker /bin/bash
+          docker run --name vidhop-docker -v ${vidhop_dir}:/vidhop -v $PWD/vidhop/config/.bash_history:/root/.bash_history -it vidhop-docker /bin/bash
           return
      }
-     if (-Not (Test-Path $PWD/media) -And -Not (Test-Path $PWD/vidhop/.bash_history)) {
+     if (-Not (Test-Path $PWD/media) -And -Not (Test-Path $PWD/vidhop/config/.bash_history)) {
           Write-Output "could not find /media and vidhop/.bash_history"
           Write-Output "you are not inside the vidhop-docker directory"
           Write-Output "navigate to the vidhop-docker directory and try again"
-          return
+          docker run --name vidhop-docker -v $PWD/media:/vidhop -v $PWD/vidhop/config/.bash_history:/root/.bash_history -it vidhop-docker /bin/bash
      }
-     docker run --name vidhop-docker -v $PWD/media:/vidhop -v $PWD/vidhop/.bash_history:/root/.bash_history -it vidhop-docker /bin/bash
 }
 
 Function Stop-Vidhop() {

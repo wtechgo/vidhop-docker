@@ -12,7 +12,10 @@
 # Now when you run your powershell console, Microsoft.PowerShell_profile.ps1 will be triggered.
 
 
-# $vidhop_dir = "//c/Users/<YOUR_USERNAME>/Videos/Vidhop"
+# user = ""
+# $vidhop_dir = "//c/Users/${user}/Videos/Vidhop"
+# $ps_profile_path = "//c/Users/${user}/Documents/WindowsPowerShell/Microsoft.PowerShell_profile.ps1"
+# $ps_profile_path = "c:\Users\${user}\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1"
 
 Function Prompt {"$(Get-Location) $ "}
 
@@ -21,7 +24,7 @@ Function Remove-Directory([string]$path) {
           Write-Output "usage:`n  Remove-Directory <PATH>"
           return
      }
-     Remove-Item $path -Force  -Recurse -ErrorAction SilentlyContinue
+     Remove-Item $path -Force -Recurse -ErrorAction SilentlyContinue
 }
 
 Function Start-Vidhop() {
@@ -68,5 +71,5 @@ Function Clear-DockerContainers {
 }
 
 Function Edit-PsProfile {
-     codium d:\Users\krist\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1
+     codium "$ps_profile_path"
 }

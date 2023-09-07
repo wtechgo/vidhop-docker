@@ -2,5 +2,6 @@ docs
 media
 
 vidhop/config/config.ini
+**/cookies.txt
 
 .idea

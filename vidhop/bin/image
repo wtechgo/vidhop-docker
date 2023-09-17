@@ -1,8 +1,8 @@
 #!/bin/bash
 
 resize_images_dir_x_y() {
-  [ -z "$1" ] || [ -z "$2" ] || [ -z "$3" ] && echo "Usage: resize_images_dir_1080p <IMAGES_DIR> <X_WIDTH_PIXELS> <Y_HEIGHT_PIXELS>" && return
-  [ ! -d "$1" ] && echo "not a directory" && return
+  [ -z "$1" ] || [ -z "$2" ] || [ -z "$3" ] && echo "Usage: resize_images_dir_x_y <IMAGES_DIR> <X_WIDTH_PIXELS> <Y_HEIGHT_PIXELS>" && return
+  [ ! -d "$1" ] && echo "not a directory: $1" && return
   [ ! "$(command -v magick)" ] && echo "image magick is not installed, abort" && return
 
   imgs_dir="$(realpath "$1")"
@@ -23,8 +23,6 @@ resize_images_dir_x_y() {
 }
 
 resize_images_dir_1080p() {
-  [ -z "$1" ] && echo "Usage: resize_images_dir_1080p <DIR>" && return
-  [ ! -d "$1" ] && echo "not a directory" && return
-
+  [ -z "$1" ] && echo "Usage: resize_images_dir_1080p <IMAGES_DIR>" && return
   resize_images_dir_x_y "$1" 1920 1080
 }

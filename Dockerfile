@@ -1,11 +1,13 @@
 FROM python:alpine
 
 RUN apk update && apk upgrade   # update system
-RUN apk add --no-cache coreutils util-linux binutils findutils grep iproute2   # replace BusyBox symlinks
-RUN apk add --no-cache bash bash-doc bash-completion gawk sed grep bc    # install bash
+RUN apk add --no-cache coreutils util-linux binutils findutils grep iproute2                         # replace BusyBox symlinks
+RUN apk add --no-cache bash bash-doc bash-completion gawk sed grep bc                                # install bash
 RUN apk add --no-cache mediainfo nano openssh rsync git ncurses tor proxychains-ng # install tools   # install vidhop requirements
+RUN apk add --no-cache imagemagick
+RUN apk add --no-cache tesseract-ocr
+RUN apk add --no-cache python3 py3-pip gcc musl-dev python3-dev libffi-dev openssl-dev cargo         # install python packages
 # install Python packages
-RUN apk add --no-cache python3 py3-pip gcc musl-dev python3-dev libffi-dev openssl-dev cargo
 RUN pip install --no-cache-dir -U wheel yt-dlp requests selenium beautifulsoup4 image pillow
 RUN pip install --no-cache-dir -U facebook-scraper snscrape
 # Install YT-DLP & VidHop dependencies

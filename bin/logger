@@ -1,0 +1,32 @@
+#!/bin/bash
+
+logs() {
+  cat "$log_file"
+}
+
+logInfo() {
+  local msg="$1"
+  echo -e "$(timestamp) - $msg" >>"$log_file"
+}
+
+logJq() {
+  if [ "$debug" = true ]; then
+    msg="[logjq] $1"
+    [ -n "$msg" ] && echo "$msg" >>"$log_json_file"
+    jq <<<"$json" >>"$log_json_file"
+    echo -e "\n\n" >>"$log_json_file"
+    logInfo "$msg"
+  fi
+}
+
+logError() {
+  if [ "$debug" = true ]; then
+    msg="$1"
+    echo -e "$(timestamp) - $msg" >>"$log_file"
+    echo -e "$(timestamp) - $msg"
+  fi
+}
+
+clearlog() {
+  echo "" >"$log_log_file"
+}

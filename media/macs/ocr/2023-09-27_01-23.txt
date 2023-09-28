@@ -1,0 +1,24 @@
+TY
+Wiscellancaus
+BO:1C:A3:42:E3:85
+D0-03-4B-4F-DD-6C
+Wiscellaneaus
+D0:03:4B:4F:DD:6C
+5C-6F-F9-A0-CD-7F
+Viscellancaus
+5C:6F:F9:A0:CD:7F
+05-2F-4F-F9-62-85
+Viscellancaus
+05:2F:4F:F9:62:85
+5F-86-CD-9B-63-52
+Viscollancaus
+5F:86:CD:9B:63:52
+[LG] webOS TV OLED65G26LA
+Video display and loudspeaker
+64:CB:EQ:BE:08:27
+FMCTO7
+Headset
+0D:34:54:30:1A:68
+18-EE-69-16-79-32
+Miscellaneous
+18:EE:69:16:79:32

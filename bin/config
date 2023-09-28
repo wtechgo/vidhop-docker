@@ -1,0 +1,70 @@
+#!/bin/bash
+
+save_cookies_txt_from_browser() {
+  [ -n "$1" ] && BROWSER="$1"
+  [ -z "$BROWSER" ] && echo "no browser set in /opt/vidhop/config/config.ini, nor provided as argument, abort" && return
+  yt-dlp --cookies-from-browser "$BROWSER" --cookies "$config_dir/cookies.txt"
+}
+
+updatecookies() {
+  save_cookies_txt_from_browser "$BROWSER"
+}
+
+fetchcookies() {
+  save_cookies_txt_from_browser "$BROWSER"
+}
+
+sendcookies(){
+  [ -z "$SSH_PORT_TERMUX"  ] && echo "no value set for \$SSH_PORT_TERMUX in /config/config.ini, can't establish SSH connection, abort" && return
+  [ -z "$SSH_PRIVATE_KEY_WS"  ] && echo "no value set for \$SSH_PRIVATE_KEY_WS in /config/config.ini, can't establish SSH connection, abort" && return
+  [ ! -f "$config_dir/cookies.txt" ] && echo "no cookies.txt found at '$config_dir/cookies.txt', abort" && return
+  rsync -Pauv -e "ssh -p $SSH_PORT_TERMUX -i $SSH_PRIVATE_KEY_WS" \
+    "$config_dir/cookies.txt" "$USER_PHONE@$IP_PHONE:/data/data/com.termux/files/usr/opt/vidhop/config/cookies.txt"
+}
+
+set_user_phone() {
+  [ ! -f "$config_ini" ] && echo "no config.ini found at $config" && return
+  sed -i "s/^#USER_PHONE=.*/USER_PHONE=\"$1\"/" "$config_ini"
+}
+
+set_ip_phone() {
+  [ ! -f "$config_ini" ] && echo "no config.ini found at $config" && return
+  sed -i "s/^#IP_PHONE=.*/IP_PHONE=\"$1\"/" "$config_ini"
+}
+
+set_user_workstation() {
+  [ ! -f "$config_ini" ] && echo "no config.ini found at $config" && return
+  sed -i "s/^#USER_WS=.*/USER_WS=\"$1\"/" "$config_ini"
+}
+
+set_ip_workstation() {
+  [ ! -f "$config_ini" ] && echo "no config.ini found at $config" && return
+  sed -i "s/^#IP_WS=.*/IP_WS=\"$1\"/" "$config_ini"
+}
+
+configure_ssh() {
+  [ ! -f "$config_ini_template" ] && echo "no config.ini.template found at $config_ini_template, abort" && return
+  [ -f "$config_ini" ] && cp "$config_ini" "$config.backup"
+  cp "$config_ini_template" "$config_ini"
+
+  user_ws=$(whoami)
+  ip_ws=$(ifdata -pa wlan0)
+  set_user_phone "$user_ws"
+  set_ip_phone "$ip_ws"
+
+  echo "We are on the phone now but the questions that follow are about your WORKSTATION."
+  echo "A workstation can be a laptop, desktop or any other device you wish to sync VidHop with."
+  echo "If you don't know the answers to the questions, just hit enter." && echo && unset answer
+
+  echo -n "Do you wish to continue? Y/n: " && read -r answer
+  answer=$(echo "$answer" | tr '[:upper:]' '[:lower:]')
+  [ "$answer" = "n" ] && return
+
+  echo -n "What is the IP-address of your workstation (e.g. 192.168.0.200)? " && read -r ip_ws
+  echo -n "What is your user on your workstation? " && read -r user_phone
+  user_phone=$(echo "$user_phone" | tr '[:upper:]' '[:lower:]')
+  [ -n "$ip_ws" ] && set_user_workstation "$ip_ws"
+  [ -n "$user_phone" ] && set_ip_workstation "$user_phone"
+
+  echo "configuration done"
+}

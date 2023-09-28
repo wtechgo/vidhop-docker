@@ -1,0 +1,541 @@
+#!/bin/bash
+
+files_help() {
+  echo " Title: files"
+  echo " Description: Manage VidHop files."
+  echo " Commands:"
+  echo "    play                            => play last downloaded video in default media player e.g. MPV or VLC"
+  echo "    play <PARTIAL_FILENAME>         => play video with filename that matches <PARTIAL_FILENAME> in default media player e.g. MPV or VLC"
+  echo "    renvid <PARTIAL_OLD_FILENAME> <NEW_FILENAME>  => rename all files of a video that matches <PARTIAL_OLD_FILENAME>"
+  echo "    renlast <NEW_FILENAME>          => rename all files of last downloaded video to <NEW_FILENAME>"
+  echo "    rmvid <PARTIAL_FILENAME>        => remove all files of a video who's name matches <PARTIAL_FILENAME>"
+  echo "    rmlast                          => remove all files of last downloaded video"
+  echo "    rmchan <PARTIAL_CHANNEL_NAME>   => remove all files of a channel that matches <PARTIAL_CHANNEL_NAME>"
+  echo "    specs                           => shows technical video information like codecs, resolution...of last downloaded video"
+  echo "    specs <URL>                     => shows technical video information like codecs, resolution...of a video at <URL>"
+  echo "    specs <PARTIAL_FILENAME>        => shows technical video information like codecs, resolution...of a video who's filename matches <PARTIAL_FILENAME>"
+}
+
+play() {
+  [ -z "$1" ] && [ -z "$media_file" ] && echo "no media file available and no user input received" && return
+  unset search_text
+  if [ -f "$1" ]; then media_file="$1"; else search_text="$1"; fi
+
+  if [ -n "$search_text" ]; then
+    searchable_text="$(enhance_searchability "$search_text")"
+    files=$(
+      find "$vidhop_dir" \
+        -not -path "$uploads_dir/*" \
+        -not -path "$websites_dir/*" \
+        -not -path "$social_media_dir/*" \
+        -not -path "$import_dir/*" \
+        -not -path "$export_dir/*" \
+        -not -path "$log_dir/*" \
+        -iname "*$searchable_text*mp4" \
+        -o -iname "*$searchable_text*mkv" \
+        -o -iname "*$searchable_text*webm" \
+        -o -iname "*$searchable_text*mov" \
+        -o -iname "*$searchable_text*wmv" \
+        -o -iname "*$searchable_text*avi" \
+        -o -iname "*$searchable_text*m4v" \
+        -o -iname "*$searchable_text*mp3" \
+        -o -iname "*$searchable_text*m4a" \
+        -not -path "$uploads_dir/*"
+    )
+    echo "$files"
+    count=$(wc -l <<<"$files")
+    [ "$files" = "" ] && count=0
+
+    [ "$count" -eq 0 ] && echo "found nothing for '$search_text'" && unset files && return
+    [ "$count" -gt 1 ] &&
+      echo -e "play requires 1 file but found $count\n$files\nyou can specifiy your search term further" &&
+      unset files && return
+    media_file="$files" && unset files
+  fi
+  ! [ -f "$media_file" ] && echo "cannot play file '$media_file'" && return
+
+  # video
+  media_file_lowercase="$(echo "$media_file" | tr '[:upper:]' '[:lower:]')"
+  [[ "$media_file_lowercase" == *.mp4 ]] && ("$video_app" "$media_file" 2>/dev/null &) && return
+  [[ "$media_file_lowercase" == *.mkv ]] && ("$video_app" "$media_file" 2>/dev/null &) && return
+  [[ "$media_file_lowercase" == *.webm ]] && ("$video_app" "$media_file" 2>/dev/null &) && return
+  [[ "$media_file_lowercase" == *.wmv ]] && ("$video_app" "$media_file" 2>/dev/null &) && return
+  [[ "$media_file_lowercase" == *.mov ]] && ("$video_app" "$media_file" 2>/dev/null &) && return
+  [[ "$media_file_lowercase" == *.avi ]] && ("$video_app" "$media_file" 2>/dev/null &) && return
+  [[ "$media_file_lowercase" == *.m4v ]] && ("$video_app" "$media_file" 2>/dev/null &) && return
+  # audio
+  [[ "$media_file_lowercase" == *.mp3 ]] && ("$audio_app" "$media_file" 2>/dev/null &) && return
+  [[ "$media_file_lowercase" == *.m4a ]] && ("$audio_app" "$media_file" 2>/dev/null &) && return
+  [[ "$media_file_lowercase" == *.aac ]] && ("$audio_app" "$media_file" 2>/dev/null &) && return
+  [[ "$media_file_lowercase" == *.flac ]] && ("$audio_app" "$media_file" 2>/dev/null &) && return
+  [[ "$media_file_lowercase" == *.ogg ]] && ("$audio_app" "$media_file" 2>/dev/null &) && return
+  [[ "$media_file_lowercase" == *.wma ]] && ("$audio_app" "$media_file" 2>/dev/null &) && return
+  [[ "$media_file_lowercase" == *.wav ]] && ("$audio_app" "$media_file" 2>/dev/null &) && return
+  [[ "$media_file_lowercase" == *.aiff ]] && ("$audio_app" "$media_file" 2>/dev/null &) && return
+  [[ "$media_file_lowercase" == *.alac ]] && ("$audio_app" "$media_file" 2>/dev/null &) && return
+  # images
+  [[ "$media_file_lowercase" == *.webp ]] && ("$picture_app_alt" "$media_file" 2>/dev/null &) && return
+  [[ "$media_file_lowercase" == *.png ]] && ("$picture_app_alt" "$media_file" 2>/dev/null &) && return
+  [[ "$media_file_lowercase" == *.bmp ]] && ("$picture_app_alt" "$media_file" 2>/dev/null &) && return
+  [[ "$media_file_lowercase" == *.jpg ]] || [[ "$media_file_lowercase" == *.jpeg ]] && ("$picture_app" "$media_file" 2>/dev/null &) && return
+  # text
+  [[ "$media_file_lowercase" == *.txt ]] && ("$text_app" "$media_file" 2>/dev/null &) && return
+  [[ "$media_file_lowercase" == *.md ]] && ("$text_app" "$media_file" 2>/dev/null &) && return
+  echo "unknown file extension for media file '$media_file'"
+}
+
+renpost() {
+  [ -z "$1" ] && echo "Usage: renpost <NEW_NAME>" && return
+  new_name="$(dirname "${social_media_dir}")/${1}_$(timestamp)"
+
+  unset answer
+  echo "Rename:"
+  echo "$social_media_dir"
+  echo "To:"
+  echo "$new_name"
+  echo -n 'y/N: ' && read -r answer
+  answer=$(echo "$answer" | tr '[:upper:]' '[:lower:]')
+  [ "$answer" = "n" ] || [ -z "$answer" ] && echo "abort" && return
+
+  mv "$social_media_dir" "$new_name"
+  echo "post renamed"
+}
+
+# Rename a video and its metadata.
+renvid() {
+  [ -z "$1" ] || [ -z "$2" ] && echo -e "Usage: renvid <OLD_NAME> <NEW_NAME>" && return
+  [ "$(echo -n "$1" | wc -c)" -lt 3 ] && echo "old name has too few chars, abort" && return # a minimal safeguard
+  old_name_search_text="$(enhance_searchability "$1")"
+  new_name="$2"
+
+  old_meta_file=$(find "$vids_meta_dir" -type f -iwholename "*$old_name_search_text*/metadata.json")
+  [ "$(echo "$old_meta_file" | wc -l)" -gt 1 ] && echo "found more than 1 metadata file, abort" && return
+  [ -z "$old_meta_file" ] && echo "no metadata file found for '$1', abort" && return
+
+  old_meta_dir=$(dirname "$old_meta_file")
+  old_name=$(basename "$old_meta_dir" .json)
+  old_vid_dir="$(dirname "$(dirname "$old_meta_file" | sed 's;/VidHop/metadata/videos/;/VidHop/videos/;;')")"
+  old_media_file="$old_vid_dir/$old_name.mp4"
+  old_media_file_webm="$old_vid_dir/$old_name.webm"
+  old_media_file_mkv="$old_vid_dir/$old_name.mkv"
+  old_media_file_sub="$old_vid_dir/$old_name.en.srt"
+
+  # show files found
+  [ -d "$old_meta_dir" ] && echo "found '$old_meta_dir' (metadata directory)"
+  [ -f "$old_media_file" ] && echo "found '$old_media_file'"
+  [ -f "$old_media_file_webm" ] && echo "found '$old_media_file_webm'"
+  [ -f "$old_media_file_mkv" ] && echo "found '$old_media_file_mkv'"
+  [ -f "$old_media_file_sub" ] && echo "found '$old_media_file_sub'"
+  # ask confirmation to rename
+  echo -n "rename these files? Y/n: " && read -r answer
+  answer=$(echo "$answer" | tr '[:upper:]' '[:lower:]')
+  [ "$answer" = "n" ] && return
+
+  # rename subs
+  find "$old_meta_dir/subs" -maxdepth 1 -type f -iname "*$old_name_search_text*.srt" 2>/dev/null |
+    while read -r file; do
+      ext=$(get_sub_extension "$file")
+      mv "$file" "$old_meta_dir/subs/$new_name.$ext"
+    done
+  find "$old_meta_dir/subs/auto-generated" -maxdepth 1 -type f -iname "*$old_name_search_text*.srt" 2>/dev/null |
+    while read -r file; do
+      ext=$(get_sub_extension "$file")
+      mv "$file" "$old_meta_dir/subs/auto-generated/$new_name.$ext"
+    done
+  [ -f "$old_media_file_sub" ] && mv "$old_media_file_sub" "$old_vid_dir/$new_name.en.srt"
+  # rename subs - end
+
+  # rename media file
+  [ -f "$old_media_file" ] &&
+    media_file="$old_vid_dir/$new_name.mp4" &&
+    mv "$old_media_file" "$media_file" &&
+    echo -e "renamed: '$old_media_file'\n     to: '$media_file'"
+  [ -f "$old_media_file_webm" ] &&
+    media_file="$old_vid_dir/$new_name.webm" &&
+    mv "$old_media_file_webm" "$media_file" &&
+    echo -e "renamed: '$old_media_file_webm'\n     to: '$media_file'"
+  [ -f "$old_media_file_mkv" ] &&
+    media_file="$old_vid_dir/$new_name.mkv" &&
+    mv "$old_media_file_mkv" "$media_file" &&
+    echo -e "renamed: '$old_media_file_mkv'\n     to: '$media_file'"
+  # rename meta dir
+  [ -d "$old_meta_dir" ] &&
+    meta_dir="$(dirname "$old_meta_dir")/$new_name" &&
+    mv "$old_meta_dir" "$meta_dir" &&
+    echo -e "renamed: '$old_meta_dir'\n     to: '$meta_dir' (metadata directory)"
+  # set vars for metadata command & rerun of renvid
+  name="$new_name"
+  meta_file="$meta_dir/metadata.json"
+
+  # rename history entry
+  if [ -f "$titles_file" ]; then
+    head -n -1 "$titles_file" >"$log_dir/titles.tmp.log"
+    echo "$new_name" >>"$log_dir/titles.tmp.log"
+    mv "$log_dir/titles.tmp.log" "$titles_file"
+  fi
+}
+
+renlast() {
+  [ -z "$1" ] && echo "Usage: renlast <NEW_NAME>" && return
+  if [ "$function" = dlfbpost ] || [ "$function" = dltweet ]; then
+    renpost "$@"
+    return
+  fi
+  old_name=$(lasttitle)
+  old_media_file="$media_file"
+  old_media_dir="$(dirname "$old_media_file")"
+  old_media_file_sub="$old_media_dir/$old_name.en.srt" # TODO: bug if sub is not srt
+  old_ext="$(get_extension "$old_media_file")"
+  old_meta_dir="$meta_dir"
+  old_meta_file="$old_meta_dir/metadata.json"
+
+  # show files found
+  [ -d "$old_meta_dir" ] && echo "found '$old_meta_dir' (metadata directory)"
+  [ -f "$old_media_file_sub" ] && echo "found '$old_media_file_sub'"
+  [ -f "$old_media_file" ] && echo "found '$old_media_file'"
+  # ask confirmation to rename
+  echo -n "rename these files? Y/n: " && read -r answer
+  answer=$(echo "$answer" | tr '[:upper:]' '[:lower:]')
+  [ "$answer" = "n" ] && return
+
+  name="$1"
+  media_file="$old_media_dir/$name.$old_ext"
+  new_media_file_sub="$(dirname "$old_media_file")/$name.en.srt"
+  meta_dir="$(dirname "$old_meta_dir")/$name"
+
+  # rename subs
+  [ -f "$old_media_file_sub" ] &&
+    mv "$old_media_file_sub" "$new_media_file_sub" &&
+    echo -e "renamed: '$old_media_file_sub'\n     to: '$new_media_file_sub"
+  old_name_search_text="$(enhance_searchability "$old_name")"
+  find "$old_meta_dir/subs" -maxdepth 1 -type f -iname "*$old_name_search_text*.srt" 2>/dev/null |
+    while read -r old_sub; do
+      ext=$(get_sub_extension "$old_sub")
+      new_sub="$old_meta_dir/subs/$name.$ext"
+      mv "$old_sub" "$new_sub" && echo -e "renamed: '$old_sub'\n     to: '$new_sub"
+    done
+  find "$old_meta_dir/subs/auto-generated" -maxdepth 1 -type f -iname "*$old_name_search_text*.srt" 2>/dev/null |
+    while read -r old_sub; do
+      ext=$(get_sub_extension "$old_sub")
+      new_sub="$old_meta_dir/subs/auto-generated/$name.$ext"
+      mv "$old_sub" "$new_sub" && echo -e "renamed: '$old_sub'\n     to: '$new_sub"
+    done
+  # rename subs - end
+
+  # rename meta dir
+  [ -d "$old_meta_dir" ] &&
+    mv "$old_meta_dir" "$meta_dir" &&
+    echo -e "renamed: '$old_meta_dir (metadata directory)'\n     to: '$meta_dir' (metadata directory)"
+
+  # rename media file
+  [ -f "$old_media_file" ] &&
+    mv "$old_media_file" "$media_file" &&
+    echo -e "renamed: '$old_media_file'\n     to: '$media_file'"
+
+  # rename history entry
+  if [ -f "$titles_file" ]; then
+    head -n -1 "$titles_file" >"$log_dir/titles.tmp.log"
+    echo "$new_name" >>"$log_dir/titles.tmp.log"
+    mv "$log_dir/titles.tmp.log" "$titles_file"
+  fi
+}
+
+rmpod() {
+  [ -z "$1" ] && echo "Usage: rmvid <PARTIAL_VIDEO_NAME>" && return 1
+  unset search_text answer results
+  search_text="$1"
+  searchable_text="$(enhance_searchability "$search_text")"
+  [ "$2" = "-y" ] || [ "$2" = "--yes" ] && answer=y
+
+  media_results=$(find "$podcasts_dir" -iname "*$searchable_text*")
+  meta_results=$(find "$podcasts_meta_dir" -iname "*$searchable_text*")
+  [ -z "$media_results" ] && [ -z "$meta_results" ] && echo found no matches && return
+  echo "$media_results" && echo "$meta_results"
+
+  if [ -z "$answer" ]; then
+    echo -n "delete these files permanently? Y/n: " && read -r answer
+    answer=$(echo "$answer" | tr '[:upper:]' '[:lower:]')
+    [ "$answer" = "n" ] || [ "$answer" = "no" ] && return
+  fi
+
+  while read -r file; do
+    rm -rf "$file"
+  done < <(echo "$media_results") && unset file
+
+  while read -r file; do
+    rm -rf "$file"
+  done < <(echo "$meta_results")
+
+  echo "deleted files for '$search_text'"
+
+  head -n -1 "$titles_file" >"$log_dir/titles.tmp.log"
+  mv "$log_dir/titles.tmp.log" "$titles_file"
+}
+
+rmvid() {
+  [ -z "$1" ] && echo "Usage: rmvid <PARTIAL_VIDEO_NAME> <PLATFORM>" && return 1
+  unset search_text answer results
+  search_text="$1"
+  [ -n "$2" ] && platform="$2"
+  searchable_text="$(enhance_searchability "$search_text")"
+  [ "$2" = "-y" ] || [ "$2" = "--yes" ] && answer=y
+
+  media_results=$(find "$vids_dir" -iwholename "*${platform}*${searchable_text}*")
+  meta_results=$(find "$vids_meta_dir" -iwholename "*${platform}*${searchable_text}*")
+  [ -z "$media_results" ] && [ -z "$meta_results" ] && echo found no matches && return
+  echo "$meta_results" && echo "$media_results"
+
+  if [ -z "$answer" ]; then
+    echo -n "delete these files permanently? Y/n: " && read -r answer
+    answer=$(echo "$answer" | tr '[:upper:]' '[:lower:]')
+    [ "$answer" = "n" ] || [ "$answer" = "no" ] && return
+  fi
+
+  while read -r file; do
+    rm -rf "$file" && echo "deleted $file"
+  done < <(echo "$meta_results")
+  while read -r file; do
+    rm -rf "$file" && echo "deleted $file"
+  done < <(echo "$media_results") && unset file
+
+  head -n -1 "$titles_file" >"$log_dir/titles.tmp.log"
+  mv "$log_dir/titles.tmp.log" "$titles_file"
+
+  echo "deleted files for '$search_text'"
+}
+
+rmlast() {
+  old_name=$(lasttitle)
+  media_file_sub="$old_media_dir/$old_name.en.srt"
+
+  # show files found
+  [ -d "$meta_dir" ] && echo "found '$meta_dir' (metadata directory)"
+  [ -f "$media_file_sub" ] && echo "found '$media_file_sub'"
+  [ -f "$media_file" ] && echo "found '$media_file'"
+
+  # ask confirmation to rename
+  echo -n "delete these files? Y/n: " && read -r answer
+  answer=$(echo "$answer" | tr '[:upper:]' '[:lower:]')
+  [ "$answer" = "n" ] && return
+
+  [ -d "$meta_dir" ] && rm -rf "$meta_dir" && echo "deleted '$meta_dir (metadata directory)'"
+  [ -f "$media_file_sub" ] && rm -rf "$media_file_sub" && echo "deleted '$media_file_sub'"
+  [ -f "$media_file" ] && rm -rf "$media_file" && echo "deleted '$media_file'"
+  echo "files deleted for $old_name"
+}
+
+find_archive_file_from_audio_channel_name() {
+  name="$1"
+  found_json=$(find "$music_meta_dir" -type f -iwholename "*$name**metadata.json")
+  [ -z "$found_json" ] && return
+  [ "$(wc -l <<<"$found_json")" -gt 1 ] && echo -e "found more than one file:\n$results" && return 1
+
+  channel_url=$(jq '.original_url' "$found_json")
+  archive_filename="$downloaded_dir/$(url_to_filename "$channel_url")"
+  echo "$archive_filename"
+}
+
+find_archive_file_from_channel_name() {
+  name="$1"
+  found_json=$(find "$channels_meta_dir" -type f -iwholename "*$name**metadata.json")
+  [ -z "$found_json" ] && return
+  [ "$(wc -l <<<"$found_json")" -gt 1 ] && echo -e "found more than one file:\n$results" && return 1
+
+  channel_url=$(channel_url_from_json_file "$found_json")
+  archive_filename=$(url_to_filename "$channel_url")
+  find "$downloaded_dir" -type f -iname "$archive_filename"
+}
+
+find_archive_file_from_url() {
+  url="$1"
+  archive_file="$downloaded_dir/$(url_to_filename "$url")"
+  [ -f "$archive_file" ] && echo "$archive_file" && return
+  logInfo "find_archive_file_from_url created an invalid archive file path: $archive_file"
+}
+
+rmarchiveforurl() {
+  url="$1"
+  [ "$(is_url "$url")" = "false" ] && echo "not a valid url" && return 1
+
+  archive_file=$(find_archive_file_from_url "$url")
+  [ -f "$archive_file" ] && rm "$archive_file" && echo "removed $archive_file" && return
+  echo "could not remove as file '$archive_file' does not exist"
+}
+
+rmchan() {
+  [ -z "$1" ] && echo "Usage: rmchan <PARTIAL_CHANNEL_NAME>" && return 1
+  unset answer found_channel_dir found_downloaded_file found_music_channel_dir found_music_channel_meta_dir
+  name="$1"
+  [ -n "$2" ] && answer="$2"
+  found_channel_dir=$(find "$channels_dir" -maxdepth 1 -type d -iname "*$name*")
+  found_channel_meta_dir=$(find "$channels_meta_dir" -maxdepth 1 -type d -iname "*$name*")
+  found_music_channel_dir=$(find "$music_dir" -maxdepth 1 -type d -iname "*$name*")
+  found_music_channel_meta_dir=$(find "$music_meta_dir" -maxdepth 1 -type d -iname "*$name*")
+  found_downloaded_file=$(find_archive_file_from_channel_name "$name")
+  found_music_downloaded_file=$(find_archive_file_from_audio_channel_name "$name")
+
+  logInfo "downloaded archive file: $found_downloaded_file"
+  [ ! -d "$found_channel_dir" ] && [ ! -d "$found_channel_meta_dir" ] &&
+    [ ! -d "$found_music_channel_dir" ] && [ ! -d "$found_music_channel_meta_dir" ] &&
+    [ ! -f "$found_downloaded_file" ] && [ ! -f "$found_music_downloaded_file" ] &&
+    echo found no matches && return
+  echo "found files:"
+  [ -d "$found_channel_dir" ] && echo -e "$found_channel_dir"
+  [ -d "$found_channel_meta_dir" ] && echo -e "$found_channel_meta_dir"
+  [ -d "$found_music_channel_dir" ] && echo -e "$found_music_channel_dir"
+  [ -d "$found_music_channel_meta_dir" ] && echo -e "$found_music_channel_meta_dir"
+  [ -f "$found_downloaded_file" ] && echo -e "$found_downloaded_file"
+  [ -f "$found_music_downloaded_file" ] && echo -e "$found_music_downloaded_file"
+
+  if [ -z "$answer" ]; then
+    echo "caution: rmchan will remove all media and metadata files of '$name' for all platforms"
+    echo -n "delete channel permanently? Y/n: " && read -r answer
+    answer=$(echo "$answer" | tr '[:upper:]' '[:lower:]')
+    [ "$answer" = "n" ] && return
+  fi
+
+  # remove files
+  [ -d "$found_channel_dir" ] && rm -rf "$found_channel_dir" && echo "deleted channel media directory: $found_channel_dir"
+  [ -d "$found_channel_meta_dir" ] && rm -rf "$found_channel_meta_dir" && echo "deleted channel metadata directory: $found_channel_meta_dir"
+  [ -d "$found_music_channel_dir" ] && rm -rf "$found_music_channel_dir" && echo "deleted channel media directory: $found_music_channel_dir"
+  [ -d "$found_music_channel_meta_dir" ] && rm -rf "$found_music_channel_meta_dir" && echo "deleted channel metadata directory: $found_music_channel_meta_dir"
+  [ -f "$found_downloaded_file" ] && rm "$found_downloaded_file" && echo "deleted downloaded archive file: $found_downloaded_file"
+  [ -f "$found_music_downloaded_file" ] && rm "$found_music_downloaded_file" && echo "deleted downloaded archive file: $found_music_downloaded_file"
+}
+
+rmartist() {
+  [ -z "$1" ] && echo "Usage: rmartist <PARTIAL_ARTIST_NAME>" && return 1
+  unset answer found_artist_dir found_downloaded_file
+
+  name="$1"
+  [ -n "$2" ] && answer="$2"
+  found_artist_dir=$(find "$music_dir" -maxdepth 1 -type d -iname "*$name*")
+  found_artist_meta_dir=$(find "$music_meta_dir" -maxdepth 1 -type d -iname "*$name*")
+  found_downloaded_file=$(find_archive_file_from_channel_name "$name" || echo "")
+
+  logInfo "downloaded archive file: $found_downloaded_file"
+  [ ! -d "$found_artist_dir" ] && [ ! -d "$found_artist_meta_dir" ] && [ ! -f "$found_downloaded_file" ] && echo found no matches && return
+  echo "found files:"
+  [ -d "$found_artist_dir" ] && echo -e "$found_artist_dir"
+  [ -d "$found_artist_meta_dir" ] && echo -e "$found_artist_meta_dir"
+  [ -f "$found_downloaded_file" ] && echo -e "$found_downloaded_file"
+
+  if [ -z "$answer" ]; then
+    echo "caution: rmchan will remove all media and metadata files of '$name' for all platforms"
+    echo -n "delete channel permanently? Y/n: " && read -r answer
+    answer=$(echo "$answer" | tr '[:upper:]' '[:lower:]')
+    [ "$answer" = "n" ] && return
+  fi
+
+  # remove files
+  [ -d "$found_artist_dir" ] && rm -rf "$found_artist_dir" && echo "deleted channel media directory: $found_artist_dir"
+  [ -d "$found_artist_meta_dir" ] && rm -rf "$found_artist_meta_dir" && echo "deleted channel metadata directory: $found_artist_meta_dir"
+  [ -f "$found_downloaded_file" ] && rm "$found_downloaded_file" && echo "deleted downloaded archive file: $found_downloaded_file"
+}
+
+rmarchive() {
+  [ -z "$1" ] && echo 'rmarchive $URL' && return
+  url="$1"
+  [[ "$url" != http* ]] && echo "invalid url '$url'" && return
+
+  archive_to_be_removed="$downloaded_dir/$(url_to_filename "$url")"
+  ! [ -f "$archive_to_be_removed" ] &&
+    echo -e "tried to remove '$archive_to_be_removed' but file doesn't exist\nno downloaded archive file for url '$url'" &&
+    return
+  rm "$archive_to_be_removed" && echo "deleted $archive_to_be_removed"
+}
+
+summary_specs() {
+  clear_last_line
+  specs="$(mediainfo --Output=JSON "$file" | jq)"
+  echo Summary
+  echo -------
+  echo "Frame rate           : $(jq '.media.track[1].FrameRate' <<<"$specs" | tr -d '"')"
+  echo "Width                : $(jq '.media.track[1].Width' <<<"$specs" | tr -d '"')"
+  echo "Height               : $(jq '.media.track[1].Height' <<<"$specs" | tr -d '"')"
+}
+
+specs() {
+  [ "$1" = "-h" ] || [ "$1" = "--help" ] && echo -e "Usage: specs <URL>\n       specs <FILE>" && return
+  if [ "$(is_url "$1")" = true ]; then
+    yt-dlp -F --force-ipv4 "$1"
+    yt-dlp -J --force-ipv4 "$1" | jq '{
+      title: .title,
+      original_url: .webpage_url,
+      duration_string: .duration_string,
+      resolution: .resolution,
+      format: .format,
+      dynamic_range: .dynamic_range,
+      vcodec: .vcodec,
+      acodec: .acodec,
+      vbr: .vbr,
+      abr: .abr,
+    }'
+    return
+  elif [ -f "$1" ]; then
+    file="$1"
+    mediainfo "$file" && summary_specs && return
+  elif [ -f "$media_file" ]; then
+    file="$media_file"
+    mediainfo "$file" && summary_specs && return
+  else
+    file="$(find_one_video "$1")"
+    error=$?
+    [ "$error" = 1 ] && echo "found nothing" && return
+    [ "$error" = 2 ] && echo -e "found multiple:\n$result" && return
+    mediainfo "$file" && summary_specs && return
+  fi
+  echo "input '$1' was not a valid URL or file"
+}
+
+uploadvideo() {
+  [ -z "$1" ] && echo "  Usage: upload-video <SEARCH_TEXT>" && echo "returns: absolute paths of videos files on disk that match <SEARCH_TERM>" && return
+  search_text="$1"
+
+  result="$(find_one_video "$search_text")"
+  error=$?
+  [ "$error" = 1 ] && echo "found nothing" && return
+  [ "$error" = 2 ] && echo -e "found multiple:\n$result" && return
+
+  media_file="$result"
+  json_file="$(media_file2metadata_path "$media_file")"
+  [ ! -f "$json_file" ] && echo "could not find metadata file, hence directory, based on media file '$media_file', abort" && return
+  meta_dir="$(dirname "$json_file")"
+  [ -f "$meta_dir/thumbnail.jpg" ] && thumb_file="$(dirname "$json_file")/thumbnail.jpg"
+  [ -f "$meta_dir/thumbnail.jpeg" ] && thumb_file="$(dirname "$json_file")/thumbnail.jpeg"
+  [ -f "$meta_dir/thumbnail.png" ] && thumb_file="$(dirname "$json_file")/thumbnail.png"
+  [ -f "$meta_dir/thumbnail.webp" ] && thumb_file="$(dirname "$json_file")/thumbnail.webp"
+
+  upload_dir="$uploads_dir/$(basename "$meta_dir")"
+  [ -d "$upload_dir" ] && rm -r "$upload_dir"
+  mkdir "$upload_dir"
+
+  ln -s "$media_file" "$upload_dir/$(basename "$media_file")"
+  ln -s "$thumb_file" "$upload_dir/$(basename "$thumb_file")"
+  ln -s "$json_file" "$upload_dir/metadata.json"
+  description_file="$upload_dir/description.txt"
+
+  upload_json="$(jq . "$json_file")"
+  title="$(strip_extension "$(basename "$media_file")")"
+  echo "$title" >"$description_file"
+  jq -r '.webpage_url, "", .description' <<<"$upload_json" | tr -d '"' >>"$description_file"
+
+  cd "$upload_dir"
+  echo "upload directory and files created at '$upload_dir'"
+  command -v "$filemanager_app" && "$filemanager_app" "$upload_dir" && return
+  command -v xdg-open && xdg-open "$upload_dir"
+}
+
+mediafile() {
+  echo "$media_file"
+}
+
+treevidhopbefore() {
+  ! [ -x "$(command -v tree)" ] && echo "'tree' command not installed" && return
+  tree "$vidhop_dir" >"$log_dir/tree_vidhop_before"
+}
+
+treevidhopafter() {
+  ! [ -x "$(command -v tree)" ] && echo "'tree' command not installed" && return
+  tree "$vidhop_dir" >"$log_dir/tree_vidhop_after"
+}

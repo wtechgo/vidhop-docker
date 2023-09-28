@@ -1,0 +1,369 @@
+#!/bin/bash
+
+create_app_dirs() {
+  mkdir -p \
+    "$vids_dir" \
+    "$channels_dir" \
+    "$music_dir" \
+    "$podcasts_dir" \
+    "$vids_meta_dir" \
+    "$channels_meta_dir" \
+    "$music_meta_dir" \
+    "$podcasts_meta_dir" \
+    "$import_list_dir/custom" \
+    "$import_list_dir/log/custom" \
+    "$export_dir" \
+    "$log_dir" \
+    "$downloaded_dir" \
+    "$social_media_dir" \
+    "$websites_dir" \
+    "$uploads_dir" \
+    2>/dev/null
+  [ -n "$projects_dir" ] && mkdir -p "$projects_dir" 2>/dev/null
+}
+create_app_dirs
+
+create_app_files() {
+  touch "$log_file" 2>/dev/null
+  touch "$import_list_dir/dlac.list" 2>/dev/null
+  touch "$import_list_dir/dlaci.list" 2>/dev/null
+  touch "$import_list_dir/dlalbum.list" 2>/dev/null
+  touch "$import_list_dir/dlapl.list" 2>/dev/null
+  touch "$import_list_dir/dlapli.list" 2>/dev/null
+  touch "$import_list_dir/dlc.list" 2>/dev/null
+  touch "$import_list_dir/dlci.list" 2>/dev/null
+  touch "$import_list_dir/dlpod.list" 2>/dev/null
+  touch "$import_list_dir/dlt.list" 2>/dev/null
+  touch "$import_list_dir/dlv.list" 2>/dev/null
+  touch "$import_list_dir/dlvi.list" 2>/dev/null
+  touch "$import_list_dir/dlvpl.list" 2>/dev/null
+  touch "$import_list_dir/dlvpli.list" 2>/dev/null
+  touch "$import_list_dir/dla.list" 2>/dev/null
+}
+create_app_files
+
+is_url() {
+  [[ "$1" == *http* ]] && echo true || echo false
+}
+
+is_platform_facebook() {
+  [ "$platform" = facebook.com ] || [ "$platform" = m.facebook.com ] || [ "$platform" = fb.watch ] && echo true && return
+  echo false
+}
+
+# Determine the video platform for a  given url e.g. https://youtube.com yields youtube.com.
+extract_platform_name() {
+  [ -n "$1" ] && input="$1" || input="$url"
+  python -c 'print("'"$input"'".split("/")[2].replace("www.", ""))'
+}
+
+# NTFS forbidden chars.
+#  * (asterisk)
+#  / (forward slash)
+#  < (less than)
+#  > (greater than)
+#  ? (question mark)
+#  " (double quote)
+#  \ (backslash)
+#  | (vertical bar or pipe)
+#  : (colon - sometimes works, but is actually NTFS Alternate Data Streams)
+#
+# shellcheck disable=SC2120
+sanitize_filename() { # echo '"*/<>?\|_: ..ok`' | sanitize_filename
+  [ -n "$1" ] && echo "$1" | sanitize_filename && return
+  tr '"' "'" |
+    tr -d '\*' |
+    tr -d '/' |
+    tr -d '<' |
+    tr -d '>' |
+    tr -d '\?' |
+    tr -d '\\' |
+    tr '"' "'" |
+    tr '\|' '-' |
+    tr '$' 'S' |
+    tr '\`' "'" |
+    sed 's/:/ -/g' |
+    sed 's/#/[ht]/g' |
+    sed 's/\.\{2,\}/./g' |
+    sed 's/ - Topic//' |
+    sed 's/ - Videos//' |
+    sed -e "s/^'//" -e "s/'$//" |
+    sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//'
+}
+
+is_dir_empty() {
+  [ -z "$1" ] && echo "Usage: is_dir_empty <PATH>" && return 0
+  [ ! -d "$1" ] && echo "'$1' is not a directory, abort" && return 1
+  [ ! "$(ls -A1q "$1")" ] && echo true || echo false
+}
+
+is_media_download() {
+  [[ "$function" == dlv ]] || [[ "$function" == dlc ]] || [[ "$function" == dlt ]] ||
+    [[ "$function" == dla ]] || [[ "$function" == dlalbum ]] || [[ "$function" == dlpod ]] ||
+    [[ "$function" == dlvpl ]] || [[ "$function" == dlapl ]] &&
+    echo "true" || echo "false"
+}
+
+media_file2metadata_path() {
+  [[ "$1" == */metadata/videos/* ]] && [[ "$1" == *.json* ]] && return "$1"
+  echo "$(strip_extension "$(echo "$(realpath "$1")" | sed 's;/videos/;/metadata/videos/;g')")/metadata.json"
+}
+
+# shellcheck disable=SC2120
+channel_url_from_obj() {
+  [ -n "$json" ] &&
+    jq 'if .channel_url != null then .channel_url
+      elif .webpage_url != null then .webpage_url
+      elif .entries[0] | has("uploader_url") then .entries[0].uploader_url
+      elif .entries[0] | has("channel_url") then .entries[0].channel_url
+      else empty end' <<<"$json" | tr -d '"'
+}
+
+# shellcheck disable=SC2120
+channel_url_from_json_file() {
+  [ -n "$1" ] && json_file="$1"
+  [ ! -f "$json_file" ] || [[ "$json_file" != *.json ]] && return
+  jq 'if .channel_url != null then .channel_url
+      elif .webpage_url != null then .webpage_url
+      elif .entries[0] | has("uploader_url") then .entries[0].uploader_url
+      elif .entries[0] | has("channel_url") then .entries[0].channel_url
+      else empty end' "$json_file" | tr -d '"'
+}
+
+channel_name_from_obj() {
+  jq 'if .channel != null then .channel
+      elif .uploader != null then .uploader
+      elif .entries[0] | has("channel") then .entries[0].channel
+      elif .entries[0] | has("uploader") then .entries[0].uploader
+      else empty end' <<<"$json" | sanitize_filename
+}
+
+# shellcheck disable=SC2120
+channel_name_from_json_file() {
+  [ -n "$1" ] && [ -f "$1" ] && local file="$1"
+  [ -z "$file" ] && [ -f "$json_file" ] && file="$json_file"
+  [ -z "$file" ] && [ -f "$meta_file" ] && file="$meta_file"
+  [ ! -f "$file" ] && return 1
+
+  jq 'if .channel != null then .channel
+      elif .uploader != null then .uploader
+      elif .entries[0] | has("channel") then .entries[0].channel
+      elif .entries[0] | has("uploader") then .entries[0].uploader
+      else empty end' "$file" | sanitize_filename
+}
+
+# shellcheck disable=SC2120
+channel_name_from_filename() {
+  [ ! -f "$json_file" ] && [ -f "$meta_file" ] && json_file="$meta_file"
+  [ -n "$json_file" ] && basename "$json_file" ".json"
+}
+
+channel_url() {
+  channel_url="$(channel_url_from_obj)"
+  [ -n "$channel_url" ] && [ "$channel_url" != "null" ] && echo "$channel_url" && return
+  channel_url="$(channel_url_from_json_file)"
+  [ -n "$channel_url" ] && [ "$channel_url" != "null" ] && echo "$channel_url"
+}
+
+channel_name() {
+  channel_name="$(channel_name_from_obj)"
+  [ -n "$channel_name" ] && [ "$channel_name" != "null" ] && echo "$channel_name" && return
+  channel_name="$(channel_name_from_json_file)"
+  [ -n "$channel_name" ] && [ "$channel_name" != "null" ] && echo "$channel_name" && return
+  # shellcheck disable=SC2119
+  channel_name="$(channel_name_from_filename)"
+  [ -n "$channel_name" ] && [ "$channel_name" != "null" ] && echo "$channel_name"
+}
+
+save_channel_entries_to_archive() {
+  jq '[.entries[].id] | unique' <<<"$json" | jq --arg platform "$platform" '$platform + " " + .[]' | tr -d '"' >"$archive_file"
+}
+
+has_entries() {
+  [ -z "$1" ] && [ -z "$json" ] && echo "has_entries received no input, abort" && return 1
+  [ -f "$1" ] && json=$(jq . "$1")
+  [ ! -f "$1" ] && [ -n "$1" ] && json=$(jq . <<<"$1")
+  [ -z "$json" ] && echo "has_entries could not determine valid json, abort" && return 1
+  has_entries="$([ "$(jq .entries <<<"$json")" = null ] && echo false || echo true)"
+  echo "$has_entries"
+}
+
+# Create name for downloaded archive file.
+url_to_filename() {
+  echo "$1" |
+    tr '/' '-' |
+    tr '.' '_' |
+    tr '@' 'AT' |
+    tr ':' '_' |
+    tr '=' '_' |
+    tr -d '"' |
+    tr -d "'" |
+    tr -d '\\' |
+    tr -d '$' |
+    tr -d '%' |
+    tr '?' '_' |
+    tr '&' '-'
+}
+
+url_to_channel_name() {
+  url="$1"
+  [ "$(is_url "$url")" = "false" ] && return 1
+
+  echo "$url" |
+    cut -d/ -f 4 |
+    tr -d '@' |
+    tr -d '%' |
+    tr -d '?' |
+    tr -d '"' |
+    tr -d "'" |
+    tr -d '\\' |
+    tr '=' '_' |
+    tr '$' 'S' |
+    tr ':' '-' |
+    tr '/' '-' |
+    tr '.' '_'
+}
+
+is_json_valid() {
+  [ -f "$1" ] && echo false && return
+  first=$(cat <<<"$1" | head -n 1)
+  [ "$first" = "{" ] || [ "$first" = "[" ] && echo true && return
+  echo false
+}
+
+get_extension() {
+  ext=$(echo -n "$1" | rev | cut -d '.' -f 1 | rev)
+  [ "$(echo -n "$ext" | wc --chars)" -gt 4 ] && echo "get_extension failed: result larger than return 4 chars" && return 1
+  echo "$ext"
+}
+
+get_name() {
+  the_name="$(basename "$1")"
+  strip_extension "$the_name"
+}
+
+get_sub_extension() {
+  sub_type=$(echo -n "$1" | rev | cut -d '.' -f 1 | rev)
+  lang=$(echo -n "$1" | rev | cut -d '.' -f 2 | rev)
+  ext="$lang.$sub_type"
+  echo "$ext"
+}
+
+strip_extension() {
+  file="$1"
+  ext=$(get_extension "$file")
+  echo "${file//.$ext/}" # remove the extension e.g. remove .json from abs path
+}
+
+prefix_extension() {
+  [ -z "$1" ] || [ -z "$2" ] && echo "Usage: replace_filename <FILE> <NEW_NAME>" && return
+  prefix="$2"
+  old_file="$1"
+  old_dir="$(dirname "$(realpath "$1")")"
+  old_name="$(strip_extension "$(basename "$1")")"
+  old_ext=$(get_extension "$1")
+  old_file_abs_path="$old_dir/$old_name.$old_ext"
+  new_file_abs_path="$old_dir/$old_name.$prefix.$old_ext"
+  echo "$new_file_abs_path"
+}
+
+publicip() {
+  ip="$(curl -s 'https://api.ipify.org?format=text')"
+  echo "$ip"
+}
+
+epoch2date() {
+  date --date @"$1"
+}
+
+clean_failed_downloads() {
+  find "$vidhop_dir" -name .json -exec rm {} \;
+  find "$vidhop_dir" -name null -prune -exec rm -rf {} \;
+}
+
+sort_upload_date_desc() {
+  [ -z "$json" ] && echo no json variable availble, abort sort && return 1
+  entries=$(jq ".entries | sort_by(.upload_date) | reverse" <<<"$json")
+  json=$(jq -s '.[0].entries = .[1] | .[0]' <<<"$json" <<<"$entries")
+}
+
+first_channel_upload() {
+  [ -n "$json" ] && jq ".entries | sort_by(.upload_date) | .[0].upload_date" <<<"$json" | tr -d '"'
+}
+
+sort_playlist_index_asc() {
+  [ -z "$json" ] && echo no json variable availble, abort sort && return 1
+  entries=$(jq ".entries | sort_by(.playlist_index) " <<<"$json")
+  json=$(jq -s '.[0].entries = .[1] | .[0]' <<<"$json" <<<"$entries")
+}
+
+clear_last_line() {
+  tput cuu 1 && tput el
+}
+
+print_line_for_msg() {
+  [ -z "$1" ] && return
+  line=""
+  for ((i = 1; i < $(echo "$1" | wc --chars); i++)); do
+    line+="_"
+  done
+  echo -e "${line}\n"
+}
+
+underline() {
+  echo -e "$1\n$(print_line_for_msg "$1")"
+}
+
+repeat_char_full_screen() {
+  [ -n "$1" ] && char="$1" || char="_"
+  [ -n "$2" ] && count="$2" || count="$termux_screen_char_count"
+  for ((i = 0; i < $count; i++)); do
+    result+="$char"
+  done
+  echo $result
+}
+
+full_screen_line() {
+  repeat_char_full_screen '_' "$workstation_screen_char_count"
+}
+
+prefix_suffix_with_double_quotes() {
+  [ -n "$1" ] && echo "$1" && echo "$1" | sed 's/^/"/;s/$/"/' && return
+  sed 's/^/"/;s/$/"/'
+}
+
+remove_leading_trailing_double_quotes() {
+  [ -n "$1" ] && echo "$1" | sed -e 's/^"//' -e 's/"$//' && return
+  sed -e 's/^"//' -e 's/"$//'
+}
+
+# shellcheck disable=SC2120
+replace_special_chars_with_asterisks() {
+  [ -n "$1" ] && echo "$1" |
+    tr ' ' '*' | tr '|' '*' | tr '&' '*' | tr "'" '*' | tr '"' '*' && return
+  tr ' ' '*' | tr '|' '*' | tr '&' '*' | tr "'" '*' | tr '"' '*'
+}
+
+# shellcheck disable=SC2120
+escape_square_brackets() {
+  [ -n "$1" ] && echo "$1" | sed 's/\[/\\\[/g' |  sed 's/\]/\\\]/g' && return
+  sed 's/\[/\\\[/g' |  sed 's/\]/\\\]/g'
+}
+
+enhance_searchability() {
+  [ -n "$1" ] && echo "$1" | replace_special_chars_with_asterisks | escape_square_brackets && return
+  replace_special_chars_with_asterisks | escape_square_brackets
+}
+
+shorten_text() {
+  [ -n "$1" ] && echo "$1" | tr -dc '[:alnum:] ' | tr '[:upper:]' '[:lower:]' | cut -c -27 && return
+  tr -dc '[:alnum:] ' | tr '[:upper:]' '[:lower:]' | cut -c -27
+}
+
+timestamp() {
+  date +'%Y-%m-%d_%Hh%Mm%Ss'  # removed H:M:S format for Termux compatibility
+}
+
+remove_blank_lines() {
+  grep "\S"
+}

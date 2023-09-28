@@ -4,7 +4,8 @@ log
 import
 export
 
-config/config.ini
+vidhop/config/config.ini
+vidhop/config/.wtechgo_history
 **/cookies.txt
 
 # ---

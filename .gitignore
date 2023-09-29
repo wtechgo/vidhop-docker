@@ -1,15 +1,15 @@
+# dirs
 media
+vidhop/log
+vidhop/import
+vidhop/export
 **/test
-log
-import
-export
-
+# files
 vidhop/config/config.ini
 vidhop/config/.wtechgo_history
 **/cookies.txt
 
 # ---
-
 
 .idea
 

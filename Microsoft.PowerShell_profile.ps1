@@ -1,4 +1,5 @@
-# remove $HOME/videos from fvidf in vidhop-docker
+# Convenience functions for running VidHop in Docker on Windows Powershell.
+
 
 # Type the following command to create the file:
 # `New-item –type file –force $profile`
@@ -10,7 +11,6 @@
 # Then edit this file and you can add personalized PowerShell functions or load modules or snap-ins...
 #
 # Now when you run your powershell console, Microsoft.PowerShell_profile.ps1 will be triggered.
-
 
 # user = ""
 # $vidhop_dir = "//c/Users/${user}/Videos/Vidhop"

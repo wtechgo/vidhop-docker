@@ -37,7 +37,7 @@ website_scraper="$bin_dir/websitescraper.py"
 # log
 log_dir="$vidhop_dir/log"
 log_file="$log_dir/vidhop.log"
-log_json_file="$log_dir/json.log"
+log_json_file="$log_dir/vidhop.log.json"
 vhistory_file="$log_dir/vhistory.log"
 chistory_file="$log_dir/chistory.log"
 ahistory_file="$log_dir/ahistory.log"
@@ -51,9 +51,27 @@ import_list_dir="$import_dir/list"
 export_dir="$vidhop_dir/export"
 fvid_export_dir="$export_dir/fvid"
 wp_export_dir="$export_dir/wp"
+# import
+import_dir="$vidhop_dir/import"
+import_list_dir="$import_dir/list"
+dlalist="$import_list_dir/dla.list"
+dlaclist="$import_list_dir/dlac.list"
+dlacilist="$import_list_dir/dlaci.list"
+dlalbumlist="$import_list_dir/dlalbum.list"
+dlapllist="$import_list_dir/dlapl.list"
+dlaplilist="$import_list_dir/dlapli.list"
+dlclist="$import_list_dir/dlc.list"
+dlcilist="$import_list_dir/dlci.list"
+dlpodlist="$import_list_dir/dlpod.list"
+dltlist="$import_list_dir/dlt.list"
+dlvlist="$import_list_dir/dlv.list"
+dlvilist="$import_list_dir/dlvi.list"
+dlvpllist="$import_list_dir/dlvpl.list"
+dlvplilist="$import_list_dir/dlvpli.list"
 
 workstation_screen_char_count=120
 filename_char_count=180
+# VidHop app dirs -- end
 
 # default applications
 video_app="SET_YOUR_APP_EG_VLC_IN_CONFIG_INI"
@@ -79,6 +97,7 @@ alias cdcmeta='cd $channels_meta_dir'
 alias cdmusic='cd $music_dir'
 alias cdthumbs='cd $thumbnails_dir'
 alias cdpods='cd $podcasts_dir'
+alias cduploads='cd $uploads_dir'
 alias cddownloaded='cd $downloaded_dir'
 alias cdlogs='cd $log_dir'
 
@@ -102,6 +121,7 @@ alias nanohistory='nano $bin_dir/history; . vidhop'
 alias nanoffmpeg='nano $bin_dir/ffmpeg; . vidhop'
 alias nanofix='nano $bin_dir/fix; . vidhop'
 alias nanocommon='nano $bin_dir/common; . vidhop'
+alias nanohistory='nano $bin_dir/history; . vidhop'
 alias nanovars='nano $bin_dir/vars; . vidhop'
 alias nanoloader='nano $bin_dir/loader; . vidhop'
 alias nanoconfigini='nano $vidhop_app_dir/config.ini; . vidhop'

@@ -1,10 +1,7 @@
-# Convenience functions for running VidHop in Docker on Windows Powershell.
-
-
-# Type the following command to create the file:
+# Type the following command to create the file:  
 # `New-item –type file –force $profile`
 #
-# A file Microsoft.PowerShell_profile.ps1 will be created in
+# A file Microsoft.PowerShell_profile.ps1 will be created in 
 # %userprofile%\Documents\WindowsPowerShell\ for PowerShell 5 and older or
 # %userprofile%\Documents\PowerShell\ for PowerShell 6 Core (this folder will be automatically created).
 #
@@ -12,19 +9,19 @@
 #
 # Now when you run your powershell console, Microsoft.PowerShell_profile.ps1 will be triggered.
 
-# user = ""
-# $vidhop_dir = "//c/Users/${user}/Videos/Vidhop"
-# $ps_profile_path = "//c/Users/${user}/Documents/WindowsPowerShell/Microsoft.PowerShell_profile.ps1"
-# $ps_profile_path = "c:\Users\${user}\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1"
+# ------------------------------------------------------------------------------------------------------
 
-Function Prompt {"$(Get-Location) $ "}
+$vidhop_dir = "//c/Users/${env:UserName}/Videos/Vidhop"
+# $projects_dir = "//c/Users/${env:UserName}/Projects"
+
+Function Prompt { "$(Get-Location) $ " }
 
 Function Remove-Directory([string]$path) {
-     if ($path -eq ""){
+     if ($path -eq "") {
           Write-Output "usage:`n  Remove-Directory <PATH>"
           return
      }
-     Remove-Item $path -Force -Recurse -ErrorAction SilentlyContinue
+     Remove-Item $path -Force  -Recurse -ErrorAction SilentlyContinue
 }
 
 Function Start-Vidhop() {
@@ -32,8 +29,19 @@ Function Start-Vidhop() {
      docker stop "$(docker ps -a -q)"
      docker rm "$(docker ps -a -q)"
      clear
+     if (($vidhop_dir) -And ($projects_dir)) {
+          docker run --name vidhop-docker `
+          -v ${vidhop_dir}:/vidhop `
+          -v ${projects_dir}:/projects `
+          -v $PWD/vidhop/config/.bash_history:/root/.bash_history `
+          -it vidhop-docker /bin/bash
+          return     
+     }
      if ($vidhop_dir) {
-          docker run --name vidhop-docker -v ${vidhop_dir}:/vidhop -v $PWD/vidhop/config/.bash_history:/root/.bash_history -it vidhop-docker /bin/bash
+          docker run --name vidhop-docker `
+          -v ${vidhop_dir}:/vidhop `
+          -v $PWD/vidhop/config/.bash_history:/root/.bash_history `
+          -it vidhop-docker /bin/bash
           return
      }
      if (-Not (Test-Path $PWD/media) -And -Not (Test-Path $PWD/vidhop/config/.bash_history)) {
@@ -50,7 +58,7 @@ Function Stop-Vidhop() {
 }
 
 Function Build-Vidhop() {
-     if ( -Not (Test-Path Dockerfile)){
+     if ( -Not (Test-Path Dockerfile)) {
           Write-Output "no Dockerfile in this directory, abort"
           return
      }
@@ -58,7 +66,7 @@ Function Build-Vidhop() {
 }
 
 Function BuildNoCache-Vidhop() {
-     if ( -Not (Test-Path Dockerfile)){
+     if ( -Not (Test-Path Dockerfile)) {
           Write-Output "no Dockerfile in this directory, abort"
           return
      }
@@ -71,5 +79,24 @@ Function Clear-DockerContainers {
 }
 
 Function Edit-PsProfile {
-     codium "$ps_profile_path"
+     if ((Test-Path ${Env:USERPROFILE}\Documents\PowerShell\Microsoft.PowerShell_profile.ps1)) {
+          notepad ${Env:USERPROFILE}\Documents\PowerShell\Microsoft.PowerShell_profile.ps1
+          return
+     }
+     if ((Test-Path ${Env:USERPROFILE}\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1)) {
+          notepad ${Env:USERPROFILE}\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1
+          return
+     }
+     Write-Output "could no locate Microsoft.PowerShell_profile.ps1"
+     Write-Output "looked for the file at these locations:"
+     Write-Output "${Env:USERPROFILE}\Documents\PowerShell\Microsoft.PowerShell_profile"
+     Write-Output "${Env:USERPROFILE}\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1"
 }
+
+# $g_var = "global var"
+# function Test-Vars {
+#      $g_var  # prints var
+
+#      $l_var = "local var"
+#      $l_var
+# }

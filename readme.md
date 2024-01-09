@@ -159,7 +159,28 @@ And if you want to delete VidHop data:
 2. Inside Vidhop, run:  
 `updatevidhop`
    
-Most of the 
+## Update Docker container
+
+Rarely required, though when there are changes in `Dockerfile`, for example after adding or removing system packages 
+(inside Alpine Docker), then the container has to be rebuilt.
+
+Steps:
+
+1. Navigate to the `vidhop-docker` project root directory. You should see at least these files and directories.
+   ```angular2html
+   media (dir)
+   vidhop  (dir)
+   .bashrc
+   .gitignore
+   Dockerfile
+   Microsoft.PowerShell_profile.ps1
+   readme.md
+   ```
+2. Execute `git pull`
+3. Execute `docker build --no-cache -t vidhop-docker .`
+4. Start VidHop.  
+   `docker run --name vidhop-docker -v ${PWD}/media:/vidhop -v ${PWD}/vidhop/config/.bash_history:/root/.bash_history -it vidhop-docker /bin/bash`  
+   or, use the shortcuts from .bashrc or Microsoft.PowerShell_profile.ps1
 
 ## Configure Powershell Windows
 

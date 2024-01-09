@@ -1,23 +1,23 @@
 FROM python:alpine
 
-RUN apk update && apk upgrade   # update system
+RUN apk update && apk upgrade                                                                        # update system
 RUN apk add --no-cache coreutils util-linux binutils findutils grep iproute2                         # replace BusyBox symlinks
 RUN apk add --no-cache bash bash-doc bash-completion gawk sed grep bc                                # install bash
-RUN apk add --no-cache mediainfo nano openssh rsync git ncurses tor proxychains-ng # install tools   # install vidhop requirements
-RUN apk add --no-cache imagemagick
-RUN apk add --no-cache tesseract-ocr
-RUN apk add --no-cache python3 py3-pip gcc musl-dev python3-dev libffi-dev openssl-dev cargo         # install python packages
+RUN apk add --no-cache mediainfo nano openssh rsync git ncurses                                      # install vidhop requirements
+RUN apk add --no-cache python3 py3-pip gcc musl-dev python3-dev libffi-dev openssl-dev cargo         # install python system packages
+RUN apk add --no-cache ffmpeg                                                                        # required for yt-dlp
+RUN apk add --no-cache jq                                                                            # JSON processing
+RUN apk add --no-cache imagemagick tesseract-ocr                                                     # image processing
+RUN apk add --no-cache tor proxychains-ng                                                            # deal with censored content
 # install Python packages
 RUN pip install --no-cache-dir -U wheel yt-dlp requests selenium beautifulsoup4 image pillow
-RUN pip install --no-cache-dir -U facebook-scraper snscrape
-# Install YT-DLP & VidHop dependencies
-RUN apk add --no-cache ffmpeg jq
-# RUN apk add moreutils && \
+
+# RUN pip install --no-cache-dir -U facebook-scraper snscrape
+# RUN apk add moreutils # adds ifdata command for network interface inspection
 
 # Force docker build to recopy.
 RUN rm -rf /vidhop
 RUN rm -rf /opt/vidhop
-
 RUN mkdir /vidhop  # media dir
 RUN mkdir /opt/vidhop   # app dir
 

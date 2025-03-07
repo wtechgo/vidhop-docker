@@ -119,7 +119,7 @@ On **Linux** it varies. On Gnome, hit super key and type "terminal" or look for 
    You are now in a running Alpine Linux with VidHop pre-installed.  
    **Try a VidHop command !**  
    ```
-   dlv https://www.youtube.com/watch?v=-DT7bX-B1Mg`
+   dlv https://www.youtube.com/watch?v=-DT7bX-B1Mg
    ```
 3. See the files `dlv` downloaded with `ls`.    
    <br>

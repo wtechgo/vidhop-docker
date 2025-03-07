@@ -10,7 +10,8 @@ RUN apk add --no-cache jq                                                       
 RUN apk add --no-cache imagemagick tesseract-ocr                                                     # image processing
 RUN apk add --no-cache tor proxychains-ng                                                            # deal with censored content
 # install Python packages
-RUN pip install --no-cache-dir -U wheel yt-dlp requests selenium beautifulsoup4 image pillow
+RUN pip install --no-cache-dir -U wheel yt-dlp
+#RUN pip install --no-cache-dir -U wheel yt-dlp requests selenium beautifulsoup4 image pillow
 
 # RUN pip install --no-cache-dir -U facebook-scraper snscrape
 # RUN apk add moreutils # adds ifdata command for network interface inspection

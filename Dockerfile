@@ -9,6 +9,8 @@ RUN apk add --no-cache ffmpeg                                                   
 RUN apk add --no-cache jq                                                                            # JSON processing
 RUN apk add --no-cache imagemagick tesseract-ocr                                                     # image processing
 RUN apk add --no-cache tor proxychains-ng                                                            # deal with censored content
+RUN apk add --no-cache deno                                                       # deal with censored content
+
 # install Python packages
 RUN pip install --no-cache-dir -U wheel yt-dlp
 #RUN pip install --no-cache-dir -U wheel yt-dlp requests selenium beautifulsoup4 image pillow

@@ -185,12 +185,12 @@ find_one_vmeta() {
 }
 
 find_one_ameta() {
-  [ -z "$1" ] && echo "Usage: find_one_vmeta <VIDEO_SEARCH_TEXT> [<PLATFORM>]" && return
+  [ -z "$1" ] && echo "Usage: find_one_ameta <AUDIO_SEARCH_TEXT> [<PLATFORM>]" && return
   search_text="$1"
   platform="$2"
 
   [ -f "$search_text" ] && echo "$search_text" && return
-  result=$(find_one f "*$platform*$search_text*metadata.json" "$music_meta_dir")
+  result=$(find_one f "*$platform*$search_text*.json" "$music_meta_dir")
   error=$?
   echo "$result"
   [ "$error" = 1 ] && return 1
@@ -332,6 +332,7 @@ set_vars_single_result() {
   if [ "$(echo "$result" | wc -l)" = 1 ]; then
     media_file="$(remove_leading_trailing_double_quotes "$result")"
     filename="$(basename "$media_file")"
+    webpage_url="$(url "$media_file")"
   fi
 }
 
@@ -342,17 +343,13 @@ fvidf() { # find video files (on disk)
   unset result
   found_something="false"
 
-  result=$(find "$podcasts_dir" -not -path "*.srt" -type f -iname "*$search_text*" | prefix_suffix_with_double_quotes | sort)
-  [ "$(wc --words <<<"$result")" -gt 0 ] &&
-    echo -e "> Podcast downloads in VidHop directory search result:" && echo -e "${GREEN}$result${NC}" &&
-    set_vars_single_result && unset result && found_something="true"
-
   result=$(find "$channels_dir" -not -path "*.srt" -type f -iname "*$search_text*" | prefix_suffix_with_double_quotes | sort)
   [ "$(wc --words <<<"$result")" -gt 0 ] &&
     echo -e "> Channel downloads in VidHop directory search result:" && echo -e "${GREEN}$result${NC}" &&
     set_vars_single_result && unset result && found_something="true"
 
-  result=$(find "$vids_dir" -not -path "*.srt" -type f -iname "*$search_text*" | prefix_suffix_with_double_quotes | sort) # sed adds quotes for filenames with spaces
+  result=$(find -L "$vids_dir" -not -path "*.srt"  -not -path "*/Production/*" -type f \
+    -iname "*$search_text*" 2>/dev/null | prefix_suffix_with_double_quotes | sort) # sed adds quotes for filenames with spaces
   [ "$(wc --words <<<"$result")" -gt 0 ] &&
     echo -e "> Video downloads in VidHop directory search result:" && echo -e "${GREEN}$result${NC}" &&
     set_vars_single_result && unset result && found_something="true"
@@ -367,26 +364,30 @@ fvidfall() { # find video files (on disk)
   unset result
   found_something="false"
 
+  result=$(find "$channels_dir" -not -path "*.srt" -type f -iname "*$search_text*" | prefix_suffix_with_double_quotes | sort)
+  [ "$(wc --words <<<"$result")" -gt 0 ] &&
+    echo -e "> Channel downloads in VidHop directory search result:" && echo -e "${GREEN}$result${NC}" &&
+    unset result && found_something="true"
+
   result=$(find -L "$HOME/Videos" \
     -not \( -path "$vidhop_dir" -prune \) \
     -not \( -path "$HOME/Videos/Production/Projects" -prune \) \
+    -not -path "*.md" \
     -not -path "*.srt" \
     -not -path "*.jpg" \
-    -not -path "*.webp" \
     -not -path "*.png" \
-    -type f -iname "*$search_text*" | prefix_suffix_with_double_quotes | sort)
+    -not -path "*.webp" \
+    -not -path "*.xcf" \
+    -not -path "*.kdenlive" \
+    -type f -iname "*$search_text*" 2>/dev/null | prefix_suffix_with_double_quotes | sort)
   [ "$(wc --words <<<"$result")" -gt 0 ] &&
     echo -e "> Videos in user home directory result:" && echo -e "${GREEN}$result${NC}" &&
     unset result && found_something="true"
 
-  result=$(find "$podcasts_dir" -not -path "*.srt" -type f -iname "*$search_text*" | prefix_suffix_with_double_quotes | sort)
+  sorttelegram # move file from $tgdl_ws to $tgvids_ws, $tgimgs_ws etc.
+  result=$(find "$tgvids_ws" -not -path "*.srt" -type f -iname "*$search_text*" | prefix_suffix_with_double_quotes | sort)
   [ "$(wc --words <<<"$result")" -gt 0 ] &&
-    echo -e "> Podcast downloads in VidHop directory search result:" && echo -e "${GREEN}$result${NC}" &&
-    unset result && found_something="true"
-
-  result=$(find "$channels_dir" -not -path "*.srt" -type f -iname "*$search_text*" | prefix_suffix_with_double_quotes | sort)
-  [ "$(wc --words <<<"$result")" -gt 0 ] &&
-    echo -e "> Channel downloads in VidHop directory search result:" && echo -e "${GREEN}$result${NC}" &&
+    echo -e "> Videos in Telegram gallery search result:" && echo -e "${GREEN}$result${NC}" &&
     unset result && found_something="true"
 
   result=$(find "$vids_dir" -not -path "*.srt" -type f -iname "*$search_text*" | prefix_suffix_with_double_quotes | sort) # sed adds quotes for filenames with spaces
@@ -395,6 +396,10 @@ fvidfall() { # find video files (on disk)
     unset result && found_something="true"
 
   [ "$found_something" = "false" ] && echo "found nothing"
+}
+
+list-videos-asc() {
+  find "${vids_dir}" -not -path "*.srt" -printf "%T@ %Tc %p\n" | sort -n | cut -d ' ' -f 3-
 }
 
 # Creates symlinks from fvidf results in the project /vid directory.
@@ -699,23 +704,56 @@ faudf() {
   unset result
   found_something="false"
 
+  result=$(find "$(realpath "$podcasts_dir")" -type f \
+    -not -path "*.au" -not -path "*.cue" -not -path "*.jpg" \
+    -iname "*$search_text*" | prefix_suffix_with_double_quotes | sort) # sed adds quotes for filenames with spaces
+  [ "$(wc --words <<<"$result")" -gt 0 ] &&
+    echo -e "> VidHop podcast directory search results:" &&
+    echo -e "${GREEN}$result${NC}" &&
+    unset result && found_something="true"
+
   if [ "$(realpath "$music_dir")" != "$(realpath "$HOME/Music")" ]; then
-    result=$(find "$(realpath "$music_dir")" -type f -iname "*$search_text*" | prefix_suffix_with_double_quotes | sort) # sed adds quotes for filenames with spaces
+    result=$(find "$(realpath "$music_dir")" -type f \
+      -not -path "*.au" -not -path "*.cue" -not -path "*.jpg" \
+      -iname "*$search_text*" | prefix_suffix_with_double_quotes | sort) # sed adds quotes for filenames with spaces
     [ "$(wc --words <<<"$result")" -gt 0 ] &&
       echo -e "> VidHop music directory search results:" &&
       echo -e "${GREEN}$result${NC}" &&
       unset result && found_something="true"
+  else
+    result=$(find "$(realpath "$HOME/Music")" -type f \
+      -not -path "*.au" -not -path "*.cue" -not -path "*.jpg" \
+      -iname "*$search_text*" | prefix_suffix_with_double_quotes | sort) # sed adds quotes for filenames with spaces
+    [ "$(wc --words <<<"$result")" -gt 0 ] &&
+      echo -e "> User music directory search results:" &&
+      echo -e "${GREEN}$result${NC}" &&
+      unset result && found_something="true"
   fi
 
-  result=$(find "$(realpath "$podcasts_dir")" -type f -iname "*$search_text*" | prefix_suffix_with_double_quotes | sort) # sed adds quotes for filenames with spaces
-  [ "$(wc --words <<<"$result")" -gt 0 ] &&
-    echo -e "> VidHop music directory search results:" &&
-    echo -e "${GREEN}$result${NC}" &&
-    unset result && found_something="true"
+  [ "$found_something" = "false" ] && echo "found nothing"
+}
 
-  result=$(find "$(realpath "$music_dir_ws")" -type f -iname "*$search_text*" | prefix_suffix_with_double_quotes | sort) # sed adds quotes for filenames with spaces
+fpodf() {
+  faudf "$@"
+}
+
+# Find image files.
+fimgf() {
+  search_text="$(echo "$1" | tr ' ' '*')"
+  unset result
+  found_something="false"
+
+  result=$(find "$(realpath "$HOME/Pictures")" -type f \
+    -iname "*$search_text*.jpg" \
+    -o -iname "*$search_text*.jpeg" \
+    -o -iname "*$search_text*.png" \
+    -o -iname "*$search_text*.webp" \
+    -o -iname "*$search_text*.tiff" \
+    -o -iname "*$search_text*.psd" \
+    -o -iname "*$search_text*.xcf" \
+    | prefix_suffix_with_double_quotes | sort) # sed adds quotes for filenames with spaces
   [ "$(wc --words <<<"$result")" -gt 0 ] &&
-    echo -e "> User music directory search results:" &&
+    echo -e "> Images search results:" &&
     echo -e "${GREEN}$result${NC}" &&
     unset result && found_something="true"
 

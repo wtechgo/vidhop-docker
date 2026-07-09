@@ -260,10 +260,11 @@ linkvideo4project() {
 linkvideos4project() {
   [ -z "$1" ] && echo "Usage: linkvideos4project <SEARCH_TEXT> <PROJECT_NAME>" &&
     echo " Info: creates symbolic links in <PROJECT_NAME>/vid/<SEARCH_TEXT> for all search results that match <SEARCH_TEXT>" && return
-  search_text="$1"
-  project_dir="$projects_dir/$2"
-  [ ! -d "$project_dir" ] && echo "project directory '$project_dir' does not exist, abort" && return
 
+  [ $# = 1 ] && search_text="$1" && project_dir="$projects_dir/$1"
+  [ $# = 2 ] && search_text="$1" && project_dir="$projects_dir/$2"
+
+  [ ! -d "$project_dir" ] && echo "project directory '$project_dir' does not exist, abort" && return
   if [ "$(basename "$project_dir")" = "$search_text" ]; then dest_dir="$project_dir/vid"; else dest_dir="$project_dir/vid/$search_text"; fi
 
   unset result
